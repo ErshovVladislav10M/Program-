@@ -1,0 +1,27 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int strange_sum(vector <int> Array, int size) {
+	if (size == 0)
+		return 0;
+	if (size % 2 == 1) {
+		size -= 1;
+		return strange_sum(Array, size) + Array[size];
+	}
+	else {
+		size /= 2;
+		vector <int> Array1(size);
+		for (int i = 0; i < size; i++)
+			Array1[i] =  Array[i + size];
+		return strange_sum(Array, size) + strange_sum(Array1, size);
+	}
+}
+int main() {
+	int n;
+	cin >> n;
+	vector <int> Array(n);
+	for (int i = 0; i < n; i++)
+		cin >> Array[i];
+	cout << strange_sum(Array, n);
+	return 0;
+}
