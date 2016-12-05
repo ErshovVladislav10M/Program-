@@ -10,12 +10,12 @@ int main() {
  vector <double> Array(m); 
  for (int i = 0; i < m; i++) 
   cin >> Array[i]; 
- while (x != Array[b]) { 
+ while (x != Array[b/2]) { 
   if (x > Array[b/2]) 
    b /= 2; 
-  else b = b/4 * 3; 
+  else b += b/2; 
  } 
- if (x == Array[b]) 
+ if (x == Array[b/2]) 
   cout << "Есть"; 
  else cout << "Нету"; 
  return 0; 
