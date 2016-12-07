@@ -6,16 +6,19 @@ int main() {
  double x; 
  cin >> x; 
  cin >> m; 
- int b = m; 
+ int b = m/2; 
+ int c = m;
  vector <double> Array(m); 
  for (int i = 0; i < m; i++) 
   cin >> Array[i]; 
- while (x != Array[b/2]) { 
-  if (x > Array[b/2]) 
+ while (x != Array[b] && c != b){ 
+  if (x > Array[b]){
    b /= 2; 
+   c = b;
+  }
   else b += b/2; 
  } 
- if (x == Array[b/2]) 
+ if (x == Array[b]) 
   cout << "Есть"; 
  else cout << "Нету"; 
  return 0; 
