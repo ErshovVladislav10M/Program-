@@ -11,7 +11,7 @@ int main() {
  vector <double> Array(m); 
  for (int i = 0; i < m; i++) 
   cin >> Array[i]; 
- while (x != Array[b] && c != b){ 
+ while (x != Array[b] && c != b && m >= b){ 
   if (x > Array[b]){
    b /= 2; 
    c = b;
