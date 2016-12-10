@@ -1,26 +1,26 @@
 #include <iostream>
 #include <vector>
 using namespace std;
- vector <double> phi(vector <double> Array, int c, int n){
+ vector <double> phi(vector <double> Array, int left, int right){
    int a = 0;
    int b = 0;
    int d = 0;
-   for (int i = c; i < n; i++)
-    if (Array[c] < Array[i])
+   for (int i = left; i < right; i++)
+    if (Array[left] < Array[i])
      b++;
    vector <double> Array1(b);
-   vector <double> Array2(n - b);
-   for (int i = c; i < n; i++)
-    if (Array[c] < Array[i]){
-     Array1[c + a] = Array[i];
+   vector <double> Array2(right - b);
+   for (int i = left; i < right; i++)
+    if (Array[left] < Array[i]){
+     Array1[left + a] = Array[i];
      a++;
     }
-   for (int i = c; i < n; i++)
-    if (Array[c] > Array[i]){
+   for (int i = left; i < right; i++)
+    if (Array[left] > Array[i]){
      Array2[b + d] = Array[i];
      d++;
     }
-   return phi(Array1, 0, b), Array[c], phi(Array2, b, n);
+   return phi(Array1, left, b), Array[left], phi(Array2, b, right);
  }
  int main(){
    int n;
