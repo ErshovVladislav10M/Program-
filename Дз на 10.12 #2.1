@@ -16,11 +16,11 @@ using namespace std;
      a++;
     }
    for (int i = left; i < right; i++)
-    if (Array[left] > Array[i]){
+    if (Array[left] >= Array[i]){
      Array2[b + d] = Array[i];
      d++;
     }
-   return phi(Array1, left, b), Array[left], phi(Array2, b, right);
+   return phi(Array1, left, b), phi(Array2, b - 1, right);
  }
  int main(){
    int n;
