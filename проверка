@@ -1,37 +1,35 @@
-void SortAlgo::quickSort(int* data, int const len)
+#include <iostream>
+using namespace std;
+int a[100];
+void quickSort(int l, int r)
 {
-  int const lenD = len;
-  int pivot = 0;
-  int ind = lenD/2;
-  int i,j = 0,k = 0;
-  if(lenD>1){
-    int* L = new int[lenD];
-    int* R = new int[lenD];
-    pivot = data[ind];
-    for(i=0;i<lenD;i++){
-      if(i!=ind){
-        if(data[i]<pivot){
-          L[j] = data[i];
-          j++;
-        }
-        else{
-          R[k] = data[i];
-          k++;
-        }
-      }
-    }
-    quickSort(L,j);
-    quickSort(R,k);
-    for(int cnt=0;cnt<lenD;cnt++){
-      if(cnt<j){
-        data[cnt] = L[cnt];;
-      }
-      else if(cnt==j){
-        data[cnt] = pivot;
-      }
-      else{
-        data[cnt] = R[cnt-(j+1)];
-      }
-    }
-  }
+    int x = a[(r + l) / 2];
+    int i = l;
+    int j = r;
+    while(i <= j){
+     while(a[i] < x) i++;
+      while(a[j] > x) j--;
+       if(i <= j){
+        swap(a[i], a[j]);
+        i++;
+        j--;
+       }
+    }
+    if (i<r)
+     quickSort(i, r);
+    if (l<j)    
+     quickSort(l, j);    
+}
+int main()
+{
+    int n;
+    cin >> n;
+    for(int i = 0; i < n; i++){
+     cin>>a[i];
+    }
+    quickSort(0, n-1);
+    for(int i = 0; i < n; i++){
+     cout<<a[i]<<" ";
+    }        
+    return 0;
 }
