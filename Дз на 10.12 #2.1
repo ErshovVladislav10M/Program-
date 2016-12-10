@@ -1,36 +1,35 @@
+#include <memory>
 #include <iostream>
 #include <vector>
-using namespace std;
- vector <double> phi(vector <double> Array, int left, int right){
-   int a = 0;
-   int b = 0;
-   int d = 0;
-   for (int i = left; i < right; i++)
-    if (Array[left] < Array[i])
-     b++;
-   vector <double> Array1(b);
-   vector <double> Array2(right - b);
-   for (int i = left; i < right; i++)
-    if (Array[left] < Array[i]){
-     Array1[left + a] = Array[i];
-     a++;
-    }
-   for (int i = left; i < right; i++)
-    if (Array[left] >= Array[i]){
-     Array2[b + d] = Array[i];
-     d++;
-    }
-   return phi(Array1, left, b), phi(Array2, b - 1, right);
- }
- int main(){
-   int n;
-   int b = 0;
-   cin >> n;
-   vector <double> Array(n);
-   for (int i = 0; i < n; i++)
-    cin >> Array[i];
-   Array = phi(Array, 0, n);
-   for (int i = 0; i < n; i++)
-    cout << Array[i] << " ";
-   return 0;
- }
+using namespace std;
+vector <int> a(100);
+void quickSort(int l, int r){
+    int x = a[(r + l) / 2];
+    int i = l;
+    int j = r;
+    while(i <= j){
+     while(a[i] < x) 
+      i++;
+     while(a[j] > x) 
+      j--;
+     if(i <= j){
+      swap(a[i], a[j]);
+      i++;
+      j--;
+     }
+    }
+    if (i<r)
+     quickSort(i, r);
+    if (l<j)    
+     quickSort(l, j);    
+}
+int main(){
+    int n;
+    cin >> n;
+    for(int i = 0; i < n; i++)
+     cin >> a[i];
+    quickSort(0, n-1);
+    for(int i = 0; i < n; i++)
+     cout << a[i] <<" ";      
+    return 0;
+}
