@@ -3,35 +3,35 @@
 using namespace std;
 vector <int> a(100);
 void quickSort(int l, int r, int k){
-    int x = a[(r + l) / 2];
-    int i = l;
-    int j = r;
-    while(i <= j){
-     while(a[i] < x) 
-      i++;
-     while(a[j] > x) 
-      j--;
-     if(i <= j){
-      swap(a[i], a[j]);
-      i++;
-      j--;
-     }
-    }
-    if (i == k - 1)
-     cout << x;
-    else {
-     if (i < r && i < k - 1)
-      quickSort(i, r, k);
-     if (j > l && i > k - 1) 
-      quickSort(l, j, k); 
-    }
+int x = a[(r + l) / 2];
+int i = l;
+int j = r;
+while(i <= j){
+while(a[i] < x) 
+i++;
+while(a[j] > x) 
+j--;
+if(i <= j){
+swap(a[i], a[j]);
+i++;
+j--;
+}
+}
+if (x == a[k - 1])
+cout << x;
+else {
+if (i < r && x < a[k - 1])
+quickSort(i, r, k);
+if (j > l && x > a[k - 1]) 
+quickSort(l, j, k); 
+}
 }
 int main(){
-    int n;
-    int k;
-    cin >> n >> k;
-    for(int i = 0; i < n; i++)
-     cin >> a[i];
-    quickSort(0, n-1, k);
-    return 0;
+int n;
+int k;
+cin >> n >> k;
+for(int i = 0; i < n; i++)
+cin >> a[i];
+quickSort(0, n-1, k);
+return 0;
 }
