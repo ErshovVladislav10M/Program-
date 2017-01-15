@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-void incredible_sort(vector <int> &A, vector <int> &B, vector <int> &C, int n, int m){
+void outer_points(vector <int> &A, vector <int> &B, vector <int> &C, int n, int m){
 	vector <int> D(m, n);
  for (int j = 0; j < n; j++) 
   for (int i = 0; i < m; i++)
@@ -20,6 +20,6 @@ int main(){
 	  cin >> A[i] >> B[i];
  for (int i = 0; i < m; i++)
    cin >> C[i];
-	incredible_sort(A, B, C, n, m);
+ outer_points(A, B, C, n, m);
 	return 0;
 }
