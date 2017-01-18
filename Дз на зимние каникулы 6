@@ -1,35 +1,35 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-void qsort (int b, int e, vector <int> &index, vector <int> &B){
-   int l = b;
-   int r = e;
+void qsort (int l, int r, vector <int> &index, vector <int> &B){
    int x = B[index[(l + r) / 2]];	
-   while (l <= r)	{		
-    while (B[index[l]] < x)	l++;		
-    while (B[index[r]] > x)	r--;		
-    if (l <= r)
-     swap(index[l++], index[r--]);	
+   int i = l;
+   int j = r;
+   while (i <= j)	{		
+    while (B[index[i]] < x)	i++;		
+    while (B[index[j]] > x)	j--;		
+    if (i <= j)
+     swap(index[i++], index[j--]);	
    }
-  	if (b < r)	
-  	 qsort(b, r, index, B);	
-   if (e > l)		
-    qsort(l, e, index, B);
+  	if (l < j)	
+  	 qsort(l, j, index, B);	
+   if (r > i)		
+    qsort(i, r, index, B);
 }
 int shedule(int n){	
  vector <int> index(n);	
  vector <int> A(n);
  vector <int> B(n);
  int kol = 1;
- int pred = 0;
+ int e = 0;
  for (int i = 0; i < n; i++){		
   cin >> A[i] >> B[i];		
   index[i] = i;	
  }	
  qsort(0, n - 1, index, B);
  for (int i = 0; i < n; i++)	{		
-  if (A[index[i]] >= B[index[pred]]){			
-   pred = i;			
+  if (A[index[i]] >= B[index[e]]){			
+   e = i;			
    kol++;		
   }
 	}	
