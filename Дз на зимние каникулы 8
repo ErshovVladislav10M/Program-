@@ -1,16 +1,41 @@
 #include <iostream>
 #include <cmath>
+// пусть мы хотим посчитать значение n
+// a[0 ... n - 1] - answer 
+// тогда ответ, это minimum из a[n - 1*1] + 1, a[n - 2*2] + 1 ...
+// a[0] = 0 a[1] = 1 a[2] = 2 a[3] = 3 
+// a[4] ?
+// a[4] = min(a[4 - 1*1], a[4 - 2*2]) + 1 = 1; while b * b <= n
+/*
+const int inf = 1e9;
+a[0] = 0;
+for (int i = 0; i <= n; i++) {
+	a[i] = a[i - 1];
+	for (int s = 2; s * s <= n; s++) {
+		a[i] = min(a[i], a[i - s*s]);
+	}
+	a[i]++;
+}
+return 4 * a[n];
+*/
+// например, a[36] < a[35]
+// пусть искомое представление числа n = 1 + part(n - 1)
+// 7 : 1 + 6, 4 + 3
 using namespace std;
-int Migraine_minimization(int N){
- int n = sqrt(N);
- N -= n*n;
- if (N==0)
-  return 1;
- return 1 + Migraine_minimization(N);
+int Migraine_minimization(int n){
+ vector <int> a()
+ for (int i = 0; i <= n; i++) {
+	a[i] = a[i - 1];
+	for (int s = 2; s * s <= n; s++) {
+		a[i] = min(a[i], a[i - s*s]);
+	}
+	a[i]++;
+ }
+ return 4 * a[n];
 }
 int main(){
  int N;
  cin >> N;
- cout << 4*Migraine_minimization(N);
+ cout << Migraine_minimization(N);
  return 0;
 }
