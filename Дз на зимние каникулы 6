@@ -6,8 +6,8 @@ void qsort (int b, int e, vector <int> &index, vector <int> &B){
    int r = e;
    int x = B[index[(l + r) / 2]];	
    while (l <= r)	{		
-    while (B[index[l]] < x)			l++;		
-    while (B[index[r]] > x)			r--;		
+    while (B[index[l]] < x)	l++;		
+    while (B[index[r]] > x)	r--;		
     if (l <= r)
      swap(index[l++], index[r--]);	
    }
