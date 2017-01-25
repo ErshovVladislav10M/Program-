@@ -1,0 +1,47 @@
+#include <iostream> 
+using namespace std; 
+class string1{ 
+private: 
+char* text; 
+int size; 
+public: 
+string1(char* a){ 
+for(size=0;a[size]!=0;size++); 
+text=new char[size]; 
+for(int i=0; i<size;i++) 
+text[i]=a[i]; 
+} 
+~string1(){ 
+delete[] text; 
+} 
+void set(int i, char a){ 
+text[i] = a; 
+} 
+char get(int i){ 
+return text[i]; 
+} 
+int size_of(){ 
+return size; 
+} 
+void print(){ 
+for (int i = 0; i < size; i++) 
+cout << text[i]; 
+} 
+void concat(string1 s){ 
+char* text1 = new char[size + s.size_of()]; 
+for (int i = 0; i < size; i++) 
+text1[i]=text[i]; 
+for (int i = size; i < size+s.size_of(); i++) 
+text1[i]=s.get(i-size); 
+for (int i = 0; i < size+s.size_of(); i++) 
+cout << text1[i]; 
+cout << endl; 
+} 
+}; 
+int main(){ 
+char* a="slava"; 
+string1 obj1(a); 
+obj1.concat(string1("aaaa")); 
+obj1.print(); 
+return 0; 
+}
