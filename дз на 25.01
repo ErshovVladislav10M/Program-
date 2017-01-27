@@ -36,13 +36,13 @@ class string1{
    text = text1;
    size += s.size_of();
   } 
-  int find(string1 a, string1 s){
+  int find(string1 s){
    int n = 1;
    for (int i=0; i<size+s.size_of(); i++)
     for (int l=0; l<s.size_of(); l++)
-     if (a.get(i)==s.get(l)){
+     if (text[i]==s.get(l)){
       for (int j=1; j<s.size_of(); j++)
-       if (a.get(i+j)==s.get(j))
+       if (text[i+j]==s.get(j))
         n++;
       if (n==s.size_of())
        return 1;
@@ -52,19 +52,17 @@ class string1{
   }
   void copir(char* a){
    for (int i = 0; i < size; i++)
-    a[i] = text[i];
+   a[i] = text[i];
   }
 }; 
 int main(){ 
  char A[20]; 
  char B[20];
  char C[20];
- char D[20];
  cin >> A >> B >> C; 
  string1 obj1(A); 
  obj1.concat(string1 (B)); 
  obj1.print(); 
- obj1.copir(D);
- cout << obj1.find(string1 (D), string1 (C));
+ cout << obj1.find(string1 (C));
  return 0; 
 }
