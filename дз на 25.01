@@ -50,10 +50,6 @@ class string1{
      }
    return 0;
   }
-  void copir(char* a){
-   for (int i = 0; i < size; i++)
-   a[i] = text[i];
-  }
 }; 
 int main(){ 
  char A[20]; 
