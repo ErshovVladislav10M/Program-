@@ -41,7 +41,7 @@ class queue{
     		delete temp;
     	}
     }
-}
+};
 int main() {
 	return 0;
 }
