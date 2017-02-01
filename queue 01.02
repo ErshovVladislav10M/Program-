@@ -21,6 +21,11 @@ class queue{
     int pop(){
     	node* temp = head;
     	int a;
+    	if (temp -> next == NULL){
+    		a = temp -> data;
+    		delete temp;
+    		return a;
+    	}
     	while(temp -> next -> next != NULL){
     	    temp = temp -> next;
     	}
@@ -38,6 +43,5 @@ class queue{
     }
 }
 int main() {
-	// your code goes here
 	return 0;
 }
