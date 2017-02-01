@@ -32,7 +32,7 @@ class stack{
     		delete temp;
     	}
     }
-}
+};
 int main() {
 	// your code goes here
 	return 0;
