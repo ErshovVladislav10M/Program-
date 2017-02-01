@@ -1,0 +1,63 @@
+#include <iostream>
+using namespace std;
+class node{
+	int data;
+	node* next;
+};
+class list{
+	node* head;
+   public:
+    list(int a){
+    	head = new node;
+    	head -> data = a;
+    	head -> next = NULL;
+    }
+    void push_head(int a){
+    	node* temp = new node;
+    	temp -> next = head;
+    	temp -> data = a;
+    	head = temp;
+    }
+    void push_back(int a){
+    	node* temp = new node;
+    	temp -> next = head;
+    	temp -> data = a;
+    	head = temp;
+    }
+    void push_data(int a, int data){
+    	node* temp = new node;
+    	temp -> next = head;
+    	temp -> data = a;
+    	head = temp;
+    }
+    int get(int i){}
+    int size(){}
+    int del(int i){}//вместо pop
+    bool find(int a){}
+    int pop(){
+    	node* temp = head;
+    	int a;
+    	if (temp -> next == NULL){
+    		a = temp -> data;
+    		delete temp;
+    		return a;
+    	}
+    	while(temp -> next -> next != NULL){
+    	    temp = temp -> next;
+    	}
+    	a = temp -> next -> data;
+    	delete temp -> next;
+    	temp -> next = NULL;
+    	return a;
+    }
+    ~list(){
+    	while(head != NULL){
+    		node* temp = head;
+    		head = head -> next;
+    		delete temp;
+    	}
+    }
+};
+int main() {
+	return 0;
+}
