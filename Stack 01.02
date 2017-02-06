@@ -1,8 +1,9 @@
 #include <iostream>
 using namespace std;
 class node{
-	int data;
-	node* next;
+ public:
+ 	int data;
+ 	node* next;
 };
 class stack{
 	node* head;
@@ -33,7 +34,11 @@ class stack{
     	}
     }
 };
-int main() {
-	// your code goes here
+int main(){
+	int a;
+ cin >> a;
+ stack obj1(a);
+ obj1.push(a);
+ cout << obj1.pop();
 	return 0;
 }
