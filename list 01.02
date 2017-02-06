@@ -1,8 +1,9 @@
 #include <iostream>
 using namespace std;
 class node{
-	int data;
-	node* next;
+ public:
+	 int data;
+ 	node* next;
 };
 class list{
 	node* head;
@@ -43,7 +44,7 @@ class list{
     		return a;
     	}
     	while(temp -> next -> next != NULL){
-    	    temp = temp -> next;
+    	 temp = temp -> next;
     	}
     	a = temp -> next -> data;
     	delete temp -> next;
@@ -58,6 +59,9 @@ class list{
     	}
     }
 };
-int main() {
+int main(){
+ int a, b, c;
+ cin >> a >> b >> c;
+ list obj1(a);
 	return 0;
 }
