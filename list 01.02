@@ -87,11 +87,14 @@ class list{
    }
 };
 int main(){
- int a, b, c;
- cin >> a >> b >> c;
+ int a, b, c, i;
+ cin >> a >> b >> c >> i;
  list obj1(a);
  obj1.push_back(b);
- obj1.push_data(a, b);
- cout << obj1.del(c);
+ obj1.push_head(b);
+ obj1.push_data(c, a);
+ cout << obj1.size() << endl;
+ cout << obj1.find(c) << endl;
+ cout << obj1.del(i) << endl;
  return 0;
 }
