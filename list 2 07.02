@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+struct node{
+  int data;
+  node* next;
+  node* prev;
+};
+class list2{
+	node* head;
+	node* tail;
+   public:
+	void push_data(int a, int data){
+     node* temp = head;
+     while(temp -> data != data)
+      temp = temp -> next;
+     node* temp1 = new node;
+     temp1 -> next = temp -> next;
+     temp1 -> data = a;
+     temp1 -> prev = temp;
+     temp -> next = temp1;
+   }
+	int del(int i){
+     node* temp = head;
+     int a;
+     if(i == 1){
+       head = head -> next;
+       a = temp -> data;
+       head -> prev = NULL;
+       delete temp;
+       return a;
+     }
+     for(int l = 1; l < i-1; l++){
+      temp = temp -> next;
+     }
+     a = temp -> next -> data;
+     node* temp1 = temp -> next;
+     temp -> next = temp -> next -> next;
+     temp -> next -> prev = temp -> prev;
+     delete temp1;
+     return a;
+   }
+};
+int main(){
+ 
+ return 0;
+}
