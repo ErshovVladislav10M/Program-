@@ -1,7 +1,6 @@
 #include <iostream>
 using namespace std;
-class node{
- public:
+struct node{
 	 int data;
  	node* next;
 };
@@ -49,5 +48,5 @@ int main(){
  queue obj1(a);
  obj1.push(b);
  cout << obj1.pop();
-	return 0;
+ return 0;
 }
