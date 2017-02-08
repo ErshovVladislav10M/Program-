@@ -39,5 +39,5 @@ int main(){
  stack obj1(a);
  obj1.push(a);
  cout << obj1.pop();
-	return 0;
+ return 0;
 }
