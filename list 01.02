@@ -19,7 +19,14 @@ class list{
      head = temp;
    }
    void push_back(int a){
-     node* temp = head;
+     node* temp = new node;
+     if (head == NULL){
+      temp -> next = head;
+      temp -> data = a;
+      head = temp;
+      return;
+     }
+     temp = head;
      while(temp -> next != NULL)
       temp = temp -> next;
      node* temp1 = new node;
@@ -29,8 +36,11 @@ class list{
    }
    void push_data(int a, int data){
      node* temp = head;
-     while(temp -> data != data)
+     while ( (temp -> data != data) && (temp!=NULL) ){
       temp = temp -> next;
+      if(temp==NULL)
+      	return;
+     }
      node* temp1 = new node;
      temp1 -> next = temp -> next;
      temp1 -> data = a;
@@ -51,23 +61,27 @@ class list{
      }
      return a;
    }
-   int del(int i){
+   bool del(int i){
      node* temp = head;
      int a;
      if(i == 1){
        head = head -> next;
-       a = temp -> data;
+       //a = temp -> data;
        delete temp;
-       return a;
+       return 1;
      }
      for(int l = 1; l < i-1; l++){
       temp = temp -> next;
+      if (temp==NULL){
+      	cout<<"No";
+      	return 0;
+      }
      }
-     a = temp -> next -> data;
+//     a = temp -> next -> data;
      node* temp1 = temp -> next;
      temp -> next = temp -> next -> next;
      delete temp1;
-     return a;
+     return 1;
    }
    int find(int a){
      node* temp = head;
