@@ -64,7 +64,9 @@ class list{
       temp = temp -> next;
      }
      a = temp -> next -> data;
-     temp = temp -> next -> next;
+     node* temp1 = temp -> next;
+     temp -> next = temp -> next -> next;
+     delete temp1;
      return a;
    }
    int find(int a){
