@@ -7,8 +7,6 @@ class vector{
   public:
    vector(int n){
      Array = new int[n];
-     for (int i = 0; i < n; i++)
-      Array[i] = '\0';
      size = n;
      cap = 0;
    }
