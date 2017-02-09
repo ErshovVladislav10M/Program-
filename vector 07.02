@@ -7,6 +7,8 @@ class vector{
   public:
    vector(int n){
      Array = new int[n];
+     for (int i = 0; i < n; i++)
+      Array[i] = '\0';
      size = n;
      cap = 0;
    }
@@ -28,9 +30,8 @@ class vector{
    }
    int find(int a){
      int i = 0;
-     while(a!=Array[i]&&Array[i+1]!='\0'){
+     while(a!=Array[i]&&Array[i+1]!='\0')
       i++;
-     }
      if(a == Array[i])
       return i;
      return -1;
@@ -43,6 +44,13 @@ class vector{
    }
 };
 int main(){
- 
+ int n;
+ cin >> n;
+ vector obj1(n);
+ obj1.push(n);
+ obj1.push(n+1);
+ obj1.push(n+2);
+ cout << obj1.size_now() << endl;
+ cout << obj1.find(n+1) << endl;
  return 0;
 }
