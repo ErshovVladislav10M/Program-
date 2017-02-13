@@ -60,6 +60,7 @@ class queue{
      if (temp -> next == NULL){
       a = temp -> data;
       delete temp;
+      head = NULL;
       return a;
      }
      while(temp -> next -> next != NULL){
@@ -85,6 +86,7 @@ int main(){
  queue obj1(a, i1);
  obj1.push(b, i2);
  obj1.push(c, i3);
+ cout << obj1.pop();
  cout << obj1.pop();
  cout << obj1.pop();
 return 0;
