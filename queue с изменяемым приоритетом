@@ -1,0 +1,95 @@
+#include <iostream>
+using namespace std;
+struct node{
+  int data;
+  int pri;
+  node* next;
+};
+class queue{
+ node* head;
+  public:
+   queue(int a, int i){
+     head = new node;
+     head -> data = a;
+     head -> next = NULL;
+     head -> pri = i;
+   }
+   void push(int a, int i){
+     int l = 0;
+     node* temp = head;
+     node* temp1 = new node; 
+     temp1 -> data = a;
+     temp1 -> pri = i;
+     if (temp -> next == NULL){
+      if (i < temp -> pri){
+       temp1 -> next = NULL;
+       temp -> next = temp1;
+      }
+      else {
+       temp1 -> next = temp;
+       head = temp1;
+      }
+      return;
+     }
+     while (temp -> next -> pri > i && temp -> next -> next != NULL){
+      temp = temp -> next;
+      l++;
+     }
+     if (l == 0){
+      if (i < temp -> next -> pri){
+       temp1 -> next = NULL;
+       temp -> next -> next = temp1;
+       return;
+      }
+      if (i > temp -> pri){
+       temp1 -> next = temp;
+       head = temp1;
+      }
+      else {
+       temp1 -> next = temp -> next;
+       temp -> next = temp1;
+      }
+      return;
+     }
+     temp1 -> next = temp -> next;
+     temp -> next = temp1;
+   }
+   int pop(){
+     node* temp = head;
+     int a;
+     if (temp -> next == NULL){
+      a = temp -> data;
+      delete temp;
+      head = NULL;
+      return a;
+     }
+     while(temp -> next -> next != NULL){
+      if (temp->next->pri < temp->pri)
+       temp -> pri++;
+      temp = temp -> next;
+     }
+     a = temp -> next -> data;
+     node* temp1 = temp -> next;
+     temp -> next = NULL;
+     delete temp1;
+     return a;
+   }
+   ~queue(){
+     while(head != NULL){
+      node* temp = head;
+      head = head -> next;
+      delete temp;
+     }
+   }
+};
+int main(){
+ int a, b, c, i1, i2, i3;
+ cin >> a >> i1 >> b >> i2 >> c >> i3;
+ queue obj1(a, i1);
+ obj1.push(b, i2);
+ obj1.push(c, i3);
+ cout << obj1.pop();
+ cout << obj1.pop();
+ cout << obj1.pop();
+return 0;
+}
