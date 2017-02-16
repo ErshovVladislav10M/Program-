@@ -44,7 +44,9 @@ class vector{
       }
    }
    void append(int new_size){}
-   int operator[](int i){}
+   int operator[](int i){
+   	 return Array[i];
+   }
    const int& operator[](int i) const{}
    ~vector(){
      delete Array;
@@ -59,5 +61,6 @@ int main(){
  obj1.push(n+2);
  cout << obj1.size_now() << endl;
  cout << obj1.find(n+1) << endl;
+ cout << obj1.operator[](2) << endl;
  return 0;
 }
