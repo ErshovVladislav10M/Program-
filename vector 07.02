@@ -12,13 +12,10 @@ class vector{
    }
    void push(int a){
      if (size <= cap){
-      int* Array1 = new int[size*2];
-      for (int i = 0; i < cap; i++)
-       Array1[i] = Array[i];
-      Array1[cap+1] = a;
+      append(size*2);
+      Array[cap] = a;
       cap++;
       size *= 2;
-      Array = Array1;
       return;
      }
      Array[cap] = a;
@@ -45,12 +42,9 @@ class vector{
       }
    }
    void append(int new_size){
-      cap = 0;
       int* Array1 = new int[new_size];
       for (int i = 0; i < new_size; i++){
        Array1[i] = Array[i];
-       if (Array[i] != '\0')
-        cap++;
       }
       Array = Array1;
     }
