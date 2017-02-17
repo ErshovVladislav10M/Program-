@@ -57,7 +57,7 @@ if(i < cap && i > -1)
 return Array[i-1];
 if (i < 0)
 k = -1;
-cout << "ошибка";
+cout << "ошибка" << endl;
 if (k == 1)
 return (Array[i % cap]);
 return (Array[-i % cap]);
@@ -69,7 +69,7 @@ if(i < cap && i > -1)
 return Array[i-1];
 if (i < 0)
 k = -1;
-cout << "ошибка";
+cout << "ошибка" << endl;
 if (k == 1)
 return Array[i % cap];
 return Array[-i % cap];
@@ -87,7 +87,7 @@ vector obj1(n);
 obj1.push(n); 
 obj1.push(n+1); 
 obj1.push(n+2); 
-obj1[1] = n+1; 
+obj1[2] = n+1; 
 cout << obj1.size_now() << endl; 
 cout << obj1.find(n+1) << endl; 
 cout << obj1[2] << endl; 
