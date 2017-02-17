@@ -21,7 +21,7 @@ class vector{
       Array = Array1;
       return;
      }
-     Array[cap+1] = a;
+     Array[cap] = a;
      cap++;
    }
    int size_now(){
