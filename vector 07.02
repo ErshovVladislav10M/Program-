@@ -43,9 +43,17 @@ class vector{
        cap--;
       }
    }
-   void append(int new_size){}
+   void append(int new_size){
+      cap = 0;
+      int* Array1 = new int[new_size];
+      for (int i = 0; i < new_size; i++){
+       Array1[i] = Array[i];
+       if (Array[i] != '\0')
+        cap++;
+      }
+    }
    int operator[](int i){
-   	 return Array[i];
+   	 return Array[i-1];
    }
    const int& operator[](int i) const{}
    ~vector(){
