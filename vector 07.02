@@ -11,13 +11,14 @@ class vector{
      cap = 0;
    }
    void push(int a){
-     if (size == cap){
+     if (size <= cap){
       int* Array1 = new int[size*2];
       for (int i = 0; i < cap; i++)
        Array1[i] = Array[i];
       Array1[cap+1] = a;
       cap++;
       size *= 2;
+      Array = Array1;
       return;
      }
      Array[cap+1] = a;
@@ -51,6 +52,7 @@ class vector{
        if (Array[i] != '\0')
         cap++;
       }
+      Array = Array1;
     }
    int operator[](int i){
    	 return Array[i-1];
