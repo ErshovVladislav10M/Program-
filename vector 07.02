@@ -13,10 +13,7 @@ class vector{
    void push(int a){
      if (size <= cap){
       append(size*2);
-      Array[cap] = a;
-      cap++;
       size *= 2;
-      return;
      }
      Array[cap] = a;
      cap++;
