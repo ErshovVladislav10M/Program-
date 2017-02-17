@@ -51,7 +51,7 @@ class vector{
     return Array[i-1];
    if (i < 0)
     k = -1;
-   cout << "ошибка" << endl;
+   cout << "ошибка";
    if (k == 1)
     return (Array[i % cap]);
    return (Array[-i % cap]);
@@ -62,7 +62,7 @@ class vector{
     return Array[i-1];
    if (i < 0)
     k = -1;
-   cout << "ошибка" << endl;
+   cout << "ошибка";
    if (k == 1)
     return Array[i % cap];
    return Array[-i % cap];
