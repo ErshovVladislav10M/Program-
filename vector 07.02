@@ -47,22 +47,22 @@ class vector{
   } 
   int& operator[](const int i){ 
    int k = 1;
-   if(i < cap && i > -1) 
+   if(i < cap+1 && i > 0) 
     return Array[i-1];
    if (i < 0)
     k = -1;
-   cout << "ошибка";
+   cout << "выход за границу";
    if (k == 1)
     return (Array[i % cap]);
    return (Array[-i % cap]);
   } 
   const int& operator[](const int i) const{ 
    int k = 1;
-   if(i < cap && i > -1) 
+   if(i < cap+1 && i > 0) 
     return Array[i-1];
    if (i < 0)
     k = -1;
-   cout << "ошибка";
+   cout << "выход за границу";
    if (k == 1)
     return Array[i % cap];
    return Array[-i % cap];
@@ -78,9 +78,9 @@ int main(){
   obj1.push(n); 
   obj1.push(n+1); 
   obj1.push(n+2); 
-  obj1[2] = n+1; 
+  obj1[3] = n+8; 
   cout << obj1.size_now() << endl; 
   cout << obj1.find(n+1) << endl; 
-  cout << obj1[2] << endl; 
+  cout << obj1[3] << endl; 
   return 0; 
 }
