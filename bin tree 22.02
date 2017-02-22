@@ -11,8 +11,8 @@ class bin_tree{
     bin_tree(int a){
     	root = new node;
     	root -> data = a;
-    	root -> right = NULL;
     	root -> left = NULL;
+    	root -> right = NULL;
     }
     void push(int a){
     	node* temp = new node;
@@ -38,12 +38,16 @@ class bin_tree{
     	  return 1;
     	return 0;
     }
-    int BFS(int data){}
+    bool BFS(int data){}
+    void del_tree(node* n){
+    	if(n == NULL)
+    	  return;
+    	del_tree(n->left);
+    	del_tree(n->right);
+    	delete n;
+    }
     ~bin_tree(){
-    	while(head != NULL){
-    		node* temp = head;
-    		head = head -> next;
-    		delete temp;
+    	del_tree(root);
     	}
     }
 };
