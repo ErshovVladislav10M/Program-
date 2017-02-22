@@ -34,7 +34,9 @@ class bin_tree{
     	}
     	if(n->right->left != NULL && n->right->right != NULL)
     	  push(a, n->left);
-    	push(a, n->right);
+    	if(n->left->left != NULL && n->left->right != NULL)
+          push(a, n->right);
+        return;
     }
     int pop(){
     	node* temp = head;
