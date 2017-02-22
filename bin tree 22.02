@@ -15,11 +15,26 @@ class bin_tree{
     	root -> left = NULL;
     	root -> right = NULL;
     }
-    void push(int a){
-    	node* temp = new node;
-    	temp -> next = head;
-    	temp -> data = a;
-    	head = temp;
+    void push(int a, node* n){
+    	node* tmp = new node;
+    	tmp -> data = a;
+    	tmp -> left = NULL;
+    	tmp -> right = NULL;
+    	if(n == NULL){
+    	  n = tmp;
+    	  return;
+    	}
+    	if(n->left == NULL){
+    	  n->left = tmp;
+    	  return;
+    	}
+    	if(n->right == NULL){
+    	  n->right = tmp;
+    	  return;
+    	}
+    	if(n->right->left != NULL && n->right->right != NULL)
+    	  push(a, n->left);
+    	push(a, n->right);
     }
     int pop(){
     	node* temp = head;
