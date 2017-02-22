@@ -37,9 +37,9 @@ class bin_tree{
 };
 int main(){
 	int a;
- cin >> a;
- bin_tree obj1(a);
- obj1.push(a);
- cout << obj1.pop();
- return 0;
+    cin >> a;
+    bin_tree obj1(a);
+    obj1.push(a);
+    cout << obj1.pop();
+    return 0;
 }
