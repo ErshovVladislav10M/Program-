@@ -51,6 +51,7 @@ class bin_tree{
     		if(tmp->right != NULL)
     		  A.push(tmp->right);
     	}
+    	return 0;
     }
     void del_tree(node* n){
     	if(n == NULL)
