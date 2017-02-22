@@ -1,0 +1,45 @@
+#include <iostream>
+using namespace std;
+struct node{
+ 	int data;
+ 	node* left = NULL;
+ 	node* right = NULL;
+};
+class bin_tree{
+	node* root;
+   public:
+    bin_tree(int a){
+    	root = new node;
+    	root -> data = a;
+    	root -> right = NULL;
+    	root -> left = NULL;
+    }
+    void push(int a){
+    	node* temp = new node;
+    	temp -> next = head;
+    	temp -> data = a;
+    	head = temp;
+    }
+    int pop(){
+    	node* temp = head;
+    	int a = temp -> data;
+    	head = head -> next;
+    	delete temp;
+    	return a;
+    }
+    ~bin_tree(){
+    	while(head != NULL){
+    		node* temp = head;
+    		head = head -> next;
+    		delete temp;
+    	}
+    }
+};
+int main(){
+	int a;
+ cin >> a;
+ bin_tree obj1(a);
+ obj1.push(a);
+ cout << obj1.pop();
+ return 0;
+}
