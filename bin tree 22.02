@@ -27,16 +27,16 @@ class bin_tree{
     	delete temp;
     	return a;
     }
-    int DFS(int data, node* n){
+    bool DFS(int data, node* n){
     	if(n == NULL)
     	  return 0;
     	if(n->data == data)
     	  return 1;
-        if(DFS(data, n->left))
-          return 1;
-        if(DFS(data, n->right))
-          return 1;
-        return 0;
+    	if(DFS(data, n->left))
+    	  return 1;
+    	if(DFS(data, n->right))
+    	  return 1;
+    	return 0;
     }
     int BFS(int data){}
     ~bin_tree(){
