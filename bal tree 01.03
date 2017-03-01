@@ -1,23 +1,21 @@
 #include <iostream>
 #include <queue>
+#include <cmath>
 using namespace std;
 struct node{
   int data;
   node* left = NULL;
   node* right = NULL;
-  int bal;
+  int bal = 0;
 };
-class bin_tree{
+class bal_tree{
     node* root;
    public:
-    bin_tree(int a){
+    bal_tree(int a){
       root = new node;
       root -> data = a;
-      root -> left = NULL;
-      root -> right = NULL;
-      root -> bal = 0;
     }
-    node* get_root(){
+    node* get(){
       return root;
     }
     int get_bal(node* n){
@@ -27,46 +25,34 @@ class bin_tree{
       if(n == NULL){
         node* tmp = new node;
         tmp -> data = a;
-        tmp -> left = NULL;
-        tmp -> right = NULL;
-        tmp -> bal = 0;
         n = tmp;
         return;
       }
       if(n->left == NULL){
        node* tmp = new node;
-       tmp -> data = a;
-       tmp -> left = NULL;
-       tmp -> right = NULL;
-       tmp -> bal = 0;
-       n -> left = tmp;
-       n -> bal++;
+       tmp->data = a;
+       n->left = tmp;
+       n->bal++;
        return;
       }
       if(n->right == NULL){
        node* tmp = new node;
-       tmp -> data = a;
-       tmp -> left = NULL;
-       tmp -> right = NULL;
-       tmp -> bal = 0;
-       n -> right = tmp;
-       n -> bal--;
+       tmp->data = a;
+       n->right = tmp;
+       n->bal--;
        return;
       }
      if(n->right->right != NULL){
        push(a, n->left);
-       n -> bal++;
+       n->bal++;
      }
      else{
-      push(a, n->right);
-      n -> bal--;
+       push(a, n->right);
+       n->bal--;
      }
      return;
     }
     int pop(){
-     if(root == NULL){
-      cout << "ошибка";
-int pop(){
      if(root == NULL){
       cout << "ошибка";
       return 0;
@@ -83,7 +69,7 @@ int pop(){
       a = tmp->left->data;
       delete tmp->left;
       root->left = NULL;
-      root -> bal--;
+      root->bal--;
       return a;
      }
      while(tmp->left->right != NULL){
@@ -124,9 +110,9 @@ int pop(){
      tmp->bal--;
      return a;
     }
-    void l_round(node* n){}
-    void r_round(node* n){}
-    bool find(int a, node* n){}
+    void l_round(){}
+    void r_round(){}
+    bool find(int data, node* n){}
     void del_tree(node* n){
      if(n == NULL)
       return;
@@ -134,18 +120,17 @@ int pop(){
      del_tree(n->right);
      delete n;
     }
-    ~bin_tree(){
+    ~bal_tree(){
       del_tree(root);
     }
 };
 int main(){
  int a, b, c, d;
  cin >> a >> b >> c >> d;
- bin_tree obj1(a);
- obj1.push(b, obj1.get_root());
- obj1.push(c, obj1.get_root());
- obj1.push(d, obj1.get_root());
- cout << obj1.get_bal(obj1.get_root()) << endl;
+ bal_tree obj1(a);
+ obj1.push(b, obj1.get());
+ obj1.push(c, obj1.get());
+ obj1.push(d, obj1.get());
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
