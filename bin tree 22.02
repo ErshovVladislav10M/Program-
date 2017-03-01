@@ -125,6 +125,17 @@ class bin_tree{
      }
      return 0;
     }
+    bool polnota(node* n){ 
+     if (n == NULL)
+      return 1;
+     if((n->left == NULL && n->right != NULL) || (n->left != NULL && n->right == NULL))
+      return 0;
+     if(!polnota(n->left))
+      return 0;
+     if(!polnota(n->right))
+      return 0;
+     return 1;
+    }
     void del_tree(node* n){
      if(n == NULL)
       return;
@@ -145,6 +156,7 @@ int main(){
  obj1.push(d, obj1.get());
  cout << obj1.DFS(d, obj1.get()) << endl;
  cout << obj1.BFS(c) << endl;
+ cout << obj1.polnota(obj1.get()) << endl;
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
