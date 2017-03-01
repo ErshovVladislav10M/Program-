@@ -126,7 +126,7 @@ class bin_tree{
      return 0;
     }
     bool polnota(node* n){ 
-     if (n == NULL)
+     if(n == NULL)
       return 1;
      if((n->left == NULL && n->right != NULL) || (n->left != NULL && n->right == NULL))
       return 0;
