@@ -26,6 +26,7 @@ class bin_tree{
         tmp -> data = a;
         tmp -> left = NULL;
         tmp -> right = NULL;
+        tmp -> bal = 0;
         n = tmp;
         return;
       }
@@ -34,7 +35,9 @@ class bin_tree{
        tmp -> data = a;
        tmp -> left = NULL;
        tmp -> right = NULL;
-       n->left = tmp;
+       tmp -> bal = 0;
+       n -> left = tmp;
+       n -> bal += 1;
        return;
       }
       if(n->right == NULL){
@@ -42,15 +45,22 @@ class bin_tree{
        tmp -> data = a;
        tmp -> left = NULL;
        tmp -> right = NULL;
-       n->right = tmp;
+       tmp -> bal = 0;
+       n -> right = tmp;
+       n -> bal -= 1;
        return;
       }
-     if(n->right->right != NULL)
+     if(n->right->right != NULL){
        push(a, n->left);
-     else push(a, n->right);
+       n -> bal += 1;
+     }
+     else{
+      push(a, n->right);
+      n -> bal -= 1;
+     }
      return;
     }
-    int pop(){
+    /*int pop(){
      if(root == NULL){
       cout << "ошибка";
       return 0;
@@ -100,34 +110,8 @@ class bin_tree{
      delete tmp->left;
      tmp->left = NULL;
      return a;
-    }
-    bool DFS(int data, node* n){ 
-     if(n == NULL) 	 
-      return 0; 
-     if(n->data == data) 	
-      return 1; 	
-     if(DFS(data, n->left)) 	
-      return 1;
-     if(DFS(data, n->right)) 
-      return 1; 	
-     return 0;
-    }
-    bool BFS(int data){
-     queue <node*> A; 	
-     A.push(root); 	
-     while(!A.empty()){ 	
-      node* tmp = A.front(); 	
-      A.pop();
-      if(tmp->data == data) 
-       return 1; 		
-      if(tmp->left != NULL) 	
-       A.push(tmp->left); 		
-      if(tmp->right != NULL) 
-       A.push(tmp->right); 	
-     }
-     return 0;
-    }
-    bool polnota(node* n){ 
+    }*/
+    /*bool polnota(node* n){ 
      if (n == NULL)
       return 1;
      if((n->left == NULL && n->right != NULL) || (n->left != NULL && n->right == NULL))
@@ -136,7 +120,8 @@ class bin_tree{
       return 0;
      if(!polnota(n->right))
       return 0;
-    }
+    }*/
+    bool find(){}
     void del_tree(node* n){
      if(n == NULL)
       return;
