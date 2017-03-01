@@ -114,7 +114,7 @@ class bin_tree{
      tmp->left = NULL;
      return a;
     }
-    bool balance(node* n){}
+    void balance(node* n){}
     bool find(int a, node* n){}
     void del_tree(node* n){
      if(n == NULL)
