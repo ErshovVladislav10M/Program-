@@ -17,8 +17,11 @@ class bin_tree{
       root -> right = NULL;
       root -> bal = 0;
     }
-    node* get(){
+    node* get_root(){
       return root;
+    }
+    int get_bal(node* n){
+      return n -> bal;
     }
     void push(int a, node* n){
       if(n == NULL){
@@ -60,7 +63,7 @@ class bin_tree{
      }
      return;
     }
-    /*int pop(){
+    int pop(){
      if(root == NULL){
       cout << "ошибка";
       return 0;
@@ -110,7 +113,7 @@ class bin_tree{
      delete tmp->left;
      tmp->left = NULL;
      return a;
-    }*/
+    }
     /*bool polnota(node* n){ 
      if (n == NULL)
       return 1;
@@ -137,12 +140,11 @@ int main(){
  int a, b, c, d;
  cin >> a >> b >> c >> d;
  bin_tree obj1(a);
- obj1.push(b, obj1.get());
- obj1.push(c, obj1.get());
- obj1.push(d, obj1.get());
- cout << obj1.DFS(d, obj1.get()) << endl;
- cout << obj1.BFS(c) << endl;
- cout << obj1.polnota(obj1.get()) << endl;
+ obj1.push(b, obj1.get_root());
+ obj1.push(c, obj1.get_root());
+ obj1.push(d, obj1.get_root());
+ //cout << obj1.polnota(obj1.get()) << endl;
+ cout << obj1.get_bal(obj1.get_root()) << endl;
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
