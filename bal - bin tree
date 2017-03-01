@@ -40,7 +40,7 @@ class bin_tree{
        tmp -> right = NULL;
        tmp -> bal = 0;
        n -> left = tmp;
-       n -> bal += 1;
+       n -> bal++;
        return;
       }
       if(n->right == NULL){
@@ -50,16 +50,16 @@ class bin_tree{
        tmp -> right = NULL;
        tmp -> bal = 0;
        n -> right = tmp;
-       n -> bal -= 1;
+       n -> bal--;
        return;
       }
      if(n->right->right != NULL){
        push(a, n->left);
-       n -> bal += 1;
+       n -> bal++;
      }
      else{
       push(a, n->right);
-      n -> bal -= 1;
+      n -> bal--;
      }
      return;
     }
