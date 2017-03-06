@@ -10,6 +10,54 @@ struct node{
 };
 class bal_tree{
     node* root;
+    void del_tree(node* n){
+     if(n == NULL)
+      return;
+     del_tree(n->left);
+     del_tree(n->right);
+     delete n;
+    }
+    void l_round(node* n){
+     node* tmp = n->right;
+     node* tmp1 = n->right->left;
+     tmp->left = n;
+     tmp->left->right = tmp1;
+     if(n == root)
+      root = tmp;
+     else{
+      node* tmp2 = n;
+      n = tmp;
+      re_n(root, tmp2, n);
+     }
+    }
+    void r_round(node* n){
+     node* tmp = n->left;
+     node* tmp1 = n->left->right;
+     tmp->right = n;
+     tmp->right->left = tmp1;
+     if(n == root)
+      root = tmp;
+     else{
+      node* tmp2 = n;
+      n = tmp;
+      re_n(root, tmp2, n);
+     }
+    }
+    void re_n(node* r, node* n, node* h){
+     if(r->left == n){
+      r->left = h;
+      return;
+     }
+     if(r->right == n){
+      r->right = h;
+      return;
+     }
+     if(r == NULL)
+      return;
+     re_n(r->left, n, h);
+     re_n(r->right, n, h);
+     return;
+    }
    public:
     bal_tree(int a){
       root = new node;
@@ -18,21 +66,30 @@ class bal_tree{
     node* get(){
       return root;
     }
-    int get_bal(node* n){
-      return n -> bal;
+    int get_bal(){
+      return root -> bal;
     }
     void push(int a, node* n){
       if(n == NULL){
-        node* tmp = new node;
-        tmp -> data = a;
-        n = tmp;
-        return;
-      }
-      if(n->left == NULL){
        node* tmp = new node;
        tmp->data = a;
-       n->left = tmp;
+       n = tmp;
+       return;
+      }
+      if(a < n->data){
+       if(n->left == NULL){
+        node* tmp = new node;
+        tmp->data = a;
+        n->left = tmp;
+        n->bal++;
+        return;
+       }
+       push(a, n->left);
        n->bal++;
+       if(n->bal > 1){
+        n->bal--;
+        r_round(n);
+       }
        return;
       }
       if(n->right == NULL){
@@ -42,15 +99,13 @@ class bal_tree{
        n->bal--;
        return;
       }
-     if(n->right->right != NULL){
-       push(a, n->left);
+      push(a, n->right);
+      n->bal--;
+      if(n->bal < -1){
        n->bal++;
-     }
-     else{
-       push(a, n->right);
-       n->bal--;
-     }
-     return;
+       l_round(n);
+      }
+      return;
     }
     int pop(){
      if(root == NULL){
@@ -59,49 +114,29 @@ class bal_tree{
      }
      node* tmp = root;
      int a;
-     if(tmp->right == NULL){
-      if(tmp->left == NULL){
+     if(tmp->left == NULL){
+      if(tmp->right == NULL){
        a = tmp->data;
        delete tmp;
        root = NULL;
        return a;
       }
-      a = tmp->left->data;
-      delete tmp->left;
-      root->left = NULL;
-      root->bal--;
+      a = tmp->data;
+      tmp = tmp->right;
+      delete root;
+      root = tmp;
       return a;
      }
-     while(tmp->left->right != NULL){
+     while(tmp->left->left != NULL){
       tmp->bal--;
       tmp = tmp->left;
      }
-     if(tmp->left->left != NULL){
-      a = tmp->left->left->data;
-      delete tmp->left->left;
-      tmp->left->left = NULL;
-      tmp->left->bal--; 
-      return a;
-     }
-     if(tmp->right->right != NULL){
-      a = tmp->right->right->data;
-      delete tmp->right->right;
-      tmp->right->right = NULL;
-      tmp->right->bal++;
-      return a;
-     }
-     if(tmp->right->left != NULL){
-      a = tmp->right->left->data;
-      delete tmp->right->left;
-      tmp->right->left = NULL;
-      tmp->right->bal--;
-      return a;
-     }
-     if(tmp->right != NULL){
-      a = tmp->right->data;
-      delete tmp->right;
-      tmp->right = NULL;
-      tmp->bal++;
+     if(tmp->left->right != NULL){
+      a = tmp->left->data;
+      node* tmp1 = tmp->left->right;
+      delete tmp->left;
+      tmp->left = tmp1;
+      tmp->bal--;
       return a;
      }
      a = tmp->left->data;
@@ -110,16 +145,7 @@ class bal_tree{
      tmp->bal--;
      return a;
     }
-    void l_round(){}
-    void r_round(){}
     bool find(int data, node* n){}
-    void del_tree(node* n){
-     if(n == NULL)
-      return;
-     del_tree(n->left);
-     del_tree(n->right);
-     delete n;
-    }
     ~bal_tree(){
       del_tree(root);
     }
