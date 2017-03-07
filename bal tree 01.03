@@ -1,6 +1,4 @@
 #include <iostream>
-#include <queue>
-#include <cmath>
 using namespace std;
 struct node{
   int data;
@@ -18,30 +16,26 @@ class bal_tree{
      delete n;
     }
     void l_round(node* n){
+     n->bal = 0;
      node* tmp = n->right;
      node* tmp1 = n->right->left;
      tmp->left = n;
      tmp->left->right = tmp1;
+     tmp->bal = 1;
      if(n == root)
       root = tmp;
-     else{
-      node* tmp2 = n;
-      n = tmp;
-      re_n(root, tmp2, n);
-     }
+     else re_n(root, n, tmp);
     }
     void r_round(node* n){
+     n->bal = 0;
      node* tmp = n->left;
      node* tmp1 = n->left->right;
      tmp->right = n;
      tmp->right->left = tmp1;
+     tmp->bal = -1;
      if(n == root)
       root = tmp;
-     else{
-      node* tmp2 = n;
-      n = tmp;
-      re_n(root, tmp2, n);
-     }
+     else re_n(root, n, tmp);
     }
     void re_n(node* r, node* n, node* h){
      if(r->left == n){
@@ -57,6 +51,13 @@ class bal_tree{
      re_n(r->left, n, h);
      re_n(r->right, n, h);
      return;
+    }
+    int l_r(node* n){
+     if(n->bal > 0)
+      return 1;
+     if(n->bal < 0)
+      return -1;
+     return 0;
     }
    public:
     bal_tree(int a){
@@ -87,7 +88,8 @@ class bal_tree{
        push(a, n->left);
        n->bal++;
        if(n->bal > 1){
-        n->bal--;
+        if(l_r(n->left) == -1)
+         l_round(n->left);
         r_round(n);
        }
        return;
@@ -102,7 +104,8 @@ class bal_tree{
       push(a, n->right);
       n->bal--;
       if(n->bal < -1){
-       n->bal++;
+       if(l_r(n->right) == 1)
+        r_round(n->right);
        l_round(n);
       }
       return;
@@ -151,12 +154,18 @@ class bal_tree{
     }
 };
 int main(){
- int a, b, c, d;
- cin >> a >> b >> c >> d;
+ int a, b, c, d, e, g, h;
+ cin >> a >> b >> c >> d >> e >> g >> h;
  bal_tree obj1(a);
  obj1.push(b, obj1.get());
  obj1.push(c, obj1.get());
  obj1.push(d, obj1.get());
+ obj1.push(e, obj1.get());
+ obj1.push(g, obj1.get());
+ obj1.push(h, obj1.get());
+ cout << obj1.pop() << endl;
+ cout << obj1.pop() << endl;
+ cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
  cout << obj1.pop() << endl;
