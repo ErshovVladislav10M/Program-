@@ -67,9 +67,6 @@ class bal_tree{
     node* get(){
       return root;
     }
-    int get_bal(){
-      return root -> bal;
-    }
     void push(int a, node* n){
       if(n == NULL){
        node* tmp = new node;
@@ -148,27 +145,31 @@ class bal_tree{
      tmp->bal--;
      return a;
     }
-    bool find(int data, node* n){}
+    bool find(int a, node* n){
+     if(n == NULL)
+      return 0;
+     if(n->data == a)
+      return 1;
+     if(find(a, n->left))
+      return find(a, n->left);
+     if(find(a, n->right))
+      return find(a, n->right);
+     return 0;
+    }
     ~bal_tree(){
       del_tree(root);
     }
 };
 int main(){
- int a, b, c, d, e, g, h;
- cin >> a >> b >> c >> d >> e >> g >> h;
+ int a, b, c, d, e;
+ cin >> a >> b >> c >> d >> e;
  bal_tree obj1(a);
  obj1.push(b, obj1.get());
  obj1.push(c, obj1.get());
  obj1.push(d, obj1.get());
  obj1.push(e, obj1.get());
- obj1.push(g, obj1.get());
- obj1.push(h, obj1.get());
- cout << obj1.pop() << endl;
- cout << obj1.pop() << endl;
- cout << obj1.pop() << endl;
- cout << obj1.pop() << endl;
- cout << obj1.pop() << endl;
- cout << obj1.pop() << endl;
- cout << obj1.pop() << endl;
+ cout << obj1.find(b, obj1.get()) << endl;
+ while(obj1.get() != NULL)
+  cout << obj1.pop() << endl;
  return 0;
 }
