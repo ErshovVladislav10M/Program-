@@ -150,11 +150,9 @@ class bal_tree{
       return 0;
      if(n->data == a)
       return 1;
-     if(find(a, n->left))
+     if(n->data > a)
       return find(a, n->left);
-     if(find(a, n->right))
-      return find(a, n->right);
-     return 0;
+     return find(a, n->right);
     }
     ~bal_tree(){
       del_tree(root);
