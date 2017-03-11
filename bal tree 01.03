@@ -21,7 +21,7 @@ class bal_tree{
      node* tmp1 = n->right->left;
      tmp->left = n;
      tmp->left->right = tmp1;
-     tmp->bal = 1;
+     tmp->bal++;
      if(n == root)
       root = tmp;
      else re_n(root, n, tmp);
@@ -32,7 +32,7 @@ class bal_tree{
      node* tmp1 = n->left->right;
      tmp->right = n;
      tmp->right->left = tmp1;
-     tmp->bal = -1;
+     tmp->bal--;
      if(n == root)
       root = tmp;
      else re_n(root, n, tmp);
