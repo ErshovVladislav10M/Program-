@@ -38,18 +38,19 @@ class bal_tree{
      else re_n(root, n, tmp);
     }
     void re_n(node* r, node* n, node* h){
-     if(r->left == n){
-      r->left = h;
-      return;
-     }
      if(r->right == n){
       r->right = h;
       return;
      }
+     if(r->left == n){
+      r->left = h;
+      return;
+     }
      if(r == NULL)
       return;
-     re_n(r->left, n, h);
-     re_n(r->right, n, h);
+     if(r->data < n->data)
+      re_n(r->right, n, h);
+     else re_n(r->left, n, h);
      return;
     }
     int l_r(node* n){
