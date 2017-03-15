@@ -177,10 +177,6 @@ int main(){
  obj1.push(c, obj1.get());
  obj1.push(d, obj1.get());
  obj1.push(e, obj1.get());
- obj1.push(b+10, obj1.get());
- obj1.push(c+10, obj1.get());
- obj1.push(d+10, obj1.get());
- obj1.push(e+10, obj1.get());
  cout << obj1.find(b, obj1.get()) << endl;
  while(obj1.get() != NULL)
   cout << obj1.pop() << endl;
