@@ -15,7 +15,7 @@ class bal_tree{
      del_tree(n->right);
      delete n;
     }
-    void l_round(node* n){
+    void l_round(node* n){ //
      n->bal = 0;
      node* tmp = n->right;
      node* tmp1 = n->right->left;
@@ -59,6 +59,13 @@ class bal_tree{
       return -1;
      return 0;
     }
+    int max_g(node* n){
+     if(n == NULL)
+      return 1;
+     if(max_g(n->left) > max_g(n->right))
+      return 1 + max_g(n->left);
+     else return 1 + max_g(n->right);
+    }
    public:
     bal_tree(int a){
       root = new node;
@@ -82,8 +89,10 @@ class bal_tree{
         n->bal++;
         return;
        }
+       int i = max_g(n->left)-1;
        push(a, n->left);
-       n->bal++;
+       if(i != max_g(n->left)-1)
+        n->bal++;
        if(n->bal > 1){
         if(l_r(n->left) == -1)
          l_round(n->left);
@@ -98,8 +107,10 @@ class bal_tree{
        n->bal--;
        return;
       }
+      int i = max_g(n->right)-1;
       push(a, n->right);
-      n->bal--;
+      if(i != max_g(n->right)-1)
+       n->bal--;
       if(n->bal < -1){
        if(l_r(n->right) == 1)
         r_round(n->right);
@@ -166,6 +177,10 @@ int main(){
  obj1.push(c, obj1.get());
  obj1.push(d, obj1.get());
  obj1.push(e, obj1.get());
+ obj1.push(b+10, obj1.get());
+ obj1.push(c+10, obj1.get());
+ obj1.push(d+10, obj1.get());
+ obj1.push(e+10, obj1.get());
  cout << obj1.find(b, obj1.get()) << endl;
  while(obj1.get() != NULL)
   cout << obj1.pop() << endl;
