@@ -51,7 +51,6 @@ class bal_tree{
      if(r->data < n->data)
       re_n(r->right, n, h);
      else re_n(r->left, n, h);
-     return;
     }
     int l_r(node* n){
      if(n->bal > 0)
