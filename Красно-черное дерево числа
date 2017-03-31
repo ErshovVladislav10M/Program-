@@ -1,0 +1,216 @@
+#include <iostream>
+using namespace std;
+struct node{
+  int data;
+  node* left = NULL;
+  node* right = NULL;
+  int col = 1;
+};
+class bal_tree{
+    node* root;
+    void del_tree(node* n){
+     if(n == NULL)
+      return;
+     del_tree(n->left);
+     del_tree(n->right);
+     delete n;
+    }
+    void l_round(node* n){
+     n->col = 1;
+     node* tmp = n->right;
+     node* tmp1 = n->right->left;
+     tmp->left = n;
+     tmp->left->right = tmp1;
+     tmp->col = 0;
+     if(n == root)
+      root = tmp;
+     else re_n(root, n, tmp);
+    }
+    void r_round(node* n){
+     n->col = 1;
+     node* tmp = n->left;
+     node* tmp1 = n->left->right;
+     tmp->right = n;
+     tmp->right->left = tmp1;
+     tmp->col = 0;
+     if(n == root)
+      root = tmp;
+     else re_n(root, n, tmp);
+    }
+    void re_n(node* r, node* n, node* h){
+     if(r->right == n){
+      r->right = h;
+      return;
+     }
+     if(r->left == n){
+      r->left = h;
+      return;
+     }
+     if(r->data < n->data)
+      re_n(r->right, n, h);
+     else re_n(r->left, n, h);
+    }
+    int r_b(node* r, node* n){
+     if(r->right == n){
+      if(r->left->col == 0);
+       return 1;
+     }
+     if(r->left == n){
+      if(r->right->col == 0);
+       return -1;
+     }
+     if(r->data < n->data)
+      return r_b(r->right, n);
+     else return r_b(r->left, n);
+    }
+    node* get_n(node* r, node* n){
+     if(r == n)
+      return r;
+     if(r->left == n || r->right == n)
+      return r;
+     if(r->data > n->data)
+      return get_n(r->left, n);
+     else return get_n(r->right, n);
+    }
+    void g(node* n){
+     if(n != root)
+      n->col == 1;
+     n->left->col == 0;
+     n->right->col == 0;
+   }
+   public:
+    bal_tree(int a){
+      root = new node;
+      root->data = a;
+      root->col = 0;
+    }
+    node* get(){
+      return root;
+    }
+    void push(int a, node* n){
+      if(n == NULL){
+       node* tmp = new node;
+       tmp->data = a;
+       if(n == root)
+        tmp->col = 0;
+       n = tmp;
+       return;
+      }
+      if(a < n->data){
+       if(n->left == NULL){
+        node* tmp = new node;
+        tmp->data = a;
+        n->left = tmp;
+        if(n->col == 1){
+         if(r_b(root, n) == -1)
+          r_round(n);
+         else g(get_n(root, n));
+        }
+        return;
+       }
+       push(a, n->left);
+       if(n->left->col == 1){
+        if(n->left->left->col == 1){
+         if(n->right->col == 0)
+          r_round(n);
+         else g(get_n(root, n));
+        }
+        if(n->left->right->col == 1){
+         if(n->right->col == 0){
+          l_round(n->left);
+          r_round(n);
+         }
+         else g(get_n(root, n));
+        }
+       }
+       return;
+      }
+      if(n->right == NULL){
+       node* tmp = new node;
+       tmp->data = a;
+       n->right = tmp;
+       if(n->col == 1){
+        if(r_b(root, n) == 1)
+         l_round(n);
+        else g(get_n(root, n));
+       }
+       return;
+      }
+      push(a, n->right);
+      if(n->right->col == 1){
+       if(n->right->right->col == 1){
+        if(n->left->col == 0)
+         l_round(n);
+        else g(get_n(root, n));
+       }
+       if(n->right->left->col == 1){
+        if(n->left->col == 0){
+         r_round(n->right);
+         l_round(n);
+        }
+        else g(get_n(root, n));
+       }
+      }
+      return;
+    }
+    int pop(){
+     if(root == NULL){
+      cout << "ошибка";
+      return 0;
+     }
+     node* tmp = root;
+     int a;
+     if(tmp->left == NULL){
+      if(tmp->right == NULL){
+       a = tmp->data;
+       delete tmp;
+       root = NULL;
+       return a;
+      }
+      a = tmp->data;
+      tmp = tmp->right;
+      delete root;
+      root = tmp;
+      return a;
+     }
+     while(tmp->left->left != NULL)
+      tmp = tmp->left;
+     if(tmp->left->right != NULL){
+      a = tmp->left->data;
+      node* tmp1 = tmp->left->right;
+      delete tmp->left;
+      tmp->left = tmp1;
+      return a;
+     }
+     a = tmp->left->data;
+     delete tmp->left;
+     tmp->left = NULL;
+     return a;
+    }
+    bool find(int a, node* n){
+     if(n == NULL)
+      return 0;
+     if(n->data == a)
+      return 1;
+     if(n->data > a)
+      return find(a, n->left);
+     return find(a, n->right);
+    }
+    ~bal_tree(){
+      del_tree(root);
+    }
+};
+int main(){
+ int a, b, c, d, e;
+ cin >> a >> b >> c >> d >> e;
+ bal_tree obj1(a);
+ obj1.push(b, obj1.get());
+ obj1.push(c, obj1.get());
+ obj1.push(d, obj1.get());
+ obj1.push(e, obj1.get());
+ cout << obj1.find(b, obj1.get()) << endl;
+ while(obj1.get() != NULL)
+  cout << obj1.pop() << endl;
+ cout << obj1.pop() << endl;
+ return 0;
+}
