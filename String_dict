@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+struct node{
+  string data;
+	 int num;
+ 	node* next;
+};
+class queue{
+	   node* head;
+   public:
+    queue(string a, int i){
+     head = new node;
+     head -> data = a;
+     head -> num = i;
+     head -> next = NULL;
+    }
+    void push(string a, int i){
+     node* temp = new node;
+     temp -> next = head;
+     temp -> data = a;
+     temp -> num = i;
+     head = temp;
+    }
+    string pop(int i){
+     node* temp = head;
+     string a;
+     if(temp->next == NULL){
+      if(i == temp->num){
+       a = temp->data;
+       delete temp;
+       return a;
+      }
+      else return "no element";
+     }
+     while(temp->next->next != NULL){
+      if(temp->num == i){
+       a = temp->data;
+       break;
+      }
+      else temp = temp->next;
+     }
+     if(temp->num == i)
+      a = temp->data;
+     if(temp->next->num == i)
+      a = temp->next->data;
+     if(a != temp->data && a != temp->next->data)
+      return "no element";
+     node* temp1 = temp->next;
+     temp = temp->next;
+     delete temp1;
+     return a;
+    }
+    ~queue(){
+     while(head != NULL){
+      node* temp = head;
+      head = head -> next;
+      delete temp;
+     }
+    }
+};
+int main(){
+ int a, b;
+ string a1 = "bed";
+ string b1 = "sleep";
+ cin >> a >> b;
+ queue obj1(a1, a);
+ obj1.push(b1, b);
+ cout << obj1.pop(a) << endl;
+ cout << obj1.pop(b);
+ return 0;
+}
