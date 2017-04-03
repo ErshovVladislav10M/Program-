@@ -5,10 +5,10 @@ struct node{
 	 int num;
  	node* next;
 };
-class queue{
+class string_dict{
 	   node* head;
    public:
-    queue(string a, int i){
+    string_dict(string a, int i){
      head = new node;
      head -> data = a;
      head -> num = i;
@@ -50,7 +50,23 @@ class queue{
      delete temp1;
      return a;
     }
-    ~queue(){
+    int find(string a){
+     node* temp = head;
+     if(temp->next == NULL)
+      if(a == temp->data)
+       return temp->num;
+     while(temp->next->next != NULL){
+      if(temp->data == a)
+       return temp->num;
+      temp = temp->next;
+     }
+     if(temp->data == a)
+      return temp->num;
+     if(temp->next->data == a)
+      return temp->next->num;
+     return -1;
+    }
+    ~string_dict(){
      while(head != NULL){
       node* temp = head;
       head = head -> next;
@@ -63,8 +79,9 @@ int main(){
  string a1 = "bed";
  string b1 = "sleep";
  cin >> a >> b;
- queue obj1(a1, a);
+ string_dict obj1(a1, a);
  obj1.push(b1, b);
+ cout << obj1.find(b1) << endl;
  cout << obj1.pop(a) << endl;
  cout << obj1.pop(b);
  return 0;
