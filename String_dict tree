@@ -166,7 +166,7 @@ class string_dict{
       return find(i, n->left);
      return find(i, n->right);
     }
-    const string& operator[](const string a)const{
+    string& operator[](const string a){
      return a;
     }
     ~string_dict(){
