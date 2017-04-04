@@ -166,12 +166,8 @@ class string_dict{
       return find(i, n->left);
      return find(i, n->right);
     }
-    const string& operator[](const int i, node* n)const{
-     if(n->num == i)
-      return n->data;
-     if(n->num > i)
-      return find(i, n->left);
-     return find(i, n->right);
+    const string& operator[](const string a)const{
+     return a;
     }
     ~string_dict(){
       del_tree(root);
