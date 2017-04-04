@@ -101,11 +101,6 @@ class bal_tree{
         node* tmp = new node;
         tmp->data = a;
         n->left = tmp;
-        if(n->col == 1){
-         if(r_b(root, n) == -1)
-          r_round(n);
-         else g(get_n(root, n));
-        }
         return;
        }
        push(a, n->left);
@@ -129,11 +124,6 @@ class bal_tree{
        node* tmp = new node;
        tmp->data = a;
        n->right = tmp;
-       if(n->col == 1){
-        if(r_b(root, n) == 1)
-         l_round(n);
-        else g(get_n(root, n));
-       }
        return;
       }
       push(a, n->right);
@@ -211,6 +201,5 @@ int main(){
  cout << obj1.find(b, obj1.get()) << endl;
  while(obj1.get() != NULL)
   cout << obj1.pop() << endl;
- cout << obj1.pop() << endl;
  return 0;
 }
