@@ -16,23 +16,23 @@ class bal_tree{
      delete n;
     }
     void l_round(node* n){
-     n->col = 1;
      node* tmp = n->right;
      node* tmp1 = n->right->left;
      tmp->left = n;
      tmp->left->right = tmp1;
      tmp->col = 0;
+     tmp->left->col = 1;
      if(n == root)
       root = tmp;
      else re_n(root, n, tmp);
     }
     void r_round(node* n){
-     n->col = 1;
      node* tmp = n->left;
      node* tmp1 = n->left->right;
      tmp->right = n;
      tmp->right->left = tmp1;
      tmp->col = 0;
+     tmp->right->col = 1;
      if(n == root)
       root = tmp;
      else re_n(root, n, tmp);
