@@ -62,10 +62,10 @@ class bal_tree{
    else return r_b(r->left, n); 
   } 
   void g(node* n){ 
-   n->left->col == 0; 
-   n->right->col == 0; 
+   n->left->col = 0; 
+   n->right->col = 0; 
    if(n != root) 
-    n->col == 1; 
+    n->col = 1; 
   } 
  public: 
   bal_tree(int a){ 
