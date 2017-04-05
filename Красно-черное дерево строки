@@ -193,8 +193,13 @@ class rb_tree{
    return find(a, n->right); 
   } 
   void slog(node* n){
-   if(find(n->data, root) != 1)  
+   if(find(n->data, root) == 0)  
     push(n->data, root);
+   if(n->left->data != "not")
+    slog(n->left);
+   if(n->right->data != "not")
+    slog(n->right);
+   return;
   }
   ~rb_tree(){ 
    del_tree(root); 
@@ -218,8 +223,8 @@ int main(){
  if(obj1.size(obj1.get()) > obj2.size(obj2.get()))
   obj1.slog(obj2.get());
  else obj2.slog(obj1.get());
- while(obj1.get() != NULL){
-  f = obj1.pop();
+ while(obj2.get() != NULL){
+  f = obj2.pop();
   if(f != "not")
    cout << f << endl;
  }
