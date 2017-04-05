@@ -6,7 +6,7 @@ struct node{
  node* right = NULL; 
  int col = 1; 
 }; 
-class bal_tree{ 
+class rb_tree{ 
   node* root; 
   void del_tree(node* n){ 
    if(n == NULL) 
@@ -69,7 +69,7 @@ class bal_tree{
   } 
   
  public: 
-  bal_tree(string a){ 
+  rb_tree(string a){ 
    root = new node; 
    root->data = a; 
    root->col = 0; 
@@ -192,7 +192,11 @@ class bal_tree{
     return find(a, n->left); 
    return find(a, n->right); 
   } 
-  ~bal_tree(){ 
+  void slog(node* n){
+   if(find(n->data, root) != 1)  
+    push(n->data, root);
+  }
+  ~rb_tree(){ 
    del_tree(root); 
   } 
 }; 
@@ -203,13 +207,17 @@ int main(){
  c = "bow";
  d = "ball";
  e = "color";
- bal_tree obj1(a); 
+ rb_tree obj1(a); 
  obj1.push(b, obj1.get()); 
  obj1.push(c, obj1.get()); 
  obj1.push(d, obj1.get()); 
  obj1.push(e, obj1.get()); 
- cout << obj1.size(obj1.get()) << endl; 
- cout << obj1.find(b, obj1.get()) << endl; 
+ rb_tree obj2(b); 
+ obj2.push(d, obj2.get()); 
+ obj2.push(e, obj2.get());
+ if(obj1.size(obj1.get()) > obj2.size(obj2.get()))
+  obj1.slog(obj2.get());
+ else obj2.slog(obj1.get());
  while(obj1.get() != NULL){
   f = obj1.pop();
   if(f != "not")
