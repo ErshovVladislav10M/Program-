@@ -65,6 +65,13 @@ class string_dict{
       return 1 + max_g(n->left);
      else return 1 + max_g(n->right);
     }
+    string& get_a(int i, node* n){
+     if(n->num == i)
+      return n->data;
+     if(n->num > i)
+      return get_a(i, n->left);
+     return get_a(i, n->right);
+    }
    public:
     string_dict(string a, int i){
       root = new node;
@@ -157,17 +164,17 @@ class string_dict{
      tmp->bal--;
      return a;
     }
-    string find(int i, node* n){
+    bool find(int i, node* n){
      if(n == NULL)
-      return "no element";
+      return 0;
      if(n->num == i)
-      return n->data;
+      return 1;
      if(n->num > i)
       return find(i, n->left);
      return find(i, n->right);
     }
     string& operator[](const int i){
-     return find(i, root);
+     return get_a(i, root);
     }
     ~string_dict(){
       del_tree(root);
@@ -184,7 +191,8 @@ int main(){
  obj1.push(b1, b, obj1.get());
  obj1.push(c1, c, obj1.get());
  obj1.push(d1, d, obj1.get());
- //obj1[b] = "flower";
+ if(obj1.find(b, obj1.get()) == 1)
+  obj1[b] = "flower";
  cout << obj1.find(b, obj1.get()) << endl;
  while(obj1.get() != NULL)
   cout << obj1.pop() << endl;
