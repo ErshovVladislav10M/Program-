@@ -157,17 +157,17 @@ class string_dict{
      tmp->bal--;
      return a;
     }
-    bool find(int i, node* n){
+    string find(int i, node* n){
      if(n == NULL)
-      return 0;
+      return "no element";
      if(n->num == i)
-      return 1;
+      return n->data;
      if(n->num > i)
       return find(i, n->left);
      return find(i, n->right);
     }
-    string& operator[](const string a){
-     return a;
+    string& operator[](const int i){
+     return find(i, root);
     }
     ~string_dict(){
       del_tree(root);
@@ -184,6 +184,7 @@ int main(){
  obj1.push(b1, b, obj1.get());
  obj1.push(c1, c, obj1.get());
  obj1.push(d1, d, obj1.get());
+ //obj1[b] = "flower";
  cout << obj1.find(b, obj1.get()) << endl;
  while(obj1.get() != NULL)
   cout << obj1.pop() << endl;
