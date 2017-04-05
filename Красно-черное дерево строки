@@ -205,21 +205,17 @@ class rb_tree{
     slog(n->right);
    return;
   }
-  void perec(node* n, node* h, node* m){
+  void peres(node* n, node* h, node* m){
    if(find(n->data, h) == 1)
     if(find(n->data, m) == 0)
      push(n->data, m);
    if(find(h->data, n) == 1)
     if(find(h->data, m) == 0)
      push(h->data, m);
-   if(n->left->data != "not" && h->left->data != "not"){
-    perec(n->left, h, m);
-    perec(n, h->left, m);
-   }
-   if(n->right->data != "not" && h->right->data != "not"){
-    perec(n->right, h, m);
-    perec(n, h->right, m);
-   }
+   if(n->left->data != "not" && h->left->data != "not")
+    peres(n->left, h, m);
+   if(n->right->data != "not" && h->right->data != "not")
+    peres(n->right, h, m);
   }
   ~rb_tree(){ 
    del_tree(root); 
@@ -244,7 +240,7 @@ int main(){
  obj2.push(e, obj2.get());
  obj2.push(i, obj2.get());
  rb_tree obj3(h);
- obj3.perec(obj1.get(), obj2.get(), obj3.get());
+ obj3.peres(obj1.get(), obj2.get(), obj3.get());
  if(obj1.size(obj1.get()) > obj2.size(obj2.get()))
   obj1.slog(obj2.get());
  else obj2.slog(obj1.get());
