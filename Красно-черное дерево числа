@@ -110,7 +110,6 @@ class bal_tree{
       return;
      } 
      if(n->left->right->col == 1){ 
-      l_round(n->left); 
       if(n->right->col == 0)
        r_round(n); 
       else g(n); 
@@ -137,7 +136,6 @@ class bal_tree{
      return;
     } 
     if(n->right->left->col == 1){ 
-     r_round(n->right); 
      if(n->left->col == 0)
       l_round(n); 
      else g(n); 
@@ -207,7 +205,7 @@ int main(){
  obj1.push(b, obj1.get()); 
  obj1.push(c, obj1.get()); 
  obj1.push(d, obj1.get()); 
- //obj1.push(e, obj1.get()); 
+ obj1.push(e, obj1.get()); 
  cout << obj1.find(b, obj1.get()) << endl; 
  while(obj1.get() != NULL){ 
   f = obj1.pop();
