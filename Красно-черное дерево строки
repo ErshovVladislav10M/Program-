@@ -205,13 +205,20 @@ class rb_tree{
     slog(n->right);
    return;
   }
-  void umnog(node* n, node* h, node* m){
-   if(find(n->data, h) == 1 && find(h->data, n) == 1)  
-    push(n->data, m);
-   if(n->left->data != "not" && h->left->data != "not")
-    umnog(n->left, h->left, m);
-   if(n->right->data != "not" && h->right->data != "not")
-    umnog(n->right, h->right, m);
+  void perec(node* n, node* h, node* m){
+   if(find(n->data, h) == 1)
+    if(find(n->data, m) == 0)
+     push(n->data, m);
+   if(find(h->data, n) == 1)
+    if(find(h->data, m) == 0)
+     push(h->data, m);
+   if(n->left->data != "not" && h->left->data != "not"){
+    perec(n->left, h, m);
+   }
+   if(n->right->data != "not" && h->right->data != "not"){
+    perec(n->right, h, m);
+    perec(n, h->right, m);
+   }
    return;
   }
   ~rb_tree(){ 
@@ -219,13 +226,14 @@ class rb_tree{
   } 
 }; 
 int main(){ 
- string a, b, c, d, e, f, i; 
+ string a, b, c, d, e, f, i, h; 
  a = "like";
  b = "be";
  c = "bow";
  d = "ball";
  e = "color";
  i = "shop";
+ h = "shell";
  rb_tree obj1(a); 
  obj1.push(b, obj1.get()); 
  obj1.push(c, obj1.get()); 
@@ -235,17 +243,18 @@ int main(){
  obj2.push(d, obj2.get()); 
  obj2.push(e, obj2.get());
  obj2.push(i, obj2.get());
- rb_tree obj3(b);
- obj3.pop();
- obj3.umnog(obj1.get(), obj2.get(), obj3.get());
+ rb_tree obj3(h);
+ obj3.perec(obj1.get(), obj2.get(), obj3.get());
  if(obj1.size(obj1.get()) > obj2.size(obj2.get()))
   obj1.slog(obj2.get());
  else obj2.slog(obj1.get());
+ cout << obj3.size(obj3.get()) << endl;
  while(obj1.get() != NULL){
   f = obj1.pop();
   if(f != "not")
    cout << f << endl;
  }
+ cout << "obj3" << endl;
  while(obj3.get() != NULL){
   f = obj3.pop();
   if(f != "not")
