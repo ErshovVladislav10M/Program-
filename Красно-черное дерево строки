@@ -220,7 +220,7 @@ class rb_tree{
 }; 
 int main(){ 
  string a, b, c, d, e, f, i; 
- a = "i";
+ a = "like";
  b = "be";
  c = "bow";
  d = "ball";
@@ -235,12 +235,12 @@ int main(){
  obj2.push(d, obj2.get()); 
  obj2.push(e, obj2.get());
  obj2.push(i, obj2.get());
- if(obj1.size(obj1.get()) > obj2.size(obj2.get()))
-  obj1.slog(obj2.get());
- else obj2.slog(obj1.get());
  rb_tree obj3(b);
  obj3.pop();
  obj3.umnog(obj1.get(), obj2.get(), obj3.get());
+ if(obj1.size(obj1.get()) > obj2.size(obj2.get()))
+  obj1.slog(obj2.get());
+ else obj2.slog(obj1.get());
  while(obj1.get() != NULL){
   f = obj1.pop();
   if(f != "not")
