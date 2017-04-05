@@ -214,12 +214,12 @@ class rb_tree{
      push(h->data, m);
    if(n->left->data != "not" && h->left->data != "not"){
     perec(n->left, h, m);
+    perec(n, h->left, m);
    }
    if(n->right->data != "not" && h->right->data != "not"){
     perec(n->right, h, m);
     perec(n, h->right, m);
    }
-   return;
   }
   ~rb_tree(){ 
    del_tree(root); 
