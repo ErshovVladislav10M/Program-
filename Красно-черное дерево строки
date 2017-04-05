@@ -62,10 +62,10 @@ class bal_tree{
    else return r_b(r->left, n); 
   } 
   void g(node* n){ 
-   n->left->col == 0; 
-   n->right->col == 0; 
+   n->left->col = 0; 
+   n->right->col = 0; 
    if(n != root) 
-    n->col == 1; 
+    n->col = 1; 
   } 
  public: 
   bal_tree(string a){ 
@@ -153,13 +153,11 @@ class bal_tree{
    if(tmp->left == NULL){ 
     if(tmp->right == NULL){ 
      a = tmp->data; 
-     cout << tmp->col;
      delete tmp; 
      root = NULL; 
      return a; 
     } 
     a = tmp->data; 
-    cout << tmp->col;
     tmp = tmp->right; 
     delete root; 
     root = tmp; 
@@ -169,14 +167,12 @@ class bal_tree{
     tmp = tmp->left; 
    if(tmp->left->right != NULL){ 
     a = tmp->left->data; 
-    cout << tmp->left->col;
     node* tmp1 = tmp->left->right; 
     delete tmp->left; 
     tmp->left = tmp1; 
     return a; 
    } 
    a = tmp->left->data; 
-   cout << tmp->left->col;
    delete tmp->left; 
    tmp->left = NULL; 
    return a; 
@@ -195,7 +191,7 @@ class bal_tree{
   } 
 }; 
 int main(){ 
- string a, b, c, d, e; 
+ string a, b, c, d, e, f; 
  a = "i";
  b = "be";
  c = "bow";
@@ -204,10 +200,13 @@ int main(){
  bal_tree obj1(a); 
  obj1.push(b, obj1.get()); 
  obj1.push(c, obj1.get()); 
- //obj1.push(d, obj1.get()); 
- //obj1.push(e, obj1.get()); 
+ obj1.push(d, obj1.get()); 
+ obj1.push(e, obj1.get()); 
  cout << obj1.find(b, obj1.get()) << endl; 
- while(obj1.get() != NULL) 
-  cout << obj1.pop() << endl; 
+ while(obj1.get() != NULL){
+  f = obj1.pop();
+  if(f != "not")
+   cout << f << endl;
+ }
  return 0; 
 }
