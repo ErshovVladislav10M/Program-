@@ -67,6 +67,7 @@ class bal_tree{
    if(n != root) 
     n->col = 1; 
   } 
+  
  public: 
   bal_tree(string a){ 
    root = new node; 
@@ -79,6 +80,11 @@ class bal_tree{
   } 
   node* get(){ 
    return root; 
+  } 
+  int size(node* n){
+   if(n->data == "not")
+    return 0;
+   return 1 + size(n->left) + size(n->right);
   } 
   void push(string a, node* n){ 
    if(n == NULL){ 
@@ -202,6 +208,7 @@ int main(){
  obj1.push(c, obj1.get()); 
  obj1.push(d, obj1.get()); 
  obj1.push(e, obj1.get()); 
+ cout << obj1.size(obj1.get()) << endl; 
  cout << obj1.find(b, obj1.get()) << endl; 
  while(obj1.get() != NULL){
   f = obj1.pop();
