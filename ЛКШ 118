@@ -13,6 +13,6 @@ int main(){
      swap(A[l], A[l+1]);
      k += A[l] - A[l+1];
     }
-  cout << k;
+  cout << k*2;
   return 0;
 }
