@@ -1,0 +1,54 @@
+#include <iostream>
+using namespace std;
+int main(){
+  int n, m, a, b, k = 0;
+  cin >> n >> m;
+  int* x = new int[m];
+  int* y = new int[m];
+  for(int i = 1; i <= m; i++)
+    cin >> x[i] >> y[i];
+  int** A = new int*[n];
+  for(int i = 1; i <= n; i++){
+    A[i] = new int[n];
+  }
+  for(int l = 1; l <= m; l++){
+    for(int i = 1; i <= n; i++)
+      A[x[l]][i] = 1;
+    for(int i = 1; i <= n; i++)
+      A[i][y[l]] = 1;
+    a = x[l];
+    b = y[l];
+    while(a != 1 && b != 1){
+      a--;
+      b--;
+      A[a][b] = 1;
+    }
+    a = x[l];
+    b = y[l];
+    while(a != 1 && b != n){
+      a--;
+      b++;
+      A[a][b] = 1;
+    }
+    a = x[l];
+    b = y[l];
+    while(a != n && b != 1){
+      a++;
+      b--;
+      A[a][b] = 1;
+    }
+    a = x[l];
+    b = y[l];
+    while(a != n && b != n){
+      a++;
+      b++;
+      A[a][b] = 1;
+    }
+  }
+  for(int l = 1; l <= n; l++)
+    for(int i = 1; i <= n; i++)
+      if(A[l][i] == 0)
+        k++;
+  cout << k;
+  return 0;
+}
