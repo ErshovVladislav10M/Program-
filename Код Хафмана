@@ -1,0 +1,54 @@
+#include <iostream>
+using namespace std;
+int main(){
+string A = "tkiijyekeeyekyjjkiihieyehiikut";
+int n = 0, k = 0, j = 0, g, h;
+while(A[n] != '\0')
+  n++;
+char* B = new char[n];
+int* C = new int[n];
+for(int i = 0; i < n; i++){
+  for(int l = 0; l < i; l++)
+    if(A[i] == B[l]){
+      k = 1;
+      g = l;
+    }
+  if(k == 0){
+    B[j] = A[i];
+    j++;
+  }
+  else C[g]++;
+  k = 0;
+}
+for(int i = 0; i < j; i++)
+  C[i]++;
+int** D = new int*[j];
+for(int i = 0; i < j; i++)
+  D[i] = new int[j];
+for(int i = 0; i < j; i++)
+  for(int l = 0; l < j; l++)
+    D[i][l] = -1;
+h = j;
+for(int t = 0; t < h; t++){
+  for(int i = 0; i < j; i++)
+    for(int l = i; l < j; l++)
+      if(C[i] < C[l]){
+        swap(C[i], C[l]);
+        swap(B[i], B[l]);
+    }
+    D[t][j-2] = 0;
+    for(int i = j-1; i < h; i++)
+      D[t][i] = 1;
+    C[j-2] += C[j-1];
+    j--;
+}
+for(int i = 0; i < h; i++){
+  cout << B[i] << " ";
+  for(int l = 0; l < h; l++)
+    if(D[i][l] != -1)
+      cout << D[i][l] << " ";
+    else cout << "  ";
+  cout << endl;
+}
+return 0;
+}
