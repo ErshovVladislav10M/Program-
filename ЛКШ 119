@@ -18,31 +18,31 @@ int main(){
       A[i][y[l]] = 1;
     a = x[l];
     b = y[l];
-    while(a != 1 && b != 1){
+    while(a != 0 && b != 0){
+      A[a][b] = 1;
       a--;
       b--;
-      A[a][b] = 1;
     }
     a = x[l];
     b = y[l];
-    while(a != 1 && b != n){
+    while(a != 0 && b != n+1){
+      A[a][b] = 1;
       a--;
       b++;
-      A[a][b] = 1;
     }
     a = x[l];
     b = y[l];
-    while(a != n && b != 1){
+    while(a != n+1 && b != 0){
+      A[a][b] = 1;
       a++;
       b--;
-      A[a][b] = 1;
     }
     a = x[l];
     b = y[l];
-    while(a != n && b != n){
+    while(a != n+1 && b != n+1){
+      A[a][b] = 1;
       a++;
       b++;
-      A[a][b] = 1;
     }
   }
   for(int l = 1; l <= n; l++)
