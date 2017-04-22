@@ -1,41 +1,35 @@
 #include <stdio.h>
 using namespace std;
 int main(){
-  int n, a, b, g = 0, k = 0; 
+  int n, a, b, g = 0, k = 0, h = 0; 
   scanf("%d%d%d",&n,&a,&b);
   int* A = new int[n];
   for(int i = 0; i < n; i++)
     scanf("%d",&(A[i]));
   int max = A[0];
   do{
+    h = 0;
     for(int i = 0; i < n; i++)
       if(max < A[i]){
         max = A[i];
         k = i;
       }
-    for(int i = 0; i < n; i++){
-      if(A[i] <= b){
-      	s-= A[i];
-        A[i] = 0;
-      }
-      else{ 
-       A[i] -= b;
-       s -= b;
-     }
-    }
-    if(A[k] <= a - b){
-   		s-= A[k];
-      A[k] = 0;
-    }
-    else{ 
-     A[k] -= a - b;
-     s -= a - b;
-    }
-    g++;
-    max = A[0];
-    k=0;
-    for(int i = 0)
-  }while(max > 0);
+      for(int i = 0; i < n; i++)
+        if(A[i] <= b)
+          A[i] = 0;
+        else A[i] -= b;
+      if(A[k] <= a - b)
+        A[k] = 0;
+      else A[k] -= a - b;
+      g++;
+      max = A[0];
+      k = 0;
+      for(int i = 0; i < n; i++)
+        if(A[i] > 0){
+          h = 1;
+          break;
+        }
+  }while(h == 1);
   printf("%d",g);
   return 0;
 }
