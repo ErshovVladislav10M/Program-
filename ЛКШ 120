@@ -1,18 +1,38 @@
 #include <stdio.h>
 using namespace std;
 int main(){
-  int n, g, h, k = 0, j = 1, j1 = 1;
+  int n, g, h, l, k = 0, j = 0, j1 = 1, t = 0;
   scanf("%d", &n);
-  int* A = new int[n];
-  int* T = new int[n];
-  int* S = new int[n];
-  scanf("%d%d%d", &A[1], &S[1], &T[1]);
-  A[1] = -1;
-  for(int i = 2; i <= n; i++){
+  int* A = new int[n+2];
+  int* T = new int[n+2];
+  int* S = new int[n+2];
+  A[0] = -1;
+  S[0] = 0;
+  T[0] = 0;
+  for(int i = 1; i <= n; i++)
   	scanf("%d%d%d", &A[i], &S[i], &T[i]);
-    if(S[i] >= S[j] + T[j]){
-      A[j1+1] = -1;
-      j = j1+1;
+  for(int i = 1; i <= n; i++){
+  	l = i + 1;
+  	while(S[i] == S[l]){
+  	  if(A[i] = A[l])
+  	    k = 1;
+  	  else{
+  	    for(int y = l-1; y >= i; y--)
+  	      A[y] = 0;
+  	    /*if(S[i] >= S[j] + T[j]){
+  	      A[i] = -1;
+  	      j = i;
+  	    }
+  	    j1 = l-1;*/
+  	    if(A[l] != A[i-1])
+          k = 0;
+  	  }
+  	  l++;
+  	}
+    if(S[i] > t){
+      A[j1] = -1;
+      j = j1;
+      j1++;
     }
     if(A[i-1] != -1)
       if(A[i-1] == A[i])
@@ -30,6 +50,9 @@ int main(){
           if(A[g] != A[i])
             k = 0;
         }
+    if(S[j] > t)
+      t = S[j] + T[j];
+    else t += T[j];
   }
   for(int i = 1; i <= n; i++)
     if(A[i] != 0)
