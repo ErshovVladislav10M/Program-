@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 int main(){
-  string A = "tkiijyekeeyekyjjkiihieyehiikut";
+  string A = "tikiiiiijiyieikieiyiekiyieikijikiyieijitikieiyijjektkiekiheieekyeehikikut";
   int n = 0, k = 0, j = 0, j1 = 0, j2 = 0, g, h;
   while(A[n] != '\0')
     n++;
@@ -24,6 +24,7 @@ int main(){
   }
   for(int i = 0; i < j; i++)
     C[i]++;
+    
   int** D = new int*[j];
   for(int i = 0; i < j; i++)
     D[i] = new int[j];
@@ -39,26 +40,27 @@ int main(){
           swap(B[f], B[l]);
           swap(D[f], D[l]);
         }
-        D[h-1][i] = 0;
-        D[h-2][i] = 1;
-        C[h-2] += C[h-1];
-        while(B[h-2][j1] != '\0')
-          j1++;
-        while(B[h-1][j2] != '\0'){
-          B[h-2][j1] = B[h-1][j2];
-          j1++;
-          j2++;
-        }
-        j1 = 0;
-        j2 = 0;
-        h--;
+    D[h-1][i] = 0;
+    D[h-2][i] = 1;
+    C[h-2] += C[h-1];
+    while(B[h-2][j1] != '\0'){
+      j1++;
+    }
+    while(B[h-1][j2] != '\0'){
+      B[h-2][j1] = B[h-1][j2];
+      j1++;
+      j2++;
+    }
+    
+    j1 = 0;
+    j2 = 0;
+    h--;
   }
   for(int i = 0; i < j; i++){
     cout << B[i][0] << " ";
-  for(int l = j-1; l >= 0; l--)
-    if(D[i][l] != -1)
-      cout << D[i][l] << " ";
-    else cout << "e ";
+    for(int l = j-1; l >= 0; l--)
+      if(D[i][l] != -1)
+        cout << D[i][l] << " ";
     cout << endl;
   }
   return 0;
