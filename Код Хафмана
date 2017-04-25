@@ -43,9 +43,15 @@ int main(){
     D[h-2][i] = 1;
     C[h-2] += C[h-1];
     while(B[h-2][j1] != '\0'){
+      for(int l = 0; l < j; l++)
+        if(B[l][0] == B[h-2][j1])
+          D[l][i] = 1;
       j1++;
     }
     while(B[h-1][j2] != '\0'){
+      for(int l = 0; l < j; l++)
+        if(B[l][0] == B[h-1][j2])
+          D[l][i] = 0;
       B[h-2][j1] = B[h-1][j2];
       j1++;
       j2++;
