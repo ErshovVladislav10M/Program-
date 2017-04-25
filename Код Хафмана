@@ -24,7 +24,6 @@ int main(){
   }
   for(int i = 0; i < j; i++)
     C[i]++;
-    
   int** D = new int*[j];
   for(int i = 0; i < j; i++)
     D[i] = new int[j];
@@ -51,7 +50,6 @@ int main(){
       j1++;
       j2++;
     }
-    
     j1 = 0;
     j2 = 0;
     h--;
