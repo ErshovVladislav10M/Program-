@@ -1,0 +1,16 @@
+#include <iostream>
+using namespace std;
+void f(int k){
+  if(k == 0)
+    return;
+  int n;
+  cin >> n;
+  f(k-1);
+  cout << n << " ";
+}
+int main(){
+  int n;
+  cin >> n;
+  f(n);
+  return 0;
+}
