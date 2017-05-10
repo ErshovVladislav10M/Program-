@@ -1,0 +1,26 @@
+#include <iostream>
+using namespace std;
+int pr(int n, int k){
+	if(k == 0 || k == 1)
+	  return n;
+	if(k % 2 == 0)
+	  return pr(n,k/2)*pr(n,k/2);
+	return pr(n,k-1)*n;
+}
+int main(){
+  int n, d = 0, k = 1;
+  cin >> n;
+  while(k < n){
+  	k*=2;
+  	d++;
+  }
+  int* A = new int[d];
+  for(int i = 0; i < d; i++)
+    if(n / pr(2, d-i-1) > 0){
+      A[i] = 1;
+      n -= pr(2, d-i-1);
+    }
+  for(int i = 0; i < d; i++)
+    cout << A[i];
+  return 0;
+}
