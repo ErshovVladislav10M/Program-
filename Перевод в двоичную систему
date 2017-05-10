@@ -3,8 +3,6 @@ using namespace std;
 int pr(int n, int k){
 	if(k == 0)
 	  return 1;
-	if(k == 1)
-	  return n;
 	if(k % 2 == 0)
 	  return pr(n,k/2)*pr(n,k/2);
 	return pr(n,k-1)*n;
