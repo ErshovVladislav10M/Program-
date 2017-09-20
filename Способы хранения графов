@@ -1,5 +1,19 @@
 #include <iostream>
 using namespace std;
+void matrix_incd(int* A, int* B, int n, int m){
+	int** C = new int*[m];
+	for(int i = 1; i <= m; i++)
+	  C[i] = new int[n];
+	for(int l = 1; l <= m; l++)
+	  for(int i = 0; i < n; i++)
+	    if(A[i] == l || B[i] == l)
+	      C[l][i] = 1;
+	for(int i = 1; i <= m; i++){
+	  for(int l = 0; l < n; l++)
+	    cout << C[i][l] << " ";
+	  cout << endl;
+	}
+}
 void matrix_smew(int* A, int* B, int n, int m){
 	int** C = new int*[m];
 	for(int i = 1; i <= m; i++)
@@ -46,5 +60,7 @@ int main(){
   spisok_smew(A, B, n, max);
   cout << endl;
   matrix_smew(A, B, n, max);
+  cout << endl;
+  matrix_incd(A, B, n, max);
   return 0;
 }
