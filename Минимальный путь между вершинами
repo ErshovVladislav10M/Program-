@@ -52,9 +52,13 @@ int main(){
         cout << C[i][l] << " ";
     cout << endl;
   }
-  min_puti(C, max, s, s, F, 0);
-  if(F[s][f] < max*(max-1)/2+1)
-    cout << F[s][f];
-  else cout << "нет пути";
+  if(s > max || f > max)
+    cout << "нет пути";
+  else{
+    min_puti(C, max, s, s, F, 0);
+    if(F[s][f] < max*(max-1)/2+1)
+      cout << F[s][f];
+    else cout << "нет пути";
+  }
   return 0;
 }
