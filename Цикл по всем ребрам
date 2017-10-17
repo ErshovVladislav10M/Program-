@@ -58,7 +58,15 @@ int main(){
         cout << C[i][l] << " ";
     cout << endl;
   }
-  cicl_rebr(C, max, o, D);
-  cout << o;
+  int x = 0;
+  for(int i = 1; i <= max; i++)
+    if(F[i] % 2 != 0)
+      x = 1;
+  if(x == 1)
+    cout << "нет цикла";
+  else{
+    cicl_rebr(C, max, o, D);
+    cout << o;
+  }
   return 0;
 }
