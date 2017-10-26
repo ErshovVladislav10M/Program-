@@ -3,11 +3,11 @@ using namespace std;
 void cicl_rebr(int** C, int max, int s, int** &D){
 	for(int i = 1; i <= max; i++)
 	  if(C[s][i] != 0 && D[s][C[s][i]] != 1){
-	  	cout << s << " ";
 	  	D[s][C[s][i]] = 1;
 	  	D[C[s][i]][s] = 1;
 	    cicl_rebr(C, max, C[s][i], D);
 	  }
+	  cout << s << " ";
 }
 int main(){ 
 	int n, max = 0, max1 = 0, j = 1, o;
@@ -64,9 +64,6 @@ int main(){
       x = 1;
   if(x == 1)
     cout << "нет цикла";
-  else{
-    cicl_rebr(C, max, o, D);
-    cout << o;
-  }
+  else cicl_rebr(C, max, o, D);
   return 0;
 }
