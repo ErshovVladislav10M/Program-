@@ -23,13 +23,13 @@ int main(){
   }
   int* F = new int[max];
   for(int i = 0; i < n; i++){
-    F[A[i]]++;
-    F[B[i]]++;
+    F[A[i]-1]++;
+    F[B[i]-1]++;
   }
-  for(int i = 1; i <= max; i++)
+  for(int i = 0; i < max; i++)
     if(F[i] > max1){
       max1 = F[i];
-      o = i;
+      o = i+1;
     }
   int** D = new int*[max];
   int** C = new int*[max];
@@ -60,9 +60,10 @@ int main(){
     cout << endl;
   }
   int x = 0;
-  for(int i = 1; i <= max; i++)
+  for(int i = 0; i < max; i++)
     if(F[i] % 2 != 0)
       x = 1;
+  cout << endl;
   if(x == 1)
     cout << "нет цикла";
   else cicl_rebr(C, max, o, D);
