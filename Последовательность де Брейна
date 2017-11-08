@@ -5,7 +5,6 @@ void cicl_rebr(int** C, int max, int s, int** &D){
   for(int i = 1; i <= max; i++)
     if(C[s][i] != 0 && D[s][C[s][i]] != 1){
       D[s][C[s][i]] = 1;
-      D[C[s][i]][s] = 1;
       cicl_rebr(C, max, C[s][i], D);
     }
   cout << s << " ";
@@ -28,9 +27,10 @@ int main(){
   }
   for(int i = 0; i < N; i++){
     for(int l = 0; l < N; l++)
-      cout << M[i][l] << " ";
+      cout << M[l][i] << " ";
     cout << endl;
   }
+  cout << endl;
   cicl_rebr(M, N, 0, B);
   cout << 0;
   return 0;
