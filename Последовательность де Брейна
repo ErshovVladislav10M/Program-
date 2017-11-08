@@ -1,0 +1,37 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+void cicl_rebr(int** C, int max, int s, int** &D){
+  for(int i = 1; i <= max; i++)
+    if(C[s][i] != 0 && D[s][C[s][i]] != 1){
+      D[s][C[s][i]] = 1;
+      D[C[s][i]][s] = 1;
+      cicl_rebr(C, max, C[s][i], D);
+    }
+  cout << s << " ";
+}
+int main(){
+  int n, k;
+  cin >> n >> k;
+  int N = pow(n, k-1);
+  int L = N / n;
+  int** M = new int*[N];
+  int** B = new int*[N];
+  for(int i = 0; i < N; i++){
+    M[i] = new int[N];
+    B[i] = new int[N];
+  }
+  for(int i = 0; i < N; i++){
+    int c = i - (i/L)*L;
+    for(int l = 0; l < n; l++)
+      M[i][c*n+l] = 1;
+  }
+  for(int i = 0; i < N; i++){
+    for(int l = 0; l < N; l++)
+      cout << M[i][l] << " ";
+    cout << endl;
+  }
+  cicl_rebr(M, N, 0, B);
+  cout << 0;
+  return 0;
+}
