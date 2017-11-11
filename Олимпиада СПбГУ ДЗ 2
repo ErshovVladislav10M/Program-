@@ -1,0 +1,25 @@
+#include <iostream>
+#include <ctime>
+using namespace std;
+int NOD(int a, int b){ 
+  int c = a * b; 
+  do{ 
+    if (a > b) a = a % b; 
+    else b = b % a; 
+  }while (a != 0 && b != 0); 
+  return c / (a + b); 
+}
+int main(){
+  int n, a, b;
+  double s;
+  cin >> n;
+  srand(time(NULL));
+  for(int i = 0; i < 1000; i++){
+    a = rand()%n + 1;
+    b = rand()%n + 1;
+    if(b == NOD(a, b))
+      s++;
+  }
+  cout << s/1000;
+  return 0;
+}
