@@ -30,15 +30,15 @@ int main(){
     else 
       if(K[i] == 12345)
         H[i] = A[i];
-      else H[i] = -(K[i]/abs(K[i]))*(A[i] - B[i]/K[i]); 
+      else H[i] = -K[i]*(A[i] - B[i]/K[i]); 
   }
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
       if(K[i]*A[j] + H[i] > B[j])
         C[j] = -1;
-      if(A[j]*K[i] + H[i] < B[j])
+      if(K[i]*A[j] + H[i] < B[j])
         C[j] = 1;
-      if(A[j]*K[i] + H[i] == B[j])
+      if(K[i]*A[j] + H[i] == B[j])
         C[j] = 0;
       cout << C[j] << " ";
     }
