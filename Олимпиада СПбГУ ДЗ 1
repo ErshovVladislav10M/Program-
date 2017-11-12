@@ -19,8 +19,7 @@ int main(){
   else 
     if(K[n-1] == 12345)
       H[n-1] = A[n-1];
-    else H[n-1] = -(K[n-1]/abs(K[n-1]))*(A[n-1] - B[n-1]/K[n-1]); 
-  int s, s1;
+    else H[n-1] = -(K[n-1]/abs(K[n-1]))*(A[n-1] - B[n-1]/K[n-1]);
   for(int i = 0; i < n-1; i++){
     if(A[i+1] - A[i] == 0)
       K[i] = 12345;
@@ -32,6 +31,7 @@ int main(){
         H[i] = A[i];
       else H[i] = -K[i]*(A[i] - B[i]/K[i]); 
   }
+  int s = 0, s1 = 0;
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
       if(K[i]*A[j] + H[i] > B[j])
@@ -40,20 +40,17 @@ int main(){
         C[j] = 1;
       if(K[i]*A[j] + H[i] == B[j])
         C[j] = 0;
-      cout << C[j] << " ";
     }
-    cout << endl;
-  }
-  /*for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
       s += abs(C[j]);
       s1 += C[j];
+      if(s != abs(s1))
+        t = 0;
     }
-    if(s != abs(s1))
-      t = 0;
-  }*/
-  //cout << t;
-  for(int i = 0; i < n; i++)
-    cout << K[i] << "*x" << " + " << H[i] << endl;
+    s = 0;
+    s1 = 0;
+  }
+    
+  cout << t;
   return 0;
 }
