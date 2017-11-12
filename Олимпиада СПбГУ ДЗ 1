@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 int main(){
   int n, t = 1;
@@ -29,16 +30,17 @@ int main(){
     else 
       if(K[i] == 12345)
         H[i] = A[i];
-      else H[i] = A[i] - B[i]/K[i]; 
+      else H[i] = -(K[i]/abs(K[i]))*(A[i] - B[i]/K[i]); 
   }
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
-      if(A[j]*K[i] > B[j])
+      if(A[j]*K[i] + H[i] > B[j])
         C[j] = -1;
-      else C[j] = 1;
-      //cout << C[j] << " ";
+      if(A[j]*K[i] + H[i] < B[j])
+        C[j] = 1;
+      cout << C[j] << " ";
     }
-    //cout << endl;
+    cout << endl;
   }
   /*for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
