@@ -1,16 +1,16 @@
 #include <iostream>
 using namespace std;
 int** C;
+int timer = 0, n, m;
 int* fup;
 int* tin;
 int* used;
-int timer = 0, n, m;
 void dfs(int v, int p=-1){
 	 used[v] = 1;
 	 tin[v] = fup[v] = timer++;
 	 int children = 0;
-	 for(int i = 0; i < n; i++)
-	 	 if(C[v][i]){
+	 for(int i = 0; i < m; i++)
+	 	 if(C[v+1][i+1]){
 	      int t0 = i;
 	      if(t0 == p)
 	       continue;
@@ -29,15 +29,15 @@ void dfs(int v, int p=-1){
 }
 void matrix_smew(int* A, int* B){
   C = new int*[m];	
-  for(int i = 0; i < m; i++)	 
+  for(int i = 1; i <= m; i++)	 
     C[i] = new int[m];    
-  for(int l = 0; l < m; l++)
-	  for(int i = 0; i < n; i++){
-	 	 if(A[i] == l)
-	 	   C[l][B[i]] = 1;
-	 	 if(B[i] == l)
-	   	 C[l][A[i]] = 1;
-	  }
+  for(int l = 1; l <= m; l++)
+    for(int i = 0; i < n; i++){
+   	 if(A[i] == l)
+   	   C[l][B[i]] = 1;
+   	 if(B[i] == l)
+     	 C[l][A[i]] = 1;
+    }
 }
 int main(){
   cin >> n >> m;
@@ -50,8 +50,8 @@ int main(){
   used = new int[m]; 
   matrix_smew(A, B);
   dfs(0);
-  for(int i = 0; i < m; i++){
-    for(int l = 0; l < m; l++)
+  for(int i = 1; i <= m; i++){
+    for(int l = 1; l <= m; l++)
       cout << C[i][l] << " ";
     cout << endl;
   }
