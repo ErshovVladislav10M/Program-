@@ -20,12 +20,12 @@ void dfs(int v, int p=-1){
 	    	  dfs(t0, v);
 	    	  fup[v] = min(fup[v], fup[t0]);
 	    	  if(fup[t0] >= tin[v] && p != -1)
-	    	  cout << v << " ";
+	    	  cout << v+1 << " ";
 	    	  children++;
 	      }
 	    }
 	 if(p == -1 && children > 1)
-	   cout << v << " ";
+	   cout << v+1 << " ";
 }
 void matrix_smew(int* A, int* B){
   C = new int*[m];	
@@ -50,10 +50,5 @@ int main(){
   used = new int[m]; 
   matrix_smew(A, B);
   dfs(0);
-  for(int i = 1; i <= m; i++){
-    for(int l = 1; l <= m; l++)
-      cout << C[i][l] << " ";
-    cout << endl;
-  }
   return 0;
 }
