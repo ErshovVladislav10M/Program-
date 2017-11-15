@@ -1,49 +1,54 @@
 #include <iostream>
-#include <vector>
 using namespace std;
-vector <vector<int>> g;
-vector <int> fup;
-vector <int> tin;
-vector <int> used;
-int timer;
-void dfs(int v, int p){
-  used[v] = 1;
-  tin[v] = fup[v] = timer++;
-  int children = 0;
-  for(int i = 0; i < g[v].size(); i++){
-    int t0 = g[v][i];
-    if(t0 == p)
-      continue;
-    if(used[t0])
-      fup[v] = min(fup[v], tin[t0]);
-    else{
-      dfs(t0, v);
-      fup[v] = min(fup[v], fup[t0]);
-      if(fup[t0] >= tin[v] && p != -1)
-        cout << v << " ";
-      children++;
-    }
-  }
-  if(p == -1 && children > 1)
-    cout << v << " ";
+int** C;
+int* fup;
+int* tin;
+int* used;
+int timer, n, m;
+void dfs(int v, int p=-1){
+	 used[v] = 1;
+	 tin[v] = fup[v] = timer++;
+	 int children = 0;
+	 for(int i = 0; i < n; i++)
+	 	 if(C[v][i]){
+	      int t0 = i;
+	      if(t0 == p)
+	       continue;
+	      if(used[t0])
+	       fup[v] = min(fup[v], tin[t0]);
+	      else{
+	    	  dfs(t0, v);
+	    	  fup[v] = min(fup[v], fup[t0]);
+	    	  if(fup[t0] >= tin[v] && p != -1)
+	    	  cout << v << " ";
+	    	  children++;
+	      }
+	    }
+	 if(p == -1 && children > 1)
+	   cout << v << " ";
+}
+void matrix_smew(int* A, int* B){
+		C = new int*[m];	
+		for(int i = 0; i < m; i++)	 
+		  C[i] = new int[m];
+  	for(int l = 0; l < m; l++)
+	 	 for(int i = 0; i < n; i++){
+	 	   if(A[i] == l)
+	 	  	 C[l][B[i]] = 1;
+	 	   if(B[i] == l)
+	   	   C[l][A[i]] = 1;
+	    }
 }
 int main(){
-  int v, l = 0, a = 1;
-  cin >> v;
-  int* tin = new int[v];
-  int* fup = new int[v];
-  int* used = new int[v];
-  int** g = new int*[v];
-  for(int i = 0; i < v; i++)
-    g[i] = new int[v];
-  for(int i = 0; i < v; i++){
-    while(a != 0){
-      cin >> a;
-      g[i][l] = a;
-      l++;
-    }
-    l = 0;
-  }
-  dfs(v, 0);
-  return 0;
+	 cin >> n >> m;
+	 int* A = new int[n];
+	 int* B = new int[n];
+	 for(int i = 0; i < n; i++)
+	   cin >> A[i] >> B[i];
+	 tin = new int[m]; 
+	 fup = new int[m]; 
+	 used = new int[m]; 
+	 matrix_smew(A, B);
+   dfs(0);
+   return 0;
 }
