@@ -1,6 +1,12 @@
 #include <iostream>
+#include <vector>
 using namespace std;
-void dfs(int v, int p=-1, int** &g, int* &fup, int* &tin){
+vector <vector<int>> g;
+vector <int> fup;
+vector <int> tin;
+vector <int> used;
+int timer;
+void dfs(int v, int p){
   used[v] = 1;
   tin[v] = fup[v] = timer++;
   int children = 0;
@@ -11,31 +17,33 @@ void dfs(int v, int p=-1, int** &g, int* &fup, int* &tin){
     if(used[t0])
       fup[v] = min(fup[v], tin[t0]);
     else{
-      dfs(t0, v, g, fup, tin);
+      dfs(t0, v);
       fup[v] = min(fup[v], fup[t0]);
       if(fup[t0] >= tin[v] && p != -1)
         cout << v << " ";
       children++;
     }
   }
+  if(p == -1 && children > 1)
+    cout << v << " ";
 }
-int main() {
-	int v, l = 0, a = 1;
-	cin >> v;
-	int** g = new int*[v];
-	for(int i = 0; i < v; i++)
-	  g[i] = new int[v];
-	for(int i = 0; i < v; i++){
-	  while(a != 0){
-	  	cin >> a;
-	  	g[i][l] = a;
-	  	l++
-	  }
-	  l = 0;
-	}
-	int* tin = new int[v];
-	int* fup = new int[v];
-	
-	  fup[i] = min()
-	return 0;
+int main(){
+  int v, l = 0, a = 1;
+  cin >> v;
+  int* tin = new int[v];
+  int* fup = new int[v];
+  int* used = new int[v];
+  int** g = new int*[v];
+  for(int i = 0; i < v; i++)
+    g[i] = new int[v];
+  for(int i = 0; i < v; i++){
+    while(a != 0){
+      cin >> a;
+      g[i][l] = a;
+      l++;
+    }
+    l = 0;
+  }
+  dfs(v, 0);
+  return 0;
 }
