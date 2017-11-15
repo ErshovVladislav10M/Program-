@@ -1,0 +1,41 @@
+#include <iostream>
+using namespace std;
+void dfs(int v, int p=-1, int** &g, int* &fup, int* &tin){
+  used[v] = 1;
+  tin[v] = fup[v] = timer++;
+  int children = 0;
+  for(int i = 0; i < g[v].size(); i++){
+    int t0 = g[v][i];
+    if(t0 == p)
+      continue;
+    if(used[t0])
+      fup[v] = min(fup[v], tin[t0]);
+    else{
+      dfs(t0, v, g, fup, tin);
+      fup[v] = min(fup[v], fup[t0]);
+      if(fup[t0] >= tin[v] && p != -1)
+        cout << v << " ";
+      children++;
+    }
+  }
+}
+int main() {
+	int v, l = 0, a = 1;
+	cin >> v;
+	int** g = new int*[v];
+	for(int i = 0; i < v; i++)
+	  g[i] = new int[v];
+	for(int i = 0; i < v; i++){
+	  while(a != 0){
+	  	cin >> a;
+	  	g[i][l] = a;
+	  	l++
+	  }
+	  l = 0;
+	}
+	int* tin = new int[v];
+	int* fup = new int[v];
+	
+	  fup[i] = min()
+	return 0;
+}
