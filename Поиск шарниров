@@ -6,26 +6,26 @@ int* fup;
 int* tin;
 int* used;
 void dfs(int v, int p=-1){
-	 used[v] = 1;
-	 tin[v] = fup[v] = timer++;
-	 int children = 0;
-	 for(int i = 0; i < m; i++)
-	 	 if(C[v+1][i+1]){
-	      int t0 = i;
-	      if(t0 == p)
-	       continue;
-	      if(used[t0])
-	       fup[v] = min(fup[v], tin[t0]);
-	      else{
-	    	  dfs(t0, v);
-	    	  fup[v] = min(fup[v], fup[t0]);
-	    	  if(fup[t0] >= tin[v] && p != -1)
-	    	  cout << v+1 << " ";
-	    	  children++;
-	      }
-	    }
-	 if(p == -1 && children > 1)
-	   cout << v+1 << " ";
+  used[v] = 1;
+  tin[v] = fup[v] = timer++;
+  int children = 0;
+  for(int i = 0; i < m; i++)
+    if(C[v+1][i+1]){
+      int t0 = i;
+      if(t0 == p)
+        continue;
+      if(used[t0])
+        fup[v] = min(fup[v], tin[t0]);
+      else{
+    	  dfs(t0, v);
+    	  fup[v] = min(fup[v], fup[t0]);
+    	  if(fup[t0] >= tin[v] && p != -1)
+      	  cout << v+1 << " ";
+      	  children++;
+        }
+      }
+  if(p == -1 && children > 1)
+  cout << v+1 << " ";
 }
 void matrix_smew(int* A, int* B){
   C = new int*[m];	
@@ -40,7 +40,7 @@ void matrix_smew(int* A, int* B){
     }
 }
 int main(){
-  cin >> n >> m;
+  cin >> n >> m;//n-кол-во ребер, m-вершин
   int* A = new int[n];
   int* B = new int[n];
   for(int i = 0; i < n; i++)
