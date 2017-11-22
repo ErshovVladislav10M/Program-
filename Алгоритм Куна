@@ -14,9 +14,15 @@ bool try_kuhn(int v){
     }
   return 0;
 }
-int main() {
+int main(){
+	int g;
 	cin >> n >> m;
 	used = new int[m];
-	mt = new int[m];
+	mt = new int[m, -1];
+	for(int i = 0; i < m; i++)
+	  g = try_kuhn(i);
+	for(int i = 0; i < m; i++)
+	  if(mt[i] != -1)
+	    cout << i << " " << mt[i] << endl;
 	return 0;
 }
