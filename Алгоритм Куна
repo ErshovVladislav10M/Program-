@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+int* used;
+int* mt;
+int n, m;
+bool try_kuhn(int v){
+  if(used[v] != 0)
+    return 0;
+  used[v] = 1;
+  for(int t0 = 0; t0 < m; t0++)
+    if(mt[t0] == -1 || try_kuhn(t0)){
+      mt[t0] = v;
+      return 1;
+    }
+  return 0;
+}
+int main() {
+	cin >> n >> m;
+	used = new int[m];
+	mt = new int[m];
+	return 0;
+}
