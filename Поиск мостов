@@ -43,7 +43,7 @@ void matrix_smew(){
     }
 }
 int main(){
-  cin >> n >> m;//n-кол-во ребер, m-вершин
+  cin >> n >> m;//n-кол-во ребер, m-вершин; нумерация с 0
   A = new int[n];
   B = new int[n];
   for(int i = 0; i < n; i++)
