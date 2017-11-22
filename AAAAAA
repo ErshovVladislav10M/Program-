@@ -1,49 +1,20 @@
 #include <iostream>
-#include <vector>
 using namespace std;
-vector <vector<int>> g;
-vector <int> fup;
-vector <int> tin;
-vector <int> used;
-int timer=0,n;
-void dfs(int v, int p=-1){
-  used[v] = 1;
-  tin[v] = fup[v] = timer++;
-  int children = 0;
-  for(int i = 0; i < n; i++){
-    if(g[v][i] == 1)
-    int t0 = i;
-    if(t0 == p)
-      continue;
-    if(used[t0])
-      fup[v] = min(fup[v], tin[t0]);
-    else{
-      dfs(t0, v);
-      fup[v] = min(fup[v], fup[t0]);
-      if(fup[t0] >= tin[v] && p != -1)
-        cout << v << " ";
-      children++;
-    }
-  }
-  if(p == -1 && children > 1)
-    cout << v << " ";
-}
+int* used;
 int main(){
-  int l = 0, a = 1;
-  cin >> n;
-  fup = vector<int>(n);
-  tin = vector<int>(n);
-  g = vector<vector<int>>(n);
-  for(int i = 0; i < n; i++)
-    g[i] = vector<
-  for(int i = 0; i < n; i++){
-    while(a != 0){
-      cin >> a;
-      g[i][l] = a;
-      l++;
-    }
-    l = 0;
-  }
-  dfs(0);
-  return 0;
+	used = new int[m];
+	for(int i = 0; i < m; i++)
+	  if(used[j] == 0)
+	    Q.pop(j);
+	while(Q.empty){
+	  int t = Q.pop();
+	  for(int i = 0; i < m; i++)
+	    if(used[i] == 0){
+	      used[i] = 3 - used[t];
+	      Q.push(i);
+	    }
+	    else if(used[i] == used[t])
+	      return;
+	}
+	return 0;
 }
