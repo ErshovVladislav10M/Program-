@@ -18,7 +18,7 @@ int main(){
 	cin >> m;
 	used = new int[m];
 	for(int i = 0; i < m; i++)
-    if(used[j] == 0)
-      Q.pop(j);
+	if(used[j] == 0)
+	  Q.pop(j);
 	return 0;
 }
