@@ -10,17 +10,17 @@ int n, m;
 vector <int> ans;
 void dfs(int v){
   used[v] = 1;
-  for(int t0 = 0; t0 < m; t0++){
-    if(!used[t0] && C[v][t0] == 1)
+  for(int t0 = 0; t0 < m; t0++)
+    if(used[t0] == 0 && C[v][t0] == 1){
       dfs(t0);
-    ans.push_back(t0);
-  }
+      ans.push_back(t0);
+    }
 }
 void fop_sort(){
   for(int i = 0; i < m; i++)
-    if(!used[i])
+    if(used[i] == 0)
       dfs(i);
-  reverse(ans.begin(), ans.end());
+  //reverse(ans.begin(), ans.end());
 }
 void matrix_smew(){
   C = new int*[m];	
@@ -39,8 +39,8 @@ int main(){
     B = new int[n];
     for(int i = 0; i < n; i++)
       cin >> A[i] >> B[i];
-    matrix_smew;
-    fop_sort;
+    matrix_smew();
+    fop_sort();
     for(int i = 0; i < m; i++)
       cout << ans[i] << " ";
     return 0;
