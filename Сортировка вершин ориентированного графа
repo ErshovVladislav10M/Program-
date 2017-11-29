@@ -11,16 +11,15 @@ vector <int> ans;
 void dfs(int v){
   used[v] = 1;
   for(int t0 = 0; t0 < m; t0++)
-    if(used[t0] == 0 && C[v][t0] == 1){
+    if(used[t0] == 0 && C[v][t0] == 1)
       dfs(t0);
-      ans.push_back(t0);
-    }
+    ans.push_back(v);
 }
 void fop_sort(){
   for(int i = 0; i < m; i++)
     if(used[i] == 0)
       dfs(i);
-  //reverse(ans.begin(), ans.end());
+  reverse(ans.begin(), ans.end());
 }
 void matrix_smew(){
   C = new int*[m];	
