@@ -1,0 +1,62 @@
+#include <iostream>
+using namespace std;
+char** A;
+int* B;
+int* C;
+int* S;
+int n, m;
+void f(){
+  int k = 0, p, q;
+  S = new int[m*n];
+  for(int i = 1; i <= n; i++)
+    for(int j = 1; j <= m; j++)
+      if(A[i][j] == '.'){
+        B[k] = i;
+        C[k] = j;
+        for(int p = i; p <= n; p++){
+          if(A[p][j] == 'B')
+            S[k]++;
+          if(A[p][j] == 'W')
+            continue;
+        }
+        for(int p = i; p > 0; p--){
+          if(A[p][j] == 'B')
+            S[k]++;
+          if(A[p][j] == 'W')
+            continue;
+        }
+        for(int q = j; q > 0; q--){
+          if(A[i][q] == 'B')
+            S[k]++;
+          if(A[i][q] == 'W')
+            continue;
+        }
+        for(int q = j; q <= m; q++){
+          if(A[i][q] == 'B')
+            S[k]++;
+          if(A[i][q] == 'W')
+            continue;
+        }
+        k++;
+      }
+}
+int main(){
+  int max = 0, p = 1, q = 1;
+  cin >> n >> m;
+  A = new char*[n];
+  B = new int[m*n];
+  C = new int[m*n];
+  for(int i = 1; i <= n; i++)
+    A[i] = new char[m];
+  for(int i = 1; i <= n; i++)
+    for(int j = 1; j <= m; j++)
+      cin >> A[i][j];
+  f();
+  for(int i = 0; i < n*m; i++)
+    if(S[i] > max){
+      p = B[i];
+      q = C[i];
+    }
+  cout << p << " " << q;
+  return 0;
+}
