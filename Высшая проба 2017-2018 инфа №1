@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+int* G;
+int* S;
+void sum(int n){
+  if(n == 0){
+    S[n] = G[0];
+    return;
+  }
+  if(n == 1){
+    S[n] = max(G[0], G[1]);
+    return;
+  }
+  S[n] = max(S[n-2] + G[n], S[n-1]);
+}
+int main(){
+  int L;
+  cin >> L;
+  int** A = new int*[3];
+  for(int i = 0; i < 3; i++)
+    A[i] = new int[L];
+  for(int i = 0; i < 3; i++)
+    for(int j = 0; j < L; j++)
+      cin >> A[i][j];
+  G = new int[L-1];
+  S = new int[L-1];
+  for(int j = 0; j < L-1; j++)
+    G[j] = max(A[0][j]+A[0][j+1],A[2][j]+A[2][j+1])+A[1][j]+A[1][j+1];
+  for(int i = 0; i < L-1; i++)
+    sum(i);
+  cout << S[L-2];
+}
