@@ -6,7 +6,7 @@ int* B;
 int n, m, flag = 0;
 int* col;
 int* used;
-void color(int k, int c){
+void dfs(int k, int c){
   if(used[k] == 1){
     if(c == col[k])
       flag = 1;
@@ -15,8 +15,8 @@ void color(int k, int c){
   used[k] = 1;
   col[k] = (c + 1) % 2;
   for(int i = 0; i < m; i++)
-    if(С[k][i] == 1)
-      color(i, col[k]);
+    if(C[k][i] == 1)
+      dfs(i, col[k]);
 }
 void matrix_smew(){
   C = new int*[m];	
@@ -39,7 +39,7 @@ int main(){
   for(int i = 0; i < n; i++)
     cin >> A[i] >> B[i]; 
   matrix_smew();
-  color(0, 0);
+  dfs(0, 0);
   if(flag == 0)
     for(int i = 0; i < m; i++)
       cout << col[i] << " ";
