@@ -32,7 +32,7 @@ void matrix_smew(){
         C[l][B[i]] = 1;
 }
 int main(){
-  int max = -1, k;
+  int max = -1, k, k1;
   cin >> n >> m;//n-кол-во ребер, m-вершин
   A = new int[n];
   B = new int[n];
@@ -53,10 +53,11 @@ int main(){
   max = -1;
   for(int i = 0; i < m; i++){
     for(int l = 0; l < m; l++)
-      if(max < M[i] && C[k][l]){
+      if(max < M[l] && C[k][l]){
         max = M[l];
-        k = l;
+        k1 = l;
       }
+    k = k1;
     if(max != -1){
       cout << k << " ";
       M[k] = -1;
