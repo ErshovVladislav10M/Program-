@@ -32,7 +32,7 @@ void matrix_smew(){
         C[l][B[i]] = 1;
 }
 int main(){
-  int ma, k;
+  int ma = -1, k;
   cin >> n >> m;//n-кол-во ребер, m-вершин
   A = new int[n];
   B = new int[n];
@@ -44,27 +44,24 @@ int main(){
   for(int i = 0; i < m; i++)
     uvel_cep(i);
   for(int i = 0; i < m; i++)
-    cout << M[i] << " ";
-  cout << endl;
-  /*for(int i = 0; i < m; i++)
     if(ma < M[i]){
       ma = M[i];
       k = i;
     }
-  cout << M[k] << " ";
-  M[k] = 0;
-  ma = 0;
+  cout << k << " ";
+  M[k] = -1;
+  ma = -1;
   for(int i = 0; i < m; i++){
     for(int l = 0; l < m; l++)
       if(ma < M[i] && C[k][l]){
         ma = M[l];
         k = l;
       }
-    if(ma != 0){
-      cout << M[k] << " ";
-      M[k] = 0;
-      ma = 0;
+    if(ma != -1){
+      cout << k << " ";
+      M[k] = -1;
+      ma = -1;
     }
-  }*/
+  }
   return 0;
 }
