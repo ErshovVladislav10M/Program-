@@ -49,20 +49,14 @@ int main(){
       k = i;
     }
   cout << k << " ";
-  M[k] = -1;
-  max = -1;
   for(int i = 0; i < m; i++){
     for(int l = 0; l < m; l++)
-      if(max < M[l] && C[k][l]){
-        max = M[l];
+      if(M[k] - M[l] == 1 && C[k][l])
         k1 = l;
-      }
     k = k1;
-    if(max != -1){
-      cout << k << " ";
-      M[k] = -1;
-      max = -1;
-    }
+    cout << k << " ";
+    if(M[k] == 0)
+      break;
   }
   return 0;
 }
