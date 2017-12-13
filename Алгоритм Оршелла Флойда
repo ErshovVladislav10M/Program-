@@ -16,6 +16,11 @@ void orsh_fl(){
           P[x][y] = k;
         }
 }
+int f(int x, int y){
+  if(P[x][y] != -1)
+    return f(x, P[x][y]) + f(P[x][y], y);
+  return x + y;
+}
 void matrix_smew(){
   D = new int*[m];	
   P = new int*[m];
