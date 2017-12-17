@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 using namespace std;
 int** D;
 int* P;
@@ -29,6 +30,7 @@ void matrix_smew(){
     D[A[i]][B[i]] = M[i];
 }
 int main(){
+  srand(time(0));
   cin >> n >> m >> k;//n-кол-во ребер, m-вершин нумерация с 0
   A = new int[n];
   B = new int[n];
@@ -44,5 +46,6 @@ int main(){
   dijks(k);
   for(int i = 0; i < m; i++)
     cout << P[i] << " ";
+  cout << endl << clock()/1000.0;
   return 0;
 }
