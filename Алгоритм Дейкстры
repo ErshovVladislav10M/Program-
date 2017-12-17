@@ -29,7 +29,7 @@ void matrix_smew(){
     D[A[i]][B[i]] = M[i];
 }
 int main(){
-  cin >> n >> m >> k;//n-кол-во ребер, m-вершин
+  cin >> n >> m >> k;//n-кол-во ребер, m-вершин нумерация с 0
   A = new int[n];
   B = new int[n];
   M = new int[n];
