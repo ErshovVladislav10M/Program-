@@ -6,7 +6,7 @@ void gam_cicl(int** C, int max, int s, int* &D){
       D[i-1] = 1;
       gam_cicl(C, max, C[s][i], D);
     }
-  cout << s << " ";
+  cout << s+1 << " ";
 }
 int main(){ 
   int n, max = 0, j = 1;
