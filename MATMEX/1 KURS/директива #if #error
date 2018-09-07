@@ -1,0 +1,18 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define P 3
+#define Q 4
+#define R 5
+
+#if P+Q <= R || P+R <= Q || Q+R <= P
+#error из отрезков не составить треугольник
+#endif
+
+int main(){
+	
+	system("pause");
+    return 0;
+}
