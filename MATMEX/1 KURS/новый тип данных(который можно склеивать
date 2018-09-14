@@ -1,0 +1,20 @@
+#include <iostream>
+using namespace std;
+
+enum ing_of_pizza{
+	tomato = 1,
+	carrot = 2,
+	ketchup = 4,
+	ham = 8,
+	cheese = 16,
+	pepper = 32
+};
+
+int main() {
+	ing_of_pizza a, b;
+	a = (ing_of_pizza)(tomato | ham);
+	b = carrot;
+	cout << a << endl << b;
+	system("pause");
+	return 0;
+}
