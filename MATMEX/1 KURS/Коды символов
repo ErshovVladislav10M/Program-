@@ -1,0 +1,9 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int a = 'B', b = 'C', c = 'D', d = 'a', e = 'b', f = '{';
+	cout << a << endl << b << endl << c << endl << d << endl << e << endl << f;
+	system("pause");
+	return 0;
+}
