@@ -1,0 +1,11 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	auto a = R"(\\\)"; //авто выбор типа данных
+	decltype(a) b;  //тот же тип что у а
+	typedef unsigned long int uli; //тип данных uli = unsigned long int
+	cout << a << endl;
+	system("pause");
+	return 0;
+}
