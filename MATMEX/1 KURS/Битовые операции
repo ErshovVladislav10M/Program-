@@ -5,6 +5,7 @@ int main() {
 	int n;
 	cin >> n;
 	cout << (1 << (n));//cдвиг на n разрядов влево
+	cout << ((n >> i) & 1);//побитовая операция и
 	system("pause");
 	return 0;
 }
