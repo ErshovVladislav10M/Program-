@@ -1,0 +1,22 @@
+#include <iostream>
+#include <cmath>
+
+#include "Header.h"
+
+using namespace std;
+
+int main(){
+	{static int i = 0; cout << i << endl;} //значение не удаляется при выходе из оператора
+	cout << A;//вывод глобальной переменной = 567
+  cout << endl << B;//вывод локальной переменной = 0
+	system("pause");
+	return 0;
+}
+
+//файл Header.h
+extern int A; // глобальная переменная видимая во всех файлах
+ststic int B; // локальная переменная 
+
+//файл Source1.cpp
+int A = 567; // действие над глобальной переменной
+int B = 567; //действие над локальной переменной
