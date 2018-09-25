@@ -14,6 +14,7 @@ int main() {
 	typedef unsigned long int uli; //тип данных uli = unsigned long int
 	cout << (double)7 / 2 << endl; //изменение типа данных на одну операцию
 	cout << a << endl;
+	cout << char(56) << endl; //вывод символа с кодом 56
 	system("pause");
 	return 0;
 }
