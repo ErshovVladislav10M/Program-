@@ -4,6 +4,7 @@
 using namespace std;
 
 int64_t g; //задаем явно количество битов для пременной t
+const int pi = 3; //объявление const pi
 
 int main() {
 	cout << 567ll << endl; //выделяет память для 567 как для long long
