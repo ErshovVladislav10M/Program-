@@ -12,6 +12,9 @@ int main() {
 	cout << f2(5, *) << endl;
 	f3("+++");
 	f4("one", "two");
+
 	system("pause");
 	return 0;
 }
+
+#undef f1 //удаление макроопределения
