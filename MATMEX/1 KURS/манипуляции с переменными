@@ -6,6 +6,7 @@ using namespace std;
 int64_t g; //задаем явно количество битов для пременной t
 
 int main() {
+	cout << 567ll << endl; //выделяет память для 567 как для long long
 	cout << sizeof(char) << endl; //количество байт под тип данных char
 	auto a = R"(\\\)"; //авто выбор типа данных
 	decltype(a) b;  //тот же тип что у а
