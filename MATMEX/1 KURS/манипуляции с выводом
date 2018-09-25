@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 	int a = 017253, b = 0x1AC9F, c = 0b11010010011;
-	cout << a << endl << b << endl << c << endl; //вывод чисел a,b,c в дестичной системе
+	cout << a << " " << b << " " << c << endl; //вывод чисел a,b,c в дестичной системе
 	cout << setw(15) // отступ вправо на 15
 		 << setprecision(2) // округление до первых 2 значащих цифр: 660
 						    // действует до следующего setprecision
