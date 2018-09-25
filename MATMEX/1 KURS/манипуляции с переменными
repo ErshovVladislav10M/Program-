@@ -1,11 +1,16 @@
 #include <iostream>
+#include <cstdint>
+
 using namespace std;
 
+int64_t g; //задаем явно количество битов для пременной t
+
 int main() {
+	cout << sizeof(char) << endl; //количество байт под тип данных char
 	auto a = R"(\\\)"; //авто выбор типа данных
 	decltype(a) b;  //тот же тип что у а
 	typedef unsigned long int uli; //тип данных uli = unsigned long int
-	cout << (double)7/2 << endl; //изменение типа данных на одну операцию
+	cout << (double)7 / 2 << endl; //изменение типа данных на одну операцию
 	cout << a << endl;
 	system("pause");
 	return 0;
