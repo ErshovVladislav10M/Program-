@@ -1,0 +1,21 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+	int z = -1;
+	double a, b;
+	for (double i = 0; i <= 20; i += 1)
+		if ((sin(sqrt(i)) - 0.5)*z < 0) {
+			z *= -1;
+			a = i - 1;
+			b = i;
+			while ((b - a) / 2 > 1e-10)
+				if ((sin(sqrt((b + a) / 2)) - 0.5)*(sin(sqrt(a)) - 0.5) > 0)
+					a = (b + a) / 2;
+				else b = (b + a) / 2;
+			cout << (b + a) / 2 << " " << i << endl;
+		}
+	system("pause");
+	return 0;
+}
