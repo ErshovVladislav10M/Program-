@@ -1,0 +1,34 @@
+#include <iostream>
+using namespace std;
+
+double f(double x);
+void graph();
+
+int main() {
+	double x;
+	cin >> x;
+	cout << f(x) << endl;
+	graph();
+	system("pause");
+	return 0;
+}
+
+f.cpp
+#include <cmath>
+double f(double x) {
+	return 30 * cos(x / 4);
+}
+
+graph.cpp
+#include <iostream>
+using namespace std;
+
+double f(double x);
+
+void graph() {
+	for (double i = -10; i < 100; i += 0.5) {
+		for (int l = 0; l < 60 - (int)(2 * f(i) + 0.5); l++)
+			cout << " ";
+		cout << "*" << endl;
+	}
+}
