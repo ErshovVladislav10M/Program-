@@ -33,9 +33,9 @@ double f(double x);
 
 void graph() {
 	for (double i = -100; i < 100; i += 0.5) {
-		for (int l = 0; l < 40 + (int)(5*f(i) + 0.5); l++)
+		for (int l = 0; l < 40 + (int)(f(i) + 0.5); l++)
 			cout << " ";
-		if (abs((int)(5 * f(i) + 0.5)) > 40)
+		if (abs((int)(f(i) + 0.5)) > 40)
 			cout << " " << endl;
 		else cout << "*" << endl;
 	}
