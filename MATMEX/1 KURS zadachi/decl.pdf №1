@@ -16,7 +16,7 @@ int main() {
 f.cpp
 #include <cmath>
 double f(double x) {
-	return 30 * cos(x / 4);
+	return 10*tan(x / 10);
 }
 
 graph.cpp
@@ -26,9 +26,17 @@ using namespace std;
 double f(double x);
 
 void graph() {
-	for (double i = -10; i < 100; i += 0.5) {
-		for (int l = 0; l < 60 - (int)(2 * f(i) + 0.5); l++)
+#include <iostream>
+using namespace std;
+
+double f(double x);
+
+void graph() {
+	for (double i = -100; i < 100; i += 0.5) {
+		for (int l = 0; l < 40 + (int)(5*f(i) + 0.5); l++)
 			cout << " ";
-		cout << "*" << endl;
+		if (abs((int)(5 * f(i) + 0.5)) > 40)
+			cout << " " << endl;
+		else cout << "*" << endl;
 	}
 }
