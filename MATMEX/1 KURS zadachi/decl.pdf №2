@@ -1,0 +1,40 @@
+#include <iostream>
+using namespace std;
+
+#include "f.h"
+
+int main() {
+	double a, b;
+	cin  >> a >> b;
+	root(a, b);
+	system("pause");
+	return 0;
+}
+
+f.h
+double f(double x);
+void root(double a, double b);
+
+root.cpp
+#include <iostream>
+using namespace std;
+
+#include "f.h"
+
+void root(double a, double b) {
+	if (f(a) * f(b) > 0) {
+		cout << "NO ROOT";
+		return;
+	}
+	while ((b - a) / 2 > 1e-10)
+		if (f((a + b) / 2)*f(a) > 0)
+			a = (b + a) / 2;
+		else b = (b + a) / 2;
+	cout << (b + a) / 2;
+}
+
+f.cpp
+#include <cmath>
+double f(double x) {
+	return exp(x) - 5*sin(x);
+}
