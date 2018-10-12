@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+int f(int m) {
+	static int t1 = 0;
+	static int t2 = 0;
+	static int t3 = 0;
+	static int x = 0;
+	switch (x) {
+	case 0: {
+		t1 = m;
+		break;
+	}
+	case 1: {
+		t2 = m;
+		break;
+	}
+	case 2: {
+		t3 = m;
+		break;
+	}
+	}
+	x++;
+	x %= 3;
+	return t1 + t2 + t3;
+
+}
+int main() {
+	int m;
+	for (int i = 0; i < 7; i++) {
+		cin >> m;
+		cout << f(m) << endl;
+	}
+	system("pause");
+	return 0;
+}
