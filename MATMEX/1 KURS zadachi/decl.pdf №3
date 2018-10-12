@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+#include "Header.h"
+
+int main() {
+	double a, b;
+	cin  >> a >> b;
+	cout << s(a, b);
+	system("pause");
+	return 0;
+}
+
+Header.h
+double f(double x);
+double s(double a, double b);
+
+s.cpp
+#include "Header.h"
+
+double s(double a, double b) {
+	int n = 100;
+	double ans = 0;
+	for (double i = a; i < b; i += (b-a)/n)
+		ans += f(i);
+	return ans*(b - a) / n;
+}
+
+f.cpp
+#include <cmath>
+double f(double x) {
+	return x*x;
+}
