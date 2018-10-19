@@ -6,6 +6,12 @@ T min(T x, T y) {
 	return x < y ? x : y;
 }
 
+template<class T, int size> //компилятор определяет тип массива сам
+void print(T (&x)[size]) {
+	for (int i = 0; i < size; i++)
+		cout << " " << x[i];
+}
+
 inline void f(int n) { //работает как #define только для всего тела функции
 	cout << n * 5;
 }
@@ -13,6 +19,8 @@ int main() {
 	int n;
 	cin >> n;
 	f(n);
+	int A[5];
+	print(A); //вызов
 	cout << " " << min(2 * n, n + 4);
 	cout << " " << min<double>(1, 2.0); //мы можем сами выбирать тип функции
 	system("pause");
