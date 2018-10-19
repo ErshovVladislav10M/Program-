@@ -1,0 +1,20 @@
+#include <iostream>
+#include <cstdarg>
+using namespace std;
+
+double f(double x, ...) {
+	va_list A;
+	double sum = 0, y;
+	va_start(A, x);
+	while(x != 0)
+		sum += (x = va_arg(A, double));
+	va_end(A);
+	return sum;
+}
+
+int main() {
+	cout << f(3.0, 1.0, 2.3, 5.0, 0.0) << endl;
+	cout << f(3.0, 1.0, 2.3, 5.0, 6.34, 7.31, 0.0);
+	system("pause");
+	return 0;
+}
