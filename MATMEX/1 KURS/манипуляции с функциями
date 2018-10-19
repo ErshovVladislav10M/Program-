@@ -1,0 +1,20 @@
+#include <iostream>
+using namespace std;
+
+template<class T> //компилятор сам определяет тип данных
+T min(T x, T y) {
+	return x < y ? x : y;
+}
+
+inline void f(int n) { //работает как #define только для всего тела функции
+	cout << n * 5;
+}
+int main() {
+	int n;
+	cin >> n;
+	f(n);
+	cout << " " << min(2 * n, n + 4);
+	cout << " " << min<double>(1, 2.0); //мы можем сами выбирать тип функции
+	system("pause");
+	return 0;
+}
