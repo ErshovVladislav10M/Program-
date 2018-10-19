@@ -1,0 +1,19 @@
+#include <iostream>
+#include <cstdarg>
+using namespace std;
+
+double f(int n, ...) {
+	va_list A;
+	double sum = 0;
+	va_start(A, n);
+	for (int i = 0; i < n; i++)
+		sum += va_arg(A, double);
+	va_end(A);
+	return sum;
+}
+
+int main() {
+	cout << f(3, 1.0, 2.3, 5.0); //вызов функции
+	system("pause");
+	return 0;
+}
