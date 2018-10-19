@@ -1,0 +1,17 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+int sum(){ //конец рекурсии
+	return 0;
+}
+template<class P, class... T> //рекурсивная функция суммы 
+auto sum(P x, T... y){
+	return x + sum(y...);
+}
+
+int main() {
+	cout << sum(1, 2.5, 3, 4.05);
+	system("pause");
+	return 0;
+}
