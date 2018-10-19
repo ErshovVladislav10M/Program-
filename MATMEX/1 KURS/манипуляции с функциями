@@ -15,11 +15,18 @@ void print(T (&x)[size]) {
 inline void f(int n) { //работает как #define только для всего тела функции
 	cout << n * 5;
 }
+
+const int N = 5;
+
+constexpr int fib(int n){ //вычисление const до компиляции программы
+	return n <= 2 ? 1 : fib(n - 1) + fib(n - 2);
+}
+
 int main() {
 	int n;
 	cin >> n;
 	f(n);
-	int A[5];
+	int A[fib(n)]; //объявление не динамического массива 
 	print(A); //вызов
 	cout << " " << min(2 * n, n + 4);
 	cout << " " << min<double>(1, 2.0); //мы можем сами выбирать тип функции
