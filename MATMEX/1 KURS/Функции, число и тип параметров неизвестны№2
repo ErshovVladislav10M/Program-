@@ -10,8 +10,17 @@ auto sum(P x, T... y){
 	return x + sum(y...);
 }
 
+int count(int x){ //конец рекурсии
+	return x;
+}
+template<class P, class... T> //количество элементов в функции
+auto count(int size, P x, T... y){
+	return count(size+1, y...);
+}
+
 int main() {
-	cout << sum(1, 2.5, 3, 4.05);
+	cout << sum(1, 2.5, 3, 4.05) << endl; //вывод 10.55
+	cout << count(0, 2.5, 3, 4.05); //вывод 3
 	system("pause");
 	return 0;
 }
