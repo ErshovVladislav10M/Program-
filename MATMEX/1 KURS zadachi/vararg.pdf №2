@@ -1,0 +1,17 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+int count(int x){
+	return x;
+}
+template<class P, class... T>
+auto count(int size, P x, T... y){
+	return count(size+1, y...);
+}
+
+int main() {
+	cout << count(0, 2.5, 3, 4.05);
+	system("pause");
+	return 0;
+}
