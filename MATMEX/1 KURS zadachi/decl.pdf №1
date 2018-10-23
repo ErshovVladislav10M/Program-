@@ -23,9 +23,6 @@ graph.cpp
 #include <iostream>
 using namespace std;
 
-double f(double x);
-
-void graph() {
 #include <iostream>
 using namespace std;
 
