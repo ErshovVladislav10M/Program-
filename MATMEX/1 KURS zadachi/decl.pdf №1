@@ -1,8 +1,7 @@
 #include <iostream>
 using namespace std;
 
-double f(double x);
-void graph();
+#include "Header.h"
 
 int main() {
 	double x;
@@ -12,6 +11,10 @@ int main() {
 	system("pause");
 	return 0;
 }
+
+Header.h
+double f(double x);
+void graph();
 
 f.cpp
 #include <cmath>
