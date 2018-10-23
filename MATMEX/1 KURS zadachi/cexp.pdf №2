@@ -1,0 +1,39 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+const int x = 24, y = 19;
+
+template<int n, int m>
+struct F{
+	enum {
+		value = F<n - 1, m>::value + F<n - 1, m - 1>::value 
+	};
+};
+
+template<>
+struct F<1, 1> {
+	enum {
+		value = 1
+	};
+};
+
+template<int n>
+struct F<n, 0>{
+	enum {
+		value = 1
+	};
+};
+
+template<int n>
+struct F<n, n> {
+	enum {
+		value = 1
+	};
+};
+
+int main() {
+	cout << F<x, y>::value;
+	system("pause");
+	return 0;
+}
