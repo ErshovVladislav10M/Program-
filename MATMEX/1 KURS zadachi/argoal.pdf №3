@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+
+
+int main() {
+	int A[50], a;
+	for (int i = 0; i < 50; i++)
+		A[i] = 0;
+	for (int i = 0; i < 20; i++) {
+		cin >> a;
+		A[a]++;
+	}
+	for (int i = 0; i < 20; i++) {
+		for (int l = 0; l < 50; l++)
+			if(20 - i <= A[l])
+			  cout << '*';
+			else cout << ' ';
+		cout << endl;
+	}
+	system("pause");
+	return 0;
+}
