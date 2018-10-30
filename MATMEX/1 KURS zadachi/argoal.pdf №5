@@ -1,0 +1,40 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double k(double ax, double ay, double bx, double by) {
+	return ((ay - by) / (ax - by));
+}
+
+double b(double ax, double ay, double bx, double by) {
+	return ax - ((ay - by) / (ax - by)) * ay;
+}
+
+int main() {
+	double X[10], Y[10];
+	int min = 10, p = 0, q = 0, x = -1, y = -1;
+	for (int i = 0; i < 10; i++)
+		cin >> X[i] >> Y[i];
+	for (int i = 0; i < 10; i++)
+		for (int l = 0; l < 10; l++)
+			if (i != l)
+				for (int j = 0; j < 10; j++) 
+					if (j != l) {
+						if (k(X[i], Y[i], X[l], Y[l]) * X[j] + b(X[i], Y[i], X[l], Y[l]) - Y[j] > 0)
+							p++;
+						if (k(X[i], Y[i], X[l], Y[l]) * X[j] + b(X[i], Y[i], X[l], Y[l]) - Y[j] < 0)
+							q++;
+						if (min > abs(p - q)) {
+							min = abs(p - q);
+							x = i;
+							y = l;
+						}
+						p = 0;
+						q = 0;
+					}
+	if(x == -1)
+		cout << "ERROR" << endl;
+	else cout << X[x] << " " << Y[x] << endl << X[y] << " " << Y[y] << endl;
+	system("pause");
+	return 0;
+}
