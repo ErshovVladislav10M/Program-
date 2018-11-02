@@ -1,0 +1,35 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double ugol(double A1, double A2) {
+	return sin(acos(fabs(A1*A2 + 1) / (sqrt(A1*A1 + 1) * sqrt(A2*A2 + 1))));
+}
+
+double r(double ax, double ay) {
+	return sqrt(ax * ax + ay * ay);
+}
+
+double k(double ax, double ay) {
+	return ay / ax;
+}
+
+double b(double ax, double ay) {
+	return ax - (ay / ax) * ay;
+}
+int main() {
+	double X[12], Y[12];
+	double sum = 0;
+	for (int i = 0; i < 12; i++)
+		cin >> X[i] >> Y[i];
+	for (int i = 0; i < 12; i++){
+		if(k(X[(i + 1) % 12], Y[(i + 1) % 12]) > k(X[i], Y[i]))
+			sum -= 0.5 * r(X[i], Y[i]) * r(X[(i + 1) % 12], Y[(i + 1) % 12]) * ugol(k(X[i], Y[i]), k(X[(i + 1) % 12], Y[(i + 1) % 12]));
+		if (k(X[(i + 1) % 12], Y[(i + 1) % 12]) < k(X[i], Y[i]))
+		    sum += 0.5 * r(X[i], Y[i]) * r(X[(i + 1) % 12], Y[(i + 1) % 12]) * ugol(k(X[i], Y[i]), k(X[(i + 1) % 12], Y[(i + 1) % 12]));
+		cout << k(X[(i + 1) % 12], Y[(i + 1) % 12]) << " " << k(X[i], Y[i]) << " " << sum << endl;
+	}
+	cout << sum << endl;
+	system("pause");
+	return 0;
+}
