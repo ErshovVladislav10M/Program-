@@ -1,0 +1,22 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+double S = 0, A = 0;
+
+void f(double x){
+	S += A * x;
+}
+template<class P, class... T>
+void f(P x, T... y){
+	S += A * x;
+	A = x;
+	f(y...);
+}
+
+int main() {
+	f(2.5, 3, 4.05, 1.2);
+	cout << S;
+	system("pause");
+	return 0;
+}
