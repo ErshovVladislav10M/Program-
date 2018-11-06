@@ -1,0 +1,15 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int *t, q = 11; //объявление *t
+	t = &q; //прикрепление к t элемента q
+	cout << *t << endl;
+	int r = *t; //использование t, вместо q
+	cout << &q  << " " << t << endl; //адрес ячейки памяти под q
+	void *t1 = t; //неопределенный тип указателя
+	r += 16;
+	*(int *)t1 = r; //применение неопределенного указателя
+	system("pause");
+	return 0;
+}
