@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+	int p = 0, q = 0;
+	int r = 1, y = 1, t = 0;
+	int z = 1, x = 1;
+	for (int i = 0; i < 100; i++) {
+		cout << "(" << p << "," << q << ")" << " ";
+		if (r % y == 0) {
+			if (t == 0) {
+				t = 1;
+				p += z;
+				z *= -1;
+			}
+			else {
+				t = 0;
+				y++;
+				q += x;
+				x *= -1;
+			}
+			r = 1;
+			continue;
+		}
+		if (r % y != 0) {
+			if (t == 0)
+				p += z;
+			else q += x;
+			r++;
+			continue;
+		}
+	}
+	system("pause");
+	return 0;
+}
