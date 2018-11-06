@@ -1,0 +1,30 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+	int A[15], P[14] = { 0 }, T[14] = { 1 };
+	int max = 1, t = 0, q = 0;
+	for (int i = 0; i < 15; i++)
+		cin >> A[i];
+	T[0] = 0;
+	for (int i = 0; i < 14; i++) {
+		for (int l = 0; l < 14; l++)
+			if (A[i + 1] - A[i] == A[P[l] + 1] - A[P[l]]) {
+				T[l]++;
+				q = 1;
+				break;
+			}
+		if (q == 0) {
+			P[t] = i;
+			t++;
+		}
+		else q = 0;
+	}
+	for (int i = 0; i < 14; i++)
+		if (max < T[i] + 1)
+			max = T[i] + 1;
+	cout << max << endl;
+	system("pause");
+	return 0;
+}
