@@ -1,0 +1,16 @@
+#include <iostream>
+using namespace std;
+
+int *f(int *a, int *b) {
+	return a+(b-a)*3/8;
+}
+
+int main() {
+	int A[7];
+	for (int i = 0; i < 7; i++)
+		A[i] = i + 1;
+	int *a = &A[6], *b = &A[1];
+	cout << f(a, b) << endl;
+	system("pause");
+	return 0;
+}
