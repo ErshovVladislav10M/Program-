@@ -1,0 +1,18 @@
+#include <iostream>
+using namespace std;
+
+void f(double *x, double *y, double *z) {
+	double tmp = *x;
+	*x = *z;
+	*z = *y;
+	*y = tmp;
+}
+
+int main() {
+	double a = 12, b = 13, c = 18;
+	double *d = &a, *e = &b, *g = &c;
+	f(d, e, g);
+	cout << b << endl;
+	system("pause");
+	return 0;
+}
