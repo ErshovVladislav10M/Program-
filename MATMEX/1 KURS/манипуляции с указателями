@@ -20,6 +20,9 @@ int main() {
 	cout << *(t + 3) << endl; //вывод A[1 + 3]
 	cout << t2 - t << endl; //вывод разности индексов(только одного массива только разность)
 	cout << *(double *)&r << endl; //чтение ячейки памяти в виде типа double
+	int b = 0x1AC9F;
+	char* r = (char*)&b;
+	cout << hex << (int)(unsigned char)r[0] << endl; //вывод первого байта из 4
 	system("pause");
 	return 0;
 }
