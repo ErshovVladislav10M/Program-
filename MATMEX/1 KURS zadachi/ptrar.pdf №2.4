@@ -1,0 +1,15 @@
+#include <iostream>
+using namespace std;
+
+void* f(void *a) {
+	return (void *)((int)a * (int)a + 3 * (int)a + 1);
+}
+
+int main() {
+	int b = 12;
+	void *a = &b;
+	cout << a << endl;
+	cout << hex << (int)f(a) << endl;
+	system("pause");
+	return 0;
+}
