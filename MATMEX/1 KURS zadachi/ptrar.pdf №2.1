@@ -1,0 +1,12 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int a = 4, b = 0x1AC9F;
+	char* r = (char*)&b;
+	cout << hex << (int)(unsigned char)r[0] << " " << (int)(unsigned char)r[1] << " " << (int)(unsigned char)r[2] << " " << (int)(unsigned char)r[3] << endl;
+	system("pause"); //вывод 9F, AC, 1, 0
+	return 0;
+}
+
+//Little Endian 
