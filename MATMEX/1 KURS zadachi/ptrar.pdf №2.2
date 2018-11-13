@@ -1,0 +1,13 @@
+#include <iostream>
+using namespace std;
+
+#define f(x) cout << hex << (int)(unsigned char)x[0] << endl;
+
+int main() {
+	int b = 0x1AC9F;
+	char* r = (char*)&b;
+	cout << hex << (int)(unsigned char)r[0] << endl;
+	f(r)
+	system("pause");
+	return 0;
+}
