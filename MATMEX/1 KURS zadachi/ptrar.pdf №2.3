@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+void f(int *t, int m, int n) {
+	t[0] = m;
+	t[1] = n;
+}
+
+int main() {
+	int a = 12, b = 17;
+	double q = 15.13;
+	int *r = (int *)&q;
+	cout << (int)r[0] << " " << (int)r[1] << endl;
+	f(r, a, b);
+	cout << (int)r[0] << " " << (int)r[1] << endl;
+	cout << *(double *)r << endl;
+	system("pause");
+	return 0;
+}
