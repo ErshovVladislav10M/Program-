@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+bool F(int a) { //предикат, проверяющий условие
+	if (a % 2 == 0)
+		return 1;
+	return 0;
+}
+
+void print(vector<int> A) { //вывод элементов вектора
+	for (int i : A)
+		cout << i << " ";
+	cout << endl;
+}
+
+int main() {
+	int a = 12, b = 7;
+	vector<int> A; //объявление пустого вектора
+	A.resize(10); //изменение размера
+	for (int i = 0; i < 10; i++)
+		A[i] = i * 5;
+	A.push_back(a); //добавление в конец элемента
+	cout << A.size() << endl; //количество элементов
+	cout << *(A.end() - 1) << endl;
+	//при передаче по значению в функцию вектор копируется
+	vector<vector<int>> B; //двумерный вектор
+	vector<int>::iterator c, d, e, f; //объявление итрераторов
+	e = A.end() - 6; //итератор на 11 - 6 элемент
+	A.erase(e); //удаление значения A[4](e) и сдвиг последующих на один влево
+	f = A.begin() + 3; //итератор на 1 + 3 элемент
+	A.insert(f, b); //вставляет в A[3](f) значение b и сдвигает направо на один последующие
+	A.erase(remove(A.begin(), A.end(), b), A.end()); //удаление всех значений равных b
+	//сдвиг на отсальных элементов влево без пробелов
+	//для remove требуется <algorithm>
+	print(A);
+	A.erase(remove_if(A.begin(), A.end(), F), A.end()); //удаление всех эелементов отвечающих условию F - true
+	print(A);
+	c = A.begin(); //начальное значение итератора, на первый элемент вектора
+	d = A.end(); //итератор на следующий за последним элементом вектора
+	f = A.begin() + 3;
+	e = A.begin() + 5;
+	copy(f, e, c); //копирует диапозон A[3](f), A[4](e - 1) в A[0](c)
+	//для copy требуется <algorithm>
+	print(A);
+	istream_iterator<int> x(cin), y;
+	copy(x, y, A.begin());
+	A.clear(); //удаление всех элементов
+	system("pause");
+	return 0;
+}
