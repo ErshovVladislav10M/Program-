@@ -45,8 +45,9 @@ int main() {
 	copy(f, e, c); //копирует диапозон A[2](f), A[3](e - 1) в A[0](c)
 	//для copy требуется <algorithm>
 	print(A);
-	istream_iterator<int> x(cin), y;
+	istream_iterator<int> x(cin), y; //ввод элементов до enter
 	copy(x, y, A.begin());
+	//требуется <iterator>
 	A.clear(); //удаление всех элементов
 	system("pause");
 	return 0;
