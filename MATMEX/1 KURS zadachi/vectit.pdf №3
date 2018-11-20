@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+template<class T>
+vector<T> concat(vector<T> V, int n) {
+	vector<T> B;
+	B.assign(V.begin(), V.end());
+	for (int i = 0; i < n; i++) 
+		copy(V.begin(), V.end(), back_inserter(B));
+	return B;
+}
+
+int main() {
+	vector<int> A = { 1 , 7, 13, 17, 21, 29}, B = { 1 , 7, 13, 17, 21, 29 }, C;
+	C = concat(A, 5);
+	ostream_iterator<int> i(cout, " ");
+	copy(C.begin(), C.end(), i);
+	cout << endl;
+	A.clear();
+	system("pause");
+	return 0;
+}
