@@ -1,0 +1,21 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+template<class T>
+void input(vector<T> &V) {
+	istream_iterator<T> x(cin), y;
+	V.assign(x, y);
+}
+
+int main() {
+	vector<int> A;
+	input(A);
+	ostream_iterator<int> i(cout, " ");
+	copy(A.begin(), A.end(), i);
+	A.clear();
+	system("pause");
+	return 0;
+}
