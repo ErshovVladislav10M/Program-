@@ -1,0 +1,24 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+template<class T>
+vector<T> part(vector<T> V) {
+	vector<T> B;
+	vector<int>::iterator c = V.begin() + (V.size() / 3) * 2, b = V.begin() + V.size() / 3;
+	B.assign(b, c);
+	return B;
+}
+
+int main() {
+	vector<int> A = { 1 , 7, 13, 17, 21, 29}, B;
+	B = part(A);
+	ostream_iterator<int> i(cout, " ");
+	copy(B.begin(), B.end(), i);
+	cout << endl;
+	A.clear();
+	system("pause");
+	return 0;
+}
