@@ -10,9 +10,10 @@ bool F(int a) { //предикат, проверяющий условие
 	return 0;
 }
 
-void print(vector<int> A) { //вывод элементов вектора
-	for (int i : A)
-		cout << i << " ";
+template<class T>
+void print(vector<T> V) { //вывод элементов вектора любого типа
+	for (T x : V)
+		cout << x << " ";
 	cout << endl;
 }
 
@@ -38,16 +39,20 @@ int main() {
 	print(A);
 	A.erase(remove_if(A.begin(), A.end(), F), A.end()); //удаление всех эелементов отвечающих условию F - true
 	print(A);
-	c = A.begin(); //начальное значение итератора, на первый элемент вектора
-	d = A.end(); //итератор на следующий за последним элементом вектора
-	f = A.begin() + 2;
-	e = A.begin() + 4;
-	copy(f, e, c); //копирует диапозон A[2](f), A[3](e - 1) в A[0](c)
+	c = A.begin(); //начальное значение итератора, на первый элемент
+	d = A.end(); //итератор на следующий за последним элементом
+	copy(A.begin() + 2, A.begin() + 4, c); //копирует диапозон A[2](f), A[3](e - 1) в A[0](c)
 	//для copy требуется <algorithm>
 	print(A);
-	istream_iterator<int> x(cin), y; //ввод элементов до enter
+	istream_iterator<int> x(cin), y; //ввод элементов с первого до ctrl + z(весь ввод блокируется до cin.clear();)
 	copy(x, y, A.begin());
 	//требуется <iterator>
+	ostream_iterator<int> i(cout, " ");
+	copy(A.begin(), A.end(), i); //вывод всех элементов через " "
+	//требуется <iterator>
+	copy(A.begin(), A.begin() + 1, back_inserter(A)); //копирование в конец массива элемента с 0 по 1 - 1
+	f = find(A.begin(), A.end(), 12); //ищет в диапозоне всего массива первое вхождение элемента равного 12
+	A.assign(A.begin(), A.end()); //перезапись вектора его же элементами в диапозоне
 	A.clear(); //удаление всех элементов
 	system("pause");
 	return 0;
