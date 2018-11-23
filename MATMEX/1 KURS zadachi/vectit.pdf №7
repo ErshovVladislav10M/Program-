@@ -1,0 +1,85 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+template<class T>
+void vvod(vector<T> &V) {
+	V.clear();
+	istream_iterator<int> x(cin), y;
+	copy(x, y, back_inserter(V));
+}
+
+template<class T>
+void vuvod(vector<T> V) {
+	for (T x : V)
+		cout << x << " ";
+	cout << endl;
+}
+
+template<class T>
+void dobav(vector<T> &V, int a) {
+	V.push_back(a);
+}
+
+template<class T>
+void udal(vector<T> &V, int a) {
+	V.erase(remove(V.begin(), V.end(), a), V.end());
+}
+
+template<class T>
+int prov(vector<T> V, int a) {
+	for (int i = 0; i < V.size(); i++)
+		if (V[i] == a)
+			return 1;
+	return 0;
+}
+
+template<class T>
+void objed(vector<T> &V, vector<T> W) {
+	int q = 0;
+	for(int t = 0; t < W.size(); t++){
+		for (int i = 0; i < V.size(); i++)
+			if (V[i] == W[t])
+				q = 1;
+		if (q == 0) 
+			V.push_back(W[t]);
+		else q = 0;
+	}
+}
+
+template<class T>
+void perec(vector<T> &V, vector<T> W) {
+	int q = 0;
+	for (int i = 0; i < V.size(); i++) {
+		for (int t = 0; t < W.size(); t++)
+			if (V[i] == W[t])
+				q = 1;
+		if (q == 0) {
+			V.erase(remove(V.begin(), V.end(), V[i]), V.end());
+			i = 0;
+		}
+		else q = 0;
+	}
+}
+
+template<class T>
+void razn(vector<T> &V, vector<T> W) {
+	for (int i = 0; i < W.size(); i++)
+		V.erase(remove(V.begin(), V.end(), W[i]), V.end());
+}
+
+int main() {
+	vector<int> A = { 1, 2, 3, 4, 1, 7, 1, 2, 17, 1, 21, 29, 1, 2 }, B = { 1, 2 };
+	vuvod(A);
+	vuvod(B);
+	objed(A, B);
+	vuvod(A);
+	razn(A, B);
+	vuvod(A);
+	perec(A, B);
+	vuvod(A);
+	system("pause");
+	return 0;
+}
