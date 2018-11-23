@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+template<class T>
+int f(vector<T> V, vector<T> W) {
+	if (V.size() < W.size())
+		return f(W, V);
+	int q = 0, ans = 0;
+	for (int i = 0; i < V.size(); i++)
+		if (V[i] == W[0]) {
+			for (int l = 0; l < W.size(); l++)
+				if (V[i + l] != W[l]) {
+					q = 1;
+					break;
+				}
+			if (q == 0)
+				ans++;
+			else q = 0;
+		}
+	return ans;
+}
+
+int main() {
+	vector<int> A = { 1, 2, 3, 4, 1, 7, 1, 2, 17, 1, 21, 29, 1, 2 }, B = { 1, 2 };
+	cout << f(A, B) << endl;
+	/*ostream_iterator<int> i(cout, " ");
+	copy(A.begin(), A.end(), i);*/
+	system("pause");
+	return 0;
+}
