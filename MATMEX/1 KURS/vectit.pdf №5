@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+template<class T>
+void f(vector<T> &V) {
+	int p, t = 0, k = V.size();
+	for(int i = 0; i < k; i++)
+		if(V[i] == 1 && i != k - 1){
+			for (int l = i + 1; i < k; l++) {
+				if (V[l] == 1) {
+					i++;
+					continue;
+				}
+				if (V[l] == 2) {
+					p = l;
+					t = 1;
+					break;
+				}
+			}
+			if (t == 1) {
+				V.erase(V.begin() + i + 1, V.begin() + p);
+				k -= p - i - 1;
+				t = 0;
+			}
+		}
+}
+
+int main() {
+	vector<int> A = {2, 3, 4, 1, 7, 2, 17, 1, 21, 29, 2};
+	f(A);
+	ostream_iterator<int> i(cout, " ");
+	copy(A.begin(), A.end(), i);
+	system("pause");
+	return 0;
+}
