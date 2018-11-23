@@ -58,7 +58,7 @@ void perec(vector<T> &V, vector<T> W) {
 				q = 1;
 		if (q == 0) {
 			V.erase(remove(V.begin(), V.end(), V[i]), V.end());
-			i = 0;
+			i = -1;
 		}
 		else q = 0;
 	}
