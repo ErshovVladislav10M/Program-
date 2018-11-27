@@ -1,0 +1,53 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+template<class T>
+void vvod(vector<T> &V) {
+	V.clear();
+	istream_iterator<int> x(cin), y;
+	copy(x, y, back_inserter(V));
+}
+
+template<class T>
+void vuvod(vector<T> V) {
+	for (T x : V)
+		cout << x << " ";
+	cout << endl;
+}
+
+template<class T>
+void zadat_const(vector<T> &V, int a) {
+	if (V.size() > 0)
+		V[0] = a;
+	else V.push_back(a);
+}
+
+template<class T>
+void zadat_x(vector<T> &V, int a) {
+	if (V.size() > 1)
+		V[1] = a;
+	else V.push_back(a);
+}
+
+template<class T>
+int vichis(vector<T> V, int x) {
+	int ans = 0;
+	for (int i = 0; i < V.size(); i++)
+		ans += V[i] * pow(x, i);
+	return ans;
+}
+
+void()
+
+int main() {
+	vector<int> A = { 1, 2, 3, 2 }, B = { 2, 1 };
+	vuvod(A);
+	vuvod(B);
+	cout <<	vichis(A, 1) << endl;
+	system("pause");
+	return 0;
+}
