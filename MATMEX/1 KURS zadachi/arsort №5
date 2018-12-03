@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template <class T>
+void f(vector<T> &V, int a, int b){
+	if(a >= b)
+	  return;
+	int i = a, l = b;
+	while(i <= l){
+		if(V[(a + b) / 2] > V[i]){
+		  i++;
+		  continue;
+		}
+		if(V[(a + b) / 2] < V[l]){
+		  l--;
+		  continue;
+		}
+		if(V[(a + b) / 2] <= V[i] && V[(a + b) / 2] >= V[l]){
+			swap(V[i], V[l]);
+			i++;
+			l--;
+		}
+	}
+	f(V, a, l);
+	f(V, i, b);
+}
+
+template <class T>
+void print(vector<T> V){
+	for(T x: V)
+	  cout << x << " ";
+	cout << endl;
+}
+
+int main() {
+	vector<int> A = {1, 82, 27, 31, 51, 2, 90, 15};
+	f(A, 0, A.size() - 1);
+	print(A);
+	return 0;
+}
