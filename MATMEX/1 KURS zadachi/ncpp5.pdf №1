@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct avto{
+	int price;
+	int power;
+	bool t = 0;
+	int color;
+};
+
+void zapol(avto a) {
+	cin >> a.price >> a.power >> a.color;
+	a.t = 1;
+}
+
+void pechat(avto a) {
+	cout << a.price << " " << a.power << " " << a.color << endl;
+}
+
+void prodaj(avto a) {
+	a.t = 0;
+}
+int main() {
+	vector<avto> A;
+	A.resize(3);
+	for (int i = 0; i < 3; i++)
+		if(A[i].t == 0)
+			zapol(A[i]);
+	for (int i = 0; i < 3; i++)
+		if (A[i].t == 1)
+			pechat(A[i]);
+	int r;
+	cin >> r;
+	if(A[r].t == 1)
+		prodaj(A[r]);
+	system("pause");
+	return 0;
+}
