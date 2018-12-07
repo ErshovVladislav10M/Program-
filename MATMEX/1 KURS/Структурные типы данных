@@ -2,7 +2,7 @@
 #include <utility>
 using namespace std;
 
-struct AB{ //структура AB
+struct AB { //структура AB
 	int a;
 	double b;
 	bool c = 0;
@@ -25,21 +25,28 @@ struct AC { //битовые поля, хранят целое число
 	int b : 3; //со знаком, на 3 бита (от -4 до 3)
 };
 
-struct AD{
+struct AD {
 	int a, a1;
 	int* p;
 	static int b; //статическое поле, для всех переменных одно и тоже
 	AD() { a = 12; } //конструктор вызывается при объявлении переменной
-	AD(int r, int r1): a(r), a1(r1) {} //конструктор по значению
-	AD(const AD &p): a(p.a), a1(p.a1) {} //конструктор копирования
-	AD(AD &&p1): a(p1.a), a1(p1.a1), p(p1.p) { p1.p = nullptr; } //конструктор перемещения
+	AD(int r, int r1) : a(r), a1(r1) {} //конструктор по значению
+	AD(const AD &p) : a(p.a), a1(p.a1) {} //конструктор копирования
+	AD(AD &&p1) : a(p1.a), a1(p1.a1), p(p1.p) { p1.p = nullptr; } //конструктор перемещения
 	~AD() { delete p; } //деструктор
 };
 int AD::b = 7; //требуется глобальное объявление(синоним имя_перем.b)
 
-void f(AD a) {
-	print();
-}
+void f(AD A) { print(); }
+
+class AE { //автоматический private
+	int a, a1;
+	friend void print(); //"друг" - может обращаться на прямую к private полям
+	friend AD; //"друг класс"
+public:
+	AE(int r = 0, int r1 = 0):a(r), a1(r1) {} //требуется для следующего метода
+	AE operator+(AE A) { return AE(a + A.a, a1 + A.a1); } //перегрузка оператора "+"
+}; //дружба не ассоциативна, не транзитивна
 
 int main() {
 	x.print(); //вызывание метода
@@ -48,7 +55,9 @@ int main() {
 	AD x1;
 	f(x1); //используется конструктор копирования
 	f(move(x1)); //используется конструктор перемещения
-	//требуется #include <utility>
+				 //требуется #include <utility>
+	AD* ptr;
+	new(ptr) AD(); //создание объекта в отведенном месте
 	system("pause");
 	return 0;
 }
