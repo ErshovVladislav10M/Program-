@@ -1,0 +1,34 @@
+#include <iostream> 
+using namespace std; 
+
+int A[3][3];
+
+int k(int a){
+	if(a % 2 == 0)
+	  return 1;
+	return -1;
+}
+
+int g(int a){
+	int ans = 0, t = 1;
+	if(a == 1)
+	  t = -1;
+	ans += A[1][(a+1) % 3] * A[2][(a+2) % 3] * t;
+	ans -= A[2][(a+1) % 3] * A[1][(a+2) % 3] * t;
+	return ans;
+}
+
+int f(){
+	int ans = 0;
+	for(int i = 0; i < 3; i++)
+	  ans += A[0][i] * g(i) * k(i);
+	return ans;
+}
+
+int main() {
+	for(int i = 0; i < 3; i++)
+	  for(int l = 0; l < 3; l++)
+	    cin >> A[i][l];
+	cout << f() << endl;
+	return 0;
+}
