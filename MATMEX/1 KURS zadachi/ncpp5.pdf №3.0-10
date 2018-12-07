@@ -1,0 +1,75 @@
+#include <iostream>
+#include <utility>
+#include <string>
+#include <vector>
+using namespace std;
+
+struct Drug {
+	string name;
+	string substance;
+	int dose;
+	int form;
+	int quantity;
+	double price;
+	bool Availability = 0;
+};
+
+void filling(Drug &A) {
+	getline(cin, A.name);
+	getline(cin, A.substance);
+	cin >> A.dose >> A.form >> A.quantity >> A.price;
+	A.Availability = 1;
+}
+
+bool check(Drug A, string a) {
+	if (A.substance == a)
+		return 1;
+	return 0;
+}
+
+double price(Drug A) {	return A.price; }
+
+struct Store {
+	vector<Drug> store;
+	int quantity;
+	double revenue;
+	
+	Store(int n) { 
+		store.resize(n);
+		quantity = n;
+		revenue = 0;
+	}
+	void input(Drug A) {
+		for(Drug x: store)
+			if (x.Availability == 0) {
+				x = A;
+				x.Availability = 1;
+				break;
+			}
+	}
+	void print(string a) {
+		for (Drug x : store)
+			if (x.substance == a)
+				cout << x.name << " ";
+		cout << endl;
+	}
+	int search(string a) {
+		int max = 0;
+		for (Drug x : store)
+			if (x.substance == a && max < x.dose)
+				max = x.dose;
+		return max;
+	}
+	void expansive(double d) {
+		for (Drug x : store)
+			if (x.price > d)
+				cout << x.substance << " ";
+		cout << endl;
+	}
+};
+
+int main() {
+	
+	system("pause");
+	return 0;
+}
