@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+
+class Complex {
+	double re, im;
+public:
+	Complex(double r = 0, double i = 0): re(r), im(i) {}
+	Complex operator+(Complex A) { return Complex(re + A.re, im + A.im); }
+};
+
+Complex operator"" _i(const char *A) { return Complex(0, atof(A)); } //создание суффикса
+
+int main() {
+	Complex x(12.0), V = x + 35.0_i; //пример его работы
+	system("pause");
+	return 0;
+}
