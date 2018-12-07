@@ -44,9 +44,14 @@ class AE { //автоматический private
 	friend void print(); //"друг" - может обращаться на прямую к private полям
 	friend AD; //"друг класс"
 public:
-	AE(int r = 0, int r1 = 0):a(r), a1(r1) {} //требуется для следующего метода
+	AE(int r = 0, int r1 = 0) :a(r), a1(r1) {} //требуется для следующего метода
 	AE operator+(AE A) { return AE(a + A.a, a1 + A.a1); } //перегрузка оператора "+"
 }; //дружба не ассоциативна, не транзитивна
+
+class AF { 
+	int a, a1;
+	mutable int b; //это поля можно меня
+};
 
 int main() {
 	x.print(); //вызывание метода
@@ -58,6 +63,7 @@ int main() {
 				 //требуется #include <utility>
 	AD* ptr;
 	new(ptr) AD(); //создание объекта в отведенном месте
+	const AF p(); //поля нельзя менять
 	system("pause");
 	return 0;
 }
