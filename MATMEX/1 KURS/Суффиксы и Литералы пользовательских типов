@@ -4,8 +4,8 @@ using namespace std;
 class Complex {
 	double re, im;
 public:
-	Complex(double r = 0, double i = 0): re(r), im(i) {}
-	Complex operator+(Complex A) { return Complex(re + A.re, im + A.im); }
+	Complex(double r = 0, double i = 0): re(r), im(i) {} //конструктор
+	Complex operator+(Complex A) { return Complex(re + A.re, im + A.im); } //перегрузка "+"
 };
 
 Complex operator"" _i(const char *A) { return Complex(0, atof(A)); } //создание суффикса
