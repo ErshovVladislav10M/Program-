@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+
+void print(int V[3][3]){
+	for(int i = 0; i < 3; i++){
+	  for(int l = 0; l < 3; l++)
+	    cout << V[i][l] << " ";
+	  cout << endl;
+	}
+	cout << endl;
+}
+
+int k(int a){	
+	if(a % 2 == 0)	 
+	  return 1;	
+	return -1;
+} 
+
+int g(int a, int V[3][3]){	
+	int ans = 0, t = 1;
+	if(a == 1)	
+	  t = -1;	
+	ans += V[1][(a+1) % 3]*V[2][(a+2) % 3]*t;
+	ans -= V[2][(a+1) % 3]*V[1][(a+2) % 3]*t;
+	return ans;
+} 
+
+int f3(int V[3][3]){
+	int ans = 0;	
+	for(int i = 0; i < 3; i++)	
+	  ans += V[0][i] * g(i, V) * k(i);
+	return ans;
+} 
+
+int f4(int V[4][4]){
+	int ans = 0, p = 0;
+	int W[3][3];
+	for(int i = 0; i < 4; i++){
+	  for(int l = 0; l < 3; l++){
+	    for(int j = 0; j < 3; j++){
+	      if(j == i)
+	        p = 1;
+	      W[l][j] = V[l+1][j+p];
+	    }
+	    p = 0;
+	  }
+	  ans += f3(W) * V[0][i] * k(i);
+	}
+	return ans;
+}
+
+int main() {	
+	int A[4][4];
+	for(int i = 0; i < 4; i++)	
+	  for(int l = 0; l < 4; l++)	
+	    cin >> A[i][l];	
+	cout << f4(A) << endl;
+  return 0;
+}
