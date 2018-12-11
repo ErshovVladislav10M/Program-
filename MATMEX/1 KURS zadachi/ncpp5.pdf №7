@@ -1,0 +1,72 @@
+#include <iostream>
+#include <sstream>
+using namespace std;
+
+union AB {
+	int a;
+	float b;
+	AB() { a = 12; }
+	AB(int p): a(p){}
+	AB(float q): b(q){}
+	AB operator+(AB A) { 
+		if (b > 1) 
+			if (A.b > 1)
+				return AB(b + A.b);
+			else return AB(b + A.a);
+		else 
+			if(A.b > 1)
+				return AB(a + A.b);
+			else return AB(a + A.a);
+	}
+	AB operator-(AB A) {
+		if (b > 1)
+			if (A.b > 1)
+				return AB(b - A.b);
+			else return AB(b - A.a);
+		else
+			if (A.b > 1)
+				return AB(a - A.b);
+			else return AB(a - A.a);
+	}
+	AB operator*(AB A) {
+		if (b > 1)
+			if (A.b > 1)
+				return AB(b * A.b);
+			else return AB(b * A.a);
+		else
+			if (A.b > 1)
+				return AB(a * A.b);
+			else return AB(a * A.a);
+	}
+	AB operator/(AB A) {
+		if (b > 1)
+			if (A.b > 1)
+				return AB(b / A.b);
+			else return AB(b / A.a);
+		else
+			if (A.b > 1)
+				return AB(a / A.b);
+			else return AB((float)a / A.a);
+	}
+} x, y, z, x1;
+
+istream &operator>>(istream &T, AB &A) {
+	float t;
+	T >> t;
+	if (t == round(t))
+		A.a = (int)t;
+	else A.b = t;
+	return T;
+}
+
+int main() {
+	x.a = 12;
+	y.a = 6;
+	z = x / y;
+	istringstream st1("7.69");
+	st1 >> x1;
+	cout << y.a << " " << z.b << endl;
+	cout << x1.b << endl;
+	system("pause");
+	return 0;
+}
