@@ -20,8 +20,11 @@ istream &operator>>(istream &T, AB &A) { //перегрузка(только с�
 }
 
 int main() {
+	x.a = 12;
+	y.a = 6;
 	istringstream st1("7.69"); //ее использование
 	st1 >> x1; 
+	//требуется #include <sstream>
 	cout << x1.b << endl;
 	system("pause");
 	return 0;
