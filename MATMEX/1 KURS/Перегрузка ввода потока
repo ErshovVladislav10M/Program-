@@ -8,7 +8,7 @@ union AB {
 	AB() { a = 12; }
 	AB(int p): a(p){}
 	AB(float q): b(q){}
-} x, y, z, x1;
+} x1;
 
 istream &operator>>(istream &T, AB &A) { //перегрузка(только снаружи структуры)
 	float t;
@@ -20,8 +20,6 @@ istream &operator>>(istream &T, AB &A) { //перегрузка(только с�
 }
 
 int main() {
-	x.a = 12;
-	y.a = 6;
 	istringstream st1("7.69"); //ее использование
 	st1 >> x1; 
 	cout << x1.b << endl;
