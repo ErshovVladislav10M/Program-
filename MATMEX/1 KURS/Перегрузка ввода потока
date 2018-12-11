@@ -13,9 +13,9 @@ union AB {
 istream &operator>>(istream &T, AB &A) { //перегрузка(только снаружи структуры)
 	float t;
 	T >> t;
-	if (t == round(t))
-		A.a = (int)t;
-	else A.b = t;
+	if (t == round(t)) //проверка на целочисленность
+		A.a = (int)t; //запись как целого числа
+	else A.b = t; //запись как вещественного
 	return T;
 }
 
