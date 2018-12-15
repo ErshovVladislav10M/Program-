@@ -18,7 +18,25 @@ double vichel(double **V, int n){
 	return ans;
 }
 
+bool g(double **V, int n, int a){
+	double *tmp = V[a];
+	int q = 0;
+	for (int i = a; i < n; i++)
+		if (fabs(V[i][a]) > 10e-6){
+		V[a] = V[i];
+		V[i] = tmp;
+		q = 1;
+		break;
+		}
+	if (q == 0)
+		return 0;
+	return 1;
+}
+
 void f(double **V, int n, int k = 0){
+	if (fabs(V[k][k]) < 10e-6)
+		if (g(V, n, k) == 0)
+			return;
 	if (k >= n - 1)
 		return;
 	double t = 0;
