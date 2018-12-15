@@ -1,59 +1,65 @@
 #include <iostream>
 using namespace std;
 
-void print(int V[3][3]){
-	for(int i = 0; i < 3; i++){
-	  for(int l = 0; l < 3; l++)
-	    cout << V[i][l] << " ";
-	  cout << endl;
+template<class T>
+void print(T **V, int n){
+	for (int i = 0; i < n; i++){
+		for (int l = 0; l < n; l++)
+			cout << V[i][l] << " ";
+		cout << endl;
 	}
 	cout << endl;
 }
 
-int k(int a){	
-	if(a % 2 == 0)	 
-	  return 1;	
-	return -1;
-} 
-
-int g(int a, int V[3][3]){	
-	int ans = 0, t = 1;
-	if(a == 1)	
-	  t = -1;	
-	ans += V[1][(a+1) % 3]*V[2][(a+2) % 3]*t;
-	ans -= V[2][(a+1) % 3]*V[1][(a+2) % 3]*t;
-	return ans;
-} 
-
-int f3(int V[3][3]){
-	int ans = 0;	
-	for(int i = 0; i < 3; i++)	
-	  ans += V[0][i] * g(i, V) * k(i);
-	return ans;
-} 
-
-int f4(int V[4][4]){
-	int ans = 0, p = 0;
-	int W[3][3];
-	for(int i = 0; i < 4; i++){
-	  for(int l = 0; l < 3; l++){
-	    for(int j = 0; j < 3; j++){
-	      if(j == i)
-	        p = 1;
-	      W[l][j] = V[l+1][j+p];
-	    }
-	    p = 0;
-	  }
-	  ans += f3(W) * V[0][i] * k(i);
-	}
+double vichel(double **V, int n){
+	double ans = 1;
+	for (int i = 0; i < n; i++)
+		ans *= V[i][i];
 	return ans;
 }
 
-int main() {	
-	int A[4][4];
-	for(int i = 0; i < 4; i++)	
-	  for(int l = 0; l < 4; l++)	
-	    cin >> A[i][l];	
-	cout << f4(A) << endl;
-  return 0;
+bool g(double **V, int n, int a){
+	double *tmp = V[a];
+	int q = 0;
+	for (int i = a; i < n; i++)
+		if (fabs(V[i][a]) > 10e-6){
+		V[a] = V[i];
+		V[i] = tmp;
+		q = 1;
+		break;
+		}
+	if (q == 0)
+		return 0;
+	return 1;
+}
+
+void f(double **V, int n, int k = 0){
+	if (fabs(V[k][k]) < 10e-6)
+		if (g(V, n, k) == 0)
+			return;
+	if (k >= n - 1)
+		return;
+	double t = 0;
+	for (int i = 1 + k; i < n; i++){
+		t = V[i][k] / V[k][k];
+		for (int l = k; l < n; l++)
+			V[i][l] -= V[k][l] * t;
+	}
+	print(V, n);
+	f(V, n, k + 1);
+}
+
+int main() {
+	int n;
+	cin >> n;
+	double **A = new double*[n];
+	for (int i = 0; i < n; i++)
+		A[i] = new double[n];
+	for (int i = 0; i < n; i++)
+		for (int l = 0; l < n; l++)
+			cin >> A[i][l];
+	f(A, n);
+	cout << vichel(A, n) << endl;
+	system("pause");
+	return 0;
 }
