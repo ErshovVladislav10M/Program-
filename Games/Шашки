@@ -1,33 +1,59 @@
 #include <iostream> 
-#include <vector>
 using namespace std; 
 
-vector<int> Table = {1,1,1,1,1,1,1,1,1,1,1,1,
-0,0,0,0,0,0,0,0,
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-
-void f(vector<int> V, int xod = 1){
-	int m = -20;
-	for(int i = 0; i < V.size(); i++)
-	  if(V[i] != 0)
-	    if(m*xod < var(i)*xod)
-	      m = var(i);
-	return;
+void print(int **V){
+	for(int i = 0; i < 8; i++){
+	  for(int l = 0; l < 4; l++)
+	    cout << V[i][l] << " ";
+	  cout << endl;
+	}
 }
 
-int var(int i){
-	if(i / 4 == 0)
-	  if(i % 4 == 0)
-
-int ocen(vector<int> V){
-  int ans;
-  for(int x: V)
-    ans += x;
+int ocen(int **V){
+  int ans = 0;
+  for(int i = 0; i < 8; i++)
+	  for(int l = 0; l < 4; l++)
+	    ans += V[i][l];
   return ans;
 }
 
+int var(int **V, int i, int l){
+	int **W = V;
+	int max = -50;
+	//if(i % 2 == 0)
+	if(W[i][l] != W[i+1][l] && i+1 < 8){
+	  if(W[i+1][l] == 0)
+	    
+	}
+	return 1;
+}
+
+/*void f(int **V, int xod = 1){
+	int max = -50, x = 0, y = 0;
+	for(int i = 0; i < 8; i++)
+	  for(int l = 0; l < 4; l++)
+	    if(V[i][l] * xod == 1)
+	      if(var(V, i, l) > max){
+	        max = var(V, i, l);
+	        x = i; y = l;
+	      }
+}*/
+
 int main() {
-	cout << 567;
-	//system("pause");
-	return 0;
+  int **Table = new int *[8];
+  for(int i = 0; i < 8; i++)
+    Table[i] = new int[4];
+  for(int i = 0; i < 8; i++)
+    for(int l = 0; l < 4; l++){
+      if(i < 3)
+        Table[i][l] = -1;
+      if(i > 2 && i < 5)
+        Table[i][l] = 0;
+      if(i > 4)
+        Table[i][l] = 1;
+    }
+  //cout << ocen(Table) << endl;
+  //print(Table);
+  //system("pause");
+  return 0;
 }
