@@ -1,0 +1,68 @@
+#include <iostream> 
+using namespace std; 
+
+void print(int **V){
+	for(int i = 0; i < 8; i++){
+	  for(int l = 0; l < 4; l++)
+	    cout << V[i][l] << " ";
+	  cout << endl;
+	}
+}
+
+int prov(int **V, int i, int l){
+	if(i % 2 == 0){
+		if((V[i+1][l] != 1 && i < 7) || (V[i+1][l+1] != 1 && l < 3 && i < 7))
+		    return -1;
+		if((V[i-1][l] == 1 || i < 1) && (V[i-1][l+1] || l > 2))
+		    return 1;
+	}
+	else{
+		if((V[i+1][l] != 1 && i < 7) || (V[i+1][l-1] != 1 && l > 1 && i < 7))
+	        return -1;
+	    if((V[i-1][l] == 1 || i < 1) && (V[i-1][l+1] || l > 2))
+	        return 1;
+	}
+	return 0;
+}
+
+int ocen(int **V){
+    for(int i = 0; i < 8; i++)
+	  for(int l = 0; l < 4; l++)
+	    if(V[i][l] == -4)
+	      return prov(V, i, l);
+}
+
+/*int var(int **V, int i, int l){
+	int **W = V;
+	int max = -50;
+	//if(i % 2 == 0)
+	if(W[i][l] != W[i+1][l] && i+1 < 8){
+	  if(W[i+1][l] == 0)
+	    
+	}
+	return 1;
+}*/
+
+/*void f(int **V, int xod = 1){
+	int max = -50, x = 0, y = 0;
+	for(int i = 0; i < 8; i++)
+	  for(int l = 0; l < 4; l++)
+	    if(V[i][l] * xod == 1)
+	      if(var(V, i, l) > max){
+	        max = var(V, i, l);
+	        x = i; y = l;
+	      }
+}*/
+
+int main() {
+  int **Table = new int *[8];
+  for(int i = 0; i < 8; i++)
+    Table[i] = new int[4];
+  Table[0][2] = -4;
+  for(int i = 0; i < 4; i++)
+    Table[7][i] = 1;
+  cout << ocen(Table) << endl;
+  print(Table);
+  //system("pause");
+  return 0;
+}
