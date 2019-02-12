@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct calc {
+	double x;
+	calc(double xx) :x(xx) {}
+	void plus(double a) { x += a; }
+	void minus(double a) { x -= a; }
+	void umnow(double a) { x *= a; }
+	void delen(double a) { x /= a; }
+	double coren() { return sqrt(x); }
+	double sinus() { return sin(x); }
+};
+
+struct calc2 : calc {
+	double x2;
+	calc2(double xx) :calc(xx), x2(0) {}
+	void zapis() { x2 = x; }
+	double izvlech() { x = x2; }
+	void dobav() { x2 += x; }
+};
+
+int main() {
+	system("pause");
+	return 0;
+}
