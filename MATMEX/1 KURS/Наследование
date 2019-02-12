@@ -1,0 +1,38 @@
+#include <iostream>
+using namespace std;
+
+struct Car { //базовый класс
+	double x, y, dir;
+	Car(double xx, double yy, double d):x(xx), y(yy), dir(d) {}
+	void move(double len) {
+		x += len*cos(dir);
+		y += len*sin(dir);
+	}
+	void setDir(double nd) { dir = nd; }
+};
+
+struct Bus : Car{ //производный класс
+	int people;
+	double money;
+	Bus(double xx, double yy, double d):Car(xx, yy, d), people(0), money(0) {} //использование функции от Car
+	void move(double len) {
+		Car::move(len); //использование функции от Car
+		money += people*len;
+	}
+	void enter(int n) { 
+		if (n >= 0)
+			people += n;
+	}
+	void exit(int n) {
+		if (n >= 0)
+			if (n >= people)
+				people = 0;
+			else
+				people -= n;
+	}
+};
+
+int main() {
+	
+	return 0;
+}
