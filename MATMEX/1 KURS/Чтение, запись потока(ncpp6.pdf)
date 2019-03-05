@@ -1,6 +1,6 @@
 #include <iostream> //cout, cerr, clog
 #include <fstream> //ifstream, ofstream, fstream
-#include <sstream>
+#include <sstream> //istringstream, ostringstream, stringstream
 #include <iomanip>
 #include <string>
 using namespace std;
@@ -32,7 +32,7 @@ int main() {
 	cout << ios::in << endl;
 
 	string str1 = "1 12 34 56 78 90";
-	istringstream str(str1); //переменнная типа istringstream
+	istringstream str(str1); //переменнная типа istringstream(можно заменить на stringstream)
 	int x, sum = 0;
 	while (str >> x) //поток считает пробел разделителем
 		sum += x;
