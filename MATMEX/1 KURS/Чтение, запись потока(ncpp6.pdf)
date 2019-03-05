@@ -2,6 +2,7 @@
 #include <fstream> //ifstream, ofstream, fstream
 #include <sstream>
 #include <iomanip>
+#include <string>
 using namespace std;
 
 int main() {
@@ -25,9 +26,17 @@ int main() {
 	st4 << "abracadabra23" << endl; //дописывание к концу файла строки
 	ofstream st5("C:\\Users\\st055883\\Documents\\file5.txt", ios::_Nocreate); //не создает файл(можно заменить на fstream)
 	st5 << "abracadabra34" << endl; //удаление всего содержимого файла и запись строки 
-	
+	st5.close(); //закрытие файла(происходит автоматически после конца программы)
+	st5.open("C:\\Users\\st055883\\Documents\\file6.txt", ios::app); //переопределение переменной нового файла
 	//ios::in, ios::app, ... - просто константы
 	cout << ios::in << endl;
+
+	string str1 = "1 12 34 56 78 90";
+	istringstream str(str1); //переменнная типа istringstream
+	int x, sum = 0;
+	while (str >> x) //поток считает пробел разделителем
+		sum += x;
+	cout << sum << endl;
 
 	system("pause");
 	return  0;
