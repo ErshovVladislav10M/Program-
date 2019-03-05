@@ -1,0 +1,36 @@
+#include <iostream> //cout, cerr, clog
+#include <fstream> //ifstream, ofstream, fstream
+#include <sstream>
+#include <iomanip>
+using namespace std;
+
+int main() {
+	cerr << 456 << endl; //вывод в другой файл (не буферизуется)
+	clog << 4567 << endl; //вывод в другой файл (буферизуется)
+	cout << "wertyuiop" << endl; //вывод в стандартный файл (различия видно только в командной строке)
+	//синтаксис для командной строки
+	// <file.txt - чтение из файла
+	// >file.txt - запись из cout
+	// 2>file.txt - запись из cerr и clog
+
+	ifstream st("C:\\Users\\st055883\\Documents\\file1.txt"); //чтение из файла в переменную типа ifstream(можно заменить на fstream)
+	cout << st.rdbuf() << endl; //вывод содержимого переменной
+	ifstream st0("C:\\Users\\st055883\\Documents\\file1.txt", ios::binary); //то же самое
+	cout << st0.rdbuf() << endl;
+	ofstream st2("C:\\Users\\st055883\\Documents\\file2.txt"); //coздает файл при его отсутствии
+	st2 << "abracadabra01" << endl; //удаление всего содержимого файла и запись строки
+	ofstream st3("C:\\Users\\st055883\\Documents\\file3.txt",ios::in); //не coздает файл
+	st3 << "abracadabra12" << endl; //удаление первых символов, перезапись на их место строки 
+	ofstream st4("C:\\Users\\st055883\\Documents\\file4.txt", ios::app); //coздает файл
+	st4 << "abracadabra23" << endl; //дописывание к концу файла строки
+	ofstream st5("C:\\Users\\st055883\\Documents\\file5.txt", ios::_Nocreate); //не создает файл(можно заменить на fstream)
+	st5 << "abracadabra34" << endl; //удаление всего содержимого файла и запись строки 
+	
+	//ios::in, ios::app, ... - просто константы
+	cout << ios::in << endl;
+
+	system("pause");
+	return  0;
+}
+
+//ncpp6.pdf
