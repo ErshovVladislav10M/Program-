@@ -14,13 +14,23 @@ int main() {
 	// >file.txt - запись из cout
 	// 2>file.txt - запись из cerr и clog
 
-	ifstream st("C:\\Users\\st055883\\Documents\\file1.txt"); //чтение из файла в переменную типа ifstream(можно заменить на fstream)
+	ifstream st("C:\\Users\\st055883\\Documents\\file0.txt"); //чтение из файла в переменную типа ifstream(можно заменить на fstream)
 	cout << st.rdbuf() << endl; //вывод содержимого переменной
-	ifstream st0("C:\\Users\\st055883\\Documents\\file1.txt", ios::binary); //то же самое
-	cout << st0.rdbuf() << endl;
+
+	ofstream st00("C:\\Users\\st055883\\Documents\\file1.txt", ios::binary);
+	for (int i = 33; i < 100; i++) st00 << (char)i; //записываем в файл
+	st00 << (char)26;
+	for (int i = 33; i < 100; i++) st00 << (char)i;
+	st00.close(); //если хотим открыть файл другой переменной, необходимо закрыть его!
+	ifstream st01("C:\\Users\\st055883\\Documents\\file1.txt"); //выводим в тескстовом
+	cout << st01.rdbuf() << endl;
+	st01.close();
+	ifstream st02("C:\\Users\\st055883\\Documents\\file1.txt", ios::binary); //выводим в бинарном
+	cout << st02.rdbuf() << endl;
+
 	ofstream st2("C:\\Users\\st055883\\Documents\\file2.txt"); //coздает файл при его отсутствии
 	st2 << "abracadabra01" << endl; //удаление всего содержимого файла и запись строки
-	ofstream st3("C:\\Users\\st055883\\Documents\\file3.txt",ios::in); //не coздает файл
+	ofstream st3("C:\\Users\\st055883\\Documents\\file3.txt", ios::in); //не coздает файл
 	st3 << "abracadabra12" << endl; //удаление первых символов, перезапись на их место строки 
 	ofstream st4("C:\\Users\\st055883\\Documents\\file4.txt", ios::app); //coздает файл
 	st4 << "abracadabra23" << endl; //дописывание к концу файла строки
@@ -31,12 +41,30 @@ int main() {
 	//ios::in, ios::app, ... - просто константы
 	cout << ios::in << endl;
 
-	string str1 = "1 12 34 56 78 90";
+	string str1 = "1 12 34 56 78 90", str2;
 	istringstream str(str1); //переменнная типа istringstream(можно заменить на stringstream)
 	int x, sum = 0;
 	while (str >> x) //поток считает пробел разделителем
 		sum += x;
 	cout << sum << endl;
+	stringstream str1A; //переменная типа stringstream(и на ввод и на вывод)
+	str1A << str1 << "***" << str1; //запись в переменную потока
+	cout << str1A.str() << endl; //вывод содержимого
+	getline(str1A, str2); //метод для считывания строк, конец строки - enter
+	cout << str2 << endl;
+	getline(cin, str2); //считывание с потока cin, конец строки - enter
+	cout << str2 << endl;
+	
+	cin >> ws; //удаление всех пробельных символов(пробел, enter, ...) до первого непробельного
+
+	char c1;
+	//while (cin.get(c1)) cout << c1; //использование метода get для посимвольного чтения
+	
+	int a1;
+	stringstream str6;
+	str6 << "1473";
+	str6.read((char*)&a1, sizeof a1); //чтение из потока str6
+	cout.write((char*)&a1, sizeof a1); //вывод в cout
 
 	system("pause");
 	return  0;
