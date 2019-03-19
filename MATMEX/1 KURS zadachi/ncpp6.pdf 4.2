@@ -1,0 +1,17 @@
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+
+	fstream st("C:\\Users\\st055883\\Documents\\g.txt");
+	string A;
+	int x1, x2;
+	while (st >> A>> x1 >> x2)
+		cout << A << " "<< x1 + x2 <<endl;
+	system("pause");
+	return  0;
+}
