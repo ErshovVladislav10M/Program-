@@ -1,0 +1,20 @@
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+void f(string a, string b) {
+	fstream st1("C:\\Users\\st055883\\Documents\\" + a + ".txt");
+	ofstream st2("C:\\Users\\st055883\\Documents\\" + b + ".txt", ios::app);
+	st2 << st1.rdbuf();
+}
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+
+	f("g", "f");
+
+	system("pause");
+	return  0;
+}
