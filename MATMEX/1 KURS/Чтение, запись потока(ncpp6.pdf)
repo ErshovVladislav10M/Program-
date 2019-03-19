@@ -16,6 +16,23 @@ int main() {
 
 	ifstream st("C:\\Users\\st055883\\Documents\\file0.txt"); //чтение из файла в переменную типа ifstream(можно заменить на fstream)
 	cout << st.rdbuf() << endl; //вывод содержимого переменной
+	streampos pos1 = st.tellg(); //запоминает нынешнюю позицию в файле
+	st.seekg(pos1); //ставит курсор на записанную позицию 
+	st.seekg(2, ios::beg); //ставит курсор на 2 байт от начала
+	cout << st.rdbuf() << endl; 
+	st.seekg(-5, ios::end); //ставит курсор на 5 байт от конца
+	cout << st.rdbuf() << endl;
+	//также есть ios:cur - нынешнее место курсора
+	//для вывода тоже самое, но вместо g используется p
+	fstream st10("C:\\Users\\st055883\\Documents\\file1.0.txt");
+	int x10;
+	while (st10 >> x10) cout << x10 << " "; //чтение чисел из потока, пока он не кончится
+	cout << endl;
+	cout << hex << 2145 << endl << oct << 2145 << endl << dec << 2145 << endl; //выводит десятичные формы чисел в восмеричной, шестнадцатеричной, десятичной соответственно
+	cout << setw(30) << "qwertyuiiop[]]][pouiu" << endl << setw(30) << "qwert" << endl; //задает ширину поля вывода
+	string str10;
+	cin >> setw(5) >> str10; //задает размер буфера при вводе строки(берет 4 символа, т.к. последний '0/')
+	cout << setprecision(2) << 12.456 << " " << setprecision(10) << 12.456 << endl; //точность вещественных чисел
 
 	ofstream st00("C:\\Users\\st055883\\Documents\\file1.txt", ios::binary);
 	for (int i = 33; i < 100; i++) st00 << (char)i; //записываем в файл
