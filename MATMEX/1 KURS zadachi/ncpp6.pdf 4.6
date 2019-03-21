@@ -1,0 +1,11 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(){
+  fstream st("f.txt");
+  int n, sum = 0;
+  while(st >> n)
+    sum += n;
+	return 0;
+}
