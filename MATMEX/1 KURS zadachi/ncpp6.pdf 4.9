@@ -1,0 +1,23 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+void save(double A[5], string a){
+	ofstream st(a + ".txt");
+	for(double x: A)
+	  st << x << " ";
+	return;
+}
+
+void loud(double &A[5], string a){
+	fstream st(a + ".txt");
+	int i = 0;
+	while(st >> A[i] && i < 5) i++;
+	return;
+}
+
+int main(){
+  double A[5] = {1.0, 3.5, 7.8, 11.1, 13};
+	return 0;
+}
