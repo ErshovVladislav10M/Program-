@@ -1,0 +1,23 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+int main(){
+  string str = "0 0 0 0 0 12 34 56 1000";
+  stringstream st(str), st1;
+  int n;
+  while(st >> n)
+    if(n == 0){
+      cout << 5 << " ";
+      st1 << 5 << " ";
+    }
+    else{
+    	cout << n << " ";
+    	st1 << n << " ";
+    }
+  st.clear();
+  st << st1.rdbuf();
+  //cout << st.rdbuf();
+	return 0;
+}
