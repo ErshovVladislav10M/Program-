@@ -1,0 +1,17 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+using namespace std;
+
+int f(int a, int b){
+	int t, p = 1;
+	while (b > p) p*=10;
+	t = a*p + b;
+	return t*t;
+}
+
+int main(){ 
+	cout << f(1, 2) << endl;
+	return 0;
+}
