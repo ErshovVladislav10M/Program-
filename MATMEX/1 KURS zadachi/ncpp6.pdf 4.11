@@ -1,0 +1,19 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+
+int main(){
+	string str = "1.0 2.4 6.9 11.1";
+	stringstream st(str), st1;
+	double n, sum = 0;
+	while(st >> n){
+	  sum += n;
+	  st1 << sum << " ";
+	}
+	cout << st1.rdbuf() << endl;
+	st.clear();
+	st << st1.rdbuf;
+	return 0;
+}
