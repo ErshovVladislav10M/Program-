@@ -1,0 +1,28 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+using namespace std;
+
+void f(double i){
+	//ofstream st("C:\\Users\\user\\Desktop\\Владислав\\Program" + "sin_i/10" + ".txt")
+	stringstream st;
+	for(double l = 0; l < 20; l += i/10)
+	  st << l << " " << sin(l) << endl;
+	cout << st.rdbuf() << endl; 
+}
+
+int main(){ 
+	double a = 17.7;
+	char A[1] = { (char)38 };
+	//cout << A[0] << endl;
+	for(char x: A)
+	  cout << x << endl;
+	string b = A;
+	cout << b + ".txt" << endl;
+	//for(double i = 1; i <= 10; i += 1)
+	  //f(i);
+	
+	
+	return 0;
+}
