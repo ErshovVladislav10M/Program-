@@ -1,0 +1,23 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+using namespace std;
+
+int main(){ 
+	//ifstream st1("f.txt");
+	//ofstream st2("g.txt");
+	string str = "12 32 111 97 56 321 452 53 578 10 802"; 
+	stringstream st1(str), st2;
+	int n, sum = 0;
+	while(st1 >> n){
+		sum += n;
+		if(sum > 500){
+			st2 << sum << " ";
+		    sum = 0;
+		}
+	}
+	cout << st2.rdbuf() << endl;
+	
+	return 0;
+}
