@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+template<class T, int s>
+class Stack{
+	T data[s];
+	int c;
+public:
+	Stack() { c = 0; }
+	void push(T x) { 
+		if (c<s)
+			data[c++] = x;
+	}
+	T pop(){
+		if (!empty())
+			return data[--c]; 
+		else return T();
+	}
+	bool empty() { return c == 0; }
+};
+
+
+
+int main() {
+	Stack<int, 10> S;
+
+
+	system("pause");
+	return 0;
+}
