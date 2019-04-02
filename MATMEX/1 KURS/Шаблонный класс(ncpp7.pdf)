@@ -1,19 +1,24 @@
 #include <iostream>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <list> 
+//шаблонные классы стэк, очередь, вектор, двусвязный список
 using namespace std;
 
 template<class T, int s>
-class Stack{
+class Stack {
 	T data[s];
 	int c;
 public:
 	Stack() { c = 0; }
-	void push(T x) { 
+	void push(T x) {
 		if (c<s)
 			data[c++] = x;
 	}
-	T pop(){
+	T pop() {
 		if (!empty())
-			return data[--c]; 
+			return data[--c];
 		else return T();
 	}
 	bool empty() { return c == 0; }
