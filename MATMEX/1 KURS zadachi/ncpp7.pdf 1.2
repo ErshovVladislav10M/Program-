@@ -1,0 +1,61 @@
+#include <iostream>
+using namespace std;
+
+template<class T>
+T gcd(T a, T b) {
+	do
+		if (a > b)
+			a = a % b;
+		else b = b % a;
+	while (a != 0 && b != 0);
+	return b + a;
+}
+
+template<class T>
+class fraction{
+	T a, b;
+public:
+	fraction(T aa = 0, T bb = 1) {
+		a = aa / gcd(aa, bb);
+		b = bb / gcd(aa, bb);
+	}
+	void vuvod() { cout << a << "/" << b; }
+	fraction<T> operator+(fraction<T> A) {
+		T a1, b1;
+		a1 = a * A.b + b * A.a;
+		b1 = b * A.b;
+		return fraction<T>(a1, b1);
+	}
+	fraction<T> operator-(fraction<T> A) {
+		T a1, b1;
+		a1 = a * A.b - b * A.a;
+		b1 = b * A.b;
+		return fraction<T>(a1, b1);
+	}
+	fraction<T> operator*(fraction<T> A) {
+		T a1, b1;
+		a1 = a * A.a;
+		b1 = b * A.b;
+		return fraction<T>(a1, b1);
+	}
+	fraction<T> operator/(fraction<T> A) {
+		T a1, b1;
+		a1 = a * A.b;
+		b1 = b * A.a;
+		return fraction<T>(a1, b1);
+	}
+	bool operator>(fraction<T> A) {
+		if(a * A.b > b * A.a) return 1;
+		else return 0;
+	}
+};
+
+
+
+int main() {
+	fraction<int> C;
+
+
+	system("pause");
+	return 0;
+}
