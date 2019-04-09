@@ -1,0 +1,47 @@
+#include <iostream>
+#include <stack>
+#include <string>
+#include <sstream>
+using namespace std;
+
+int sum(int a, int b, char c) {
+	if (c == '+')
+		return a + b;
+	if (c == '-')
+		return a - b;
+	if (c == '*')
+		return a * b;
+	if (c == '/')
+		return a / b;
+}
+
+int main() {
+	string B = "10 2 5 + *";
+	stringstream str(B);
+	stack<int> A;
+	int a, b;
+	char c, c1;
+	while (str.get(c)) {
+		if (c == ' ') continue;
+		if (c != '+' && c != '-' && c != '*' && c != '/') {
+			a = c - '0';
+			str.get(c1);
+			while (c1 != ' ') {
+				a *= 10;
+				a += c1 - '0';
+				str.get(c1);
+			}
+			A.push(a);
+		}
+		else {
+			a = A.top();
+			A.pop();
+			b = A.top();
+			A.pop();
+			A.push(sum(a, b, c));
+		}
+	}
+	cout << A.top() << endl;
+	system("pause");
+	return 0;
+}
