@@ -1,0 +1,40 @@
+#include <iostream>
+#include <cstdarg> //вариант для С
+#include <cstdlib> //вариант для C++
+using namespace std;
+
+double sum_C(int n, ...) {
+	va_list A;
+	double sum = 0;
+	va_start(A, n);
+	for (int i = 0; i < n; i++)
+		sum += va_arg(A, double);
+	va_end(A);
+	return sum;
+}
+
+int sum(){ //конец рекурсии
+	return 0;
+}
+template<class P, class... T> //рекурсивная функция суммы 
+auto sum(P x, T... y){
+	return x + sum(y...);
+}
+
+int count(int x){ //конец рекурсии
+	return x;
+}
+template<class P, class... T> //количество элементов в функции
+auto count(int size, P x, T... y){
+	return count(size+1, y...);
+}
+
+
+int main() {
+	cout << sum_C(3, 1.0, 2.3, 5.0) << endl; //вызов функции, С
+	
+	cout << sum(1, 2.5, 3, 4.05) << endl; //для С++
+	cout << count(0, 2.5, 3, 4.05); //вывод 3
+	system("pause");
+	return 0;
+}
