@@ -1,0 +1,25 @@
+#include <iostream>
+#include <fstream>
+#include <list> 
+
+using namespace std;
+
+void f(string a, string b) {
+	list<int> A;
+	ifstream st1(a);
+	int n;
+	while (st1 >> n) A.push_back(n*n);
+	ofstream st2(b);
+	while (!A.empty()) {
+		n = A.front();
+		A.pop_front();
+		st2 << n << " ";
+	}
+}
+
+int main() {
+	f("C:\\Users\\st055883\\Documents\\g.txt", "C:\\Users\\st055883\\Documents\\f.txt");
+
+	system("pause");
+	return 0;
+}
