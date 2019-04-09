@@ -1,9 +1,13 @@
 #include <iostream>
 #include <cmath>
 #include <iomanip>
+#include <clocale> //возможность вывода кириллицы
 using namespace std;
 
 int main() {
+        setlocale(LC_ALL,"Russian");
+	cout << "Закрыто" << endl;
+	
 	int a = 017253, b = 0x1AC9F, c = 0b11010010011;
 	cout << a << " " << b << " " << c << endl; //вывод чисел a,b,c в дестичной системе
 	cout << setw(15) // отступ вправо на 15
