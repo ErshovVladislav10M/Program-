@@ -1,6 +1,16 @@
 #include <iostream>
+#include "stdafx.h"
 
 using namespace std;
+
+//директива #if#error
+#define P 3
+#define Q 4
+#define R 5
+
+#if P+Q <= R || P+R <= Q || Q+R <= P
+#error из отрезков не составить треугольник
+#endif
 
 #define f1(x) ((x)*(x)) //функция x^2
 #define f2(x, o) ((x)o(x)) //функция x действие x
