@@ -1,9 +1,12 @@
 #include <iostream>
+
 #include <stack>
 #include <queue>
 #include <vector>
 #include <list> 
 //шаблонные классы стэк, очередь, вектор, двусвязный список
+#include <iterator> //работа с итераторами не связанными со стандартными классами
+
 using namespace std;
 
 template<class T, int s> //шаблонный класс
@@ -31,9 +34,26 @@ class Stack<bool, 2> {
 //для ускорения работы программы во всех файлах, кроме одного, следует
 //писать extern template class имя<параметры>
 
+template<class T>
+void print(list<T> l){
+	typename list<T>::iterator i; //объявление итератора
+	//typename, чтобы понять, что list<T>::iterator — тип
+	for (i = l.begin(); i != l.end(); i++) //двунаправленные итераторы можно сравнивать только на == и !=
+		cout << *i << endl; //разыменование
+	//для структурных типов вместо * нужно писать ->
+}
+
+//Обобщение для любого стандартного контейнера с iterator
+template<class T>
+void print(T l)
+{
+	typename T::iterator i;
+	for (i = l.begin(); i != l.end(); i++)
+		cout << *i << endl;
+}
+
 int main() {
 	Stack<int, 10> S; //объявление
-
 
 	system("pause");
 	return 0;
