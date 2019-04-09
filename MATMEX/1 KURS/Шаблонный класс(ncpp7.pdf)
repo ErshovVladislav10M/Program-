@@ -6,7 +6,7 @@
 //шаблонные классы стэк, очередь, вектор, двусвязный список
 using namespace std;
 
-template<class T, int s>
+template<class T, int s> //шаблонный класс
 class Stack {
 	T data[s];
 	int c;
@@ -24,10 +24,15 @@ public:
 	bool empty() { return c == 0; }
 };
 
-
+template<> //частный случай шаблонного класса
+class Stack<bool, 2> {
+	/*тело класса для частного случая*/
+};
+//для ускорения работы программы во всех файлах, кроме одного, следует
+//писать extern template class имя<параметры>
 
 int main() {
-	Stack<int, 10> S;
+	Stack<int, 10> S; //объявление
 
 
 	system("pause");
