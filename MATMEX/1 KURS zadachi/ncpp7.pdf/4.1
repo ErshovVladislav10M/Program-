@@ -1,0 +1,11 @@
+#include <iostream>
+using namespace std;
+
+constexpr int fib(int x, int y) { return y == 0 ? 1 : x * fib(x, y - 1); }
+
+int main() {
+	cout << fib(2, 3) << endl;
+
+	system("pause");
+	return 0;
+}
