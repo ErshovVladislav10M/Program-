@@ -34,13 +34,15 @@ class Stack<bool, 2> {
 //для ускорения работы программы во всех файлах, кроме одного, следует
 //писать extern template class имя<параметры>
 
+Stack<int, 10> S; //объявление
+
 template<class T>
-void print(list<T> l){
+void print(list<T> l) {
 	typename list<T>::iterator i; //объявление итератора
-	//typename, чтобы понять, что list<T>::iterator — тип
+								  //typename, чтобы понять, что list<T>::iterator — тип
 	for (i = l.begin(); i != l.end(); i++) //двунаправленные итераторы можно сравнивать только на == и !=
 		cout << *i << endl; //разыменование
-	//для структурных типов вместо * нужно писать ->
+							//для структурных типов вместо * нужно писать ->
 }
 
 //Обобщение для любого стандартного контейнера с iterator
@@ -52,8 +54,21 @@ void print(T l)
 		cout << *i << endl;
 }
 
+//программирование на этапе компиляции
+const int N = 5;
+template<int n>
+struct Fib{ enum { value = Fib<n - 1>::value + Fib<n - 2>::value }; };
+template<>
+struct Fib<1>{ enum { value = 1 }; };
+template<>
+struct Fib<2>{ enum { value = 1 }; };
+int A00[Fib<N>::value];
+
+//более удобный вариант
+constexpr int fib(int n){ return n <= 2 ? 1 : fib(n - 1) + fib(n - 2); }
+int A01[fib(N)];
+
 int main() {
-	Stack<int, 10> S; //объявление
 
 	system("pause");
 	return 0;
