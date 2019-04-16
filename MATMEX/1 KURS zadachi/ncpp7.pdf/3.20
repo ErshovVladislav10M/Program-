@@ -1,0 +1,49 @@
+#include <iostream>
+#include <sstream>
+#include <list> 
+using namespace std;
+
+template<class T>
+list<T> f(list<T> A, list<T> B) {
+	list<T> C;
+	while (!A.empty() && !B.empty())
+		if (A.front() < B.front()) {
+			C.push_back(A.front());
+			A.pop_front();
+		}
+		else {
+			C.push_back(B.front());
+			B.pop_front();
+		}
+	if(A.empty())
+		while (!B.empty()) {
+			C.push_back(B.front());
+			B.pop_front();
+		}
+	else
+		while (!A.empty()) {
+			C.push_back(A.front());
+			A.pop_front();
+		}
+	return C;
+}
+
+template<class T>
+void g(list<T> A) {
+	while (!A.empty()) {
+		cout << A.front() << " ";
+		A.pop_front();
+	}
+}
+
+int main() {
+	list<int> A, B;
+	for (int i = 0; i < 10; i++) {
+		A.push_back(3 * i);
+		B.push_back(i / 9);
+	}
+	g(f(A, B));
+
+	system("pause");
+	return 0;
+}
