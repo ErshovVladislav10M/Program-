@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+const int N = 5;
+template<int k, int n>
+struct C { enum { value = C<k ,n - 1>::value + C<k - 1, n - 1>::value }; };
+
+template<int n>
+struct C<0, n> { enum { value = 1 }; };
+
+template<int n>
+struct C<n, n> { enum { value = 1 }; };
+
+int main() {
+	cout << C<3, 5>::value << endl;
+
+	system("pause");
+	return 0;
+}
