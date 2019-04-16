@@ -1,0 +1,27 @@
+#include <iostream>
+#include <sstream>
+#include <list> 
+
+using namespace std;
+
+int f(string a) {
+	list<int> A;
+	stringstream str1(a);
+	int n, sum = 0;
+	while (str1 >> n) A.push_back(n);
+	while (!A.empty()) {
+		n = A.front();
+		A.pop_front();
+		while (n > 9) n /= 10;
+		if (n == 1) sum++;
+	}
+	return sum;
+}
+
+int main() {
+	string a = "12 23 34 10 1";
+	cout << f(a) << endl;
+
+	system("pause");
+	return 0;
+}
