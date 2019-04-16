@@ -1,0 +1,28 @@
+#include <iostream>
+#include <sstream>
+#include <list> 
+
+using namespace std;
+
+void f(string a) {
+	list<int> A;
+	stringstream str1(a);
+	int n, sum = 0;
+	while (str1 >> n) A.push_back(n);
+	list<int>::iterator i;
+	i = A.begin();
+	while (i != A.end()) {
+		n = *i;
+		i++;
+		if (n % 2 == 0)	cout << n / 2 << " ";
+		else cout << n << " ";
+	}
+}
+
+int main() {
+	string a = "12 23 34 45 56";
+	f(a);
+
+	system("pause");
+	return 0;
+}
