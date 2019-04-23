@@ -1,0 +1,15 @@
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main() {
+	set<int> S;
+	int n = 1;
+	while (n != 0) {
+		cin >> n;
+		S.insert(n);
+	}
+	for (auto x : S) cout << x << " ";
+	system("pause");
+	return 0;
+}
