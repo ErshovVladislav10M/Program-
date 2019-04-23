@@ -1,0 +1,17 @@
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main() {
+	set<int> S, C;
+	int n = 1;
+	while (n != 0) {
+		cin >> n;
+		if (S.count(n))
+			C.insert(n);
+		S.insert(n);
+	}
+	for (auto x : C) cout << x << " ";
+	system("pause");
+	return 0;
+}
