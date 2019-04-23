@@ -1,95 +1,60 @@
 #include <iostream>
-
-#include <stack>
-#include <queue>
 #include <vector>
-#include <list> 
-//шаблонные классы стэк, очередь, вектор, двусвязный список
-#include <iterator> //работа с итераторами не связанными со стандартными классами
-
+#include <algorithm>
+#include <iterator>
 using namespace std;
 
-template<class T, int s> //шаблонный класс
-class Stack {
-	T data[s];
-	int c;
-public:
-	Stack() { c = 0; }
-	void push(T x) {
-		if (c<s)
-			data[c++] = x;
-	}
-	T pop() {
-		if (!empty())
-			return data[--c];
-		else return T();
-	}
-	bool empty() { return c == 0; }
-};
-
-template<> //частный случай шаблонного класса
-class Stack<bool, 2> {
-	/*тело класса для частного случая*/
-};
-//для ускорения работы программы во всех файлах, кроме одного, следует
-//писать extern template class имя<параметры>
-
-Stack<int, 10> S; //объявление
-
-template<class T>
-void print(list<T> l) {
-	typename list<T>::iterator i; //объявление итератора
-								  //typename, чтобы понять, что list<T>::iterator — тип
-	for (i = l.begin(); i != l.end(); i++) //двунаправленные итераторы можно сравнивать только на == и !=
-		cout << *i << endl; //разыменование
-							//для структурных типов вместо * нужно писать ->
+bool F(int a) { //предикат, проверяющий условие
+	if (a % 2 == 0)
+		return 1;
+	return 0;
 }
 
-//Обобщение для любого стандартного контейнера с iterator
 template<class T>
-void print(T l)
-{
-	typename T::iterator i;
-	for (i = l.begin(); i != l.end(); i++)
-		cout << *i << endl;
+void print(vector<T> V) { //вывод элементов вектора любого типа
+	for (T x : V)
+		cout << x << " ";
+	cout << endl;
 }
-
-//программирование на этапе компиляции
-const int N = 5;
-template<int n>
-struct Fib { enum { value = Fib<n - 1>::value + Fib<n - 2>::value }; };
-template<>
-struct Fib<1> { enum { value = 1 }; };
-template<>
-struct Fib<2> { enum { value = 1 }; };
-int A00[Fib<N>::value];
-
-//более удобный вариант
-constexpr int fib(int n) { return n <= 2 ? 1 : fib(n - 1) + fib(n - 2); }
-int A01[fib(N)];
-
-#include <set> //шаблонный класс set(множество отсортированных элементов)
-#include <map> //шаблонный класс map(отображение)
-//оттсортированы по возрастанию(значений и прообразов)
 
 int main() {
-	int A[] = { 2, 1, 4, 12, 56, 11, 34 };
-	set<int> S;
-	S.insert(9); //добавление 9
-	S.insert(A, A+7); //добавление трех элементов из А
-	S.erase(4); //удаление 4
-	set<int>::iterator i = S.begin(); //указатель на нулевой элемент
-	advance(i, 4); //сдвиг итератора на 4 позиции
-	S.erase(S.begin(), i); //удаление с 0 по 3 элемент
-	cout << S.count(12) << endl; //принадлежность элемента множеству(1 - да)
-	for (auto x : S) cout << x << "  ";
-	cout << endl;
-
-	map<int, int> M;
-	for (int i = 0; i < 20; i += 2) M[i] = i * 4; //добавление элементов
-	cout << M.count(16) << endl; //проверка
-	M.erase(16); //удаление
-	cout << M.count(16) << endl;
-	system("pause");
+	int a = 12, b = 7;
+	vector<int> A; //объявление пустого вектора
+	A.resize(10); //изменение размера
+	for (int i = 0; i < 10; i++)
+		A[i] = i * 5;
+	A.push_back(a); //добавление в конец элемента
+	cout << A.size() << endl; //количество элементов
+	cout << *(A.end() - 1) << endl;
+	//при передаче по значению в функцию вектор копируется
+	vector<vector<int>> B; //двумерный вектор
+	vector<int>::iterator c, d, e, f; //объявление итрераторов
+	e = A.end() - 6; //итератор на 11 - 6 элемент
+	A.erase(e); //удаление значения A[4](e) и сдвиг последующих на один влево
+	f = A.begin() + 3; //итератор на 1 + 3 элемент
+	A.insert(f, b); //вставляет в A[3](f) значение b и сдвигает направо на один последующие
+	A.erase(remove(A.begin(), A.end(), b), A.end()); //удаление всех значений равных b
+	//сдвиг на отсальных элементов влево без пробелов
+	//для remove требуется <algorithm>
+	print(A);
+	A.erase(remove_if(A.begin(), A.end(), F), A.end()); //удаление всех эелементов отвечающих условию F - true
+	print(A);
+	c = A.begin(); //начальное значение итератора, на первый элемент
+	d = A.end(); //итератор на следующий за последним элементом
+	copy(A.begin() + 2, A.begin() + 4, c); //копирует диапозон A[2](f), A[3](e - 1) в A[0](c)
+	//для copy требуется <algorithm>
+	print(A);
+	istream_iterator<int> x(cin), y; //ввод элементов с первого до ctrl + z(весь ввод блокируется до cin.clear();)
+	copy(x, y, A.begin());
+	//требуется <iterator>
+	ostream_iterator<int> i(cout, " ");
+	copy(A.begin(), A.end(), i); //вывод всех элементов через " "
+	//требуется <iterator>
+	copy(A.begin(), A.begin() + 1, back_inserter(A)); //копирование в конец массива элемента с 0 по 1 - 1
+	f = find(A.begin(), A.end(), 12); //ищет в диапозоне всего массива первое вхождение элемента равного 12
+	A.assign(A.begin(), A.end()); //перезапись вектора его же элементами в диапозоне
+	A.clear(); //удаление всех элементов
+ 
+        system("pause");
 	return 0;
 }
