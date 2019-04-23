@@ -57,18 +57,41 @@ void print(T l)
 //программирование на этапе компиляции
 const int N = 5;
 template<int n>
-struct Fib{ enum { value = Fib<n - 1>::value + Fib<n - 2>::value }; };
+struct Fib { enum { value = Fib<n - 1>::value + Fib<n - 2>::value }; };
 template<>
-struct Fib<1>{ enum { value = 1 }; };
+struct Fib<1> { enum { value = 1 }; };
 template<>
-struct Fib<2>{ enum { value = 1 }; };
+struct Fib<2> { enum { value = 1 }; };
 int A00[Fib<N>::value];
 
 //более удобный вариант
-constexpr int fib(int n){ return n <= 2 ? 1 : fib(n - 1) + fib(n - 2); }
+constexpr int fib(int n) { return n <= 2 ? 1 : fib(n - 1) + fib(n - 2); }
 int A01[fib(N)];
 
+#include <set> //шаблонный класс set(множество отсортированных элементов)
+#include <map> //шаблонный класс map(отображение)
+//оттсортированы по возрастанию(значений и прообразов)
+
 int main() {
+	int A[] = { 2, 1, 4, 12, 56, 11, 34 };
+	set<int> S;
+	S.insert(9); //добавление 9
+	S.insert(A, A + 7); //добавление трех элементов из А
+	S.erase(4); //удаление 4
+	set<int>::iterator i = S.begin(); //указатель на нулевой элемент
+	advance(i, 4); //сдвиг итератора на 4 позиции
+	S.erase(S.begin(), i); //удаление с 0 по 3 элемент
+	cout << S.count(12) << endl; //принадлежность элемента множеству(1 - да)
+	for (auto x : S) cout << x << "  ";
+	cout << endl;
+	S.clear(); //удаление всех элементов
+
+	map<int, int> M;
+	for (int i = 0; i < 20; i += 2) M[i] = i * 4; //добавление элементов
+	cout << M.count(16) << endl; //проверка
+	M.erase(16); //удаление
+	cout << M.count(16) << endl;
+	M.clear();
 
 	system("pause");
 	return 0;
