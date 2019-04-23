@@ -1,0 +1,19 @@
+#include <iostream>
+#include <set>
+#include <map>
+using namespace std;
+
+int main() {
+	map<int, int> M;
+	int n = 1;
+	while (n != 0) {
+		cin >> n;
+		if (M.count(n) > 0)
+			M[n]++;
+		else
+			M[n] = 1;
+	}
+	for (auto x : M) cout << x.first << " (" << x.second << ")" << endl;
+	system("pause");
+	return 0;
+}
