@@ -22,10 +22,11 @@ struct String : Item {
 	string str;
 	String(string a) { str = a; }
 	Item *read(ifstream st) {
-		char c;
+		char c = st.get();
 		string b;
-		while (st >> c && c != '"'){
+		while (c != '"'){
 			b += c;
+			c = st.get();
 		}
 		return new String(b);
 	}
