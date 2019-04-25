@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+using namespace std;
+
+struct Item {
+	virtual ~Item() {}
+	virtual Item *read(ifstream st) {}
+};
+
+struct Integer : Item {
+	int n;
+	Integer(int p) { n = p; }
+	Item *read(ifstream st) {
+		int p;
+		st >> p;
+		return new Integer(p);
+	}
+};
+
+struct String : Item {
+	string str;
+	String(string a) { str = a; }
+	Item *read(ifstream st) {
+		char c;
+		string b;
+		while (st >> c && c != '"'){
+			b += c;
+		}
+		return new String(b);
+	}
+};
+
+struct List : Item {
+	vector<Item *> A;
+	List(vector<Item *> B) { A = B; }
+	Item *read(ifstream st) {
+		int i = 0;
+		while (st.get() != char(-1)) {
+			char c;
+			if (st.get() == ',') st >> c;
+			if (st.get() != char(34) && st.get != char(91)) {
+				int p;
+				st >> p;
+				A[i] = new Integer(p);
+				i++;
+			}
+			if (st.get() == char(34)) {
+				char k;
+				st >> c;
+				string b;
+				while (st >> k && k != char(34))
+					b += k;
+				A[i] = new String(b);
+				i++;
+			}
+			if (st.get() == char(91)) {
+				st >> c;
+
+				A[i] = new List();
+				i++;
+			}
+		}
+	}
+};
+
+int main() {
+	ifstream st("C:\\Users\\st055883\\Documents\\g.txt");
+	cout << st.get() << endl;
+	
+	system("pause");
+	return 0;
+}
