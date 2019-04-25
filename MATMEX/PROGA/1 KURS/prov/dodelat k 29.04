@@ -36,38 +36,44 @@ struct List : Item {
 	vector<Item *> A;
 	List(vector<Item *> B) { A = B; }
 	Item *read(ifstream st) {
+		vector<Item *> B;	
 		int i = 0;
-		while (st.get() != char(-1)) {
-			char c;
-			if (st.get() == ',') st >> c;
-			if (st.get() != char(34) && st.get != char(91)) {
-				int p;
-				st >> p;
-				A[i] = new Integer(p);
+		char c = st.get(), k;
+		while (c != char(-1)) {
+			if (c == ',') st >> c;
+			if (c != '"' && c != '[') {
+				int p = c - '0';
+				B[i] = new Integer(p);
 				i++;
-			}
-			if (st.get() == char(34)) {
-				char k;
 				st >> c;
+				continue;
+			}
+			if (c == '"') {
 				string b;
-				while (st >> k && k != char(34))
+				k = st.get();
+				while (k != '"'){
 					b += k;
-				A[i] = new String(b);
+					k = st.get();
+				}
+				B[i] = new String(b);
 				i++;
-			}
-			if (st.get() == char(91)) {
 				st >> c;
-
-				A[i] = new List();
+				continue;
+			}
+			if (c == '[') {
+				B[i] = read(st);
 				i++;
+				st >> c;
+				continue;
 			}
 		}
+		return new List(B);
 	}
 };
 
 int main() {
-	ifstream st("C:\\Users\\st055883\\Documents\\g.txt");
-	cout << st.get() << endl;
+	ifstream st("g.txt");
+	vector<Item *> A = read(st);
 	
 	system("pause");
 	return 0;
