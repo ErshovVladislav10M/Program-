@@ -40,6 +40,7 @@ struct List : Item {
 		int i = 0;
 		char c = st.get(), k;
 		while (c != char(-1)) {
+			if (c == ']') return new List(B);
 			if (c == ',') st >> c;
 			if (c != '"' && c != '[') {
 				int p = c - '0';
