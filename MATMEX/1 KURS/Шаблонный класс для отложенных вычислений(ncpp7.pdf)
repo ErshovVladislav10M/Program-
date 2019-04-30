@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+//шаблонный класс для отложенных вычислений, вычислния будут производитья
+//только при непосредственном использовании результата
+class Vector{
+	vector<double> _data;
+public:
+	Vector(int s) : _data(s) {}
+	double &operator[](int i) { return _data[i]; }
+};
+
+template<class lhs, class rhs>
+class Vector_sum{ //класс для сложения одной координаты двух векторов
+	lhs &l;
+	rhs &r;
+public:
+	Vector_sum(lhs &L, rhs &R) : l(L), r(R) {}
+	const double &operator[](int i) { return l[i] + r[i]; }
+};
+
+template<class rhs>
+class Vector_scale{ //класс для умножения на скаляр одной координаты
+	double l;
+	rhs &r;
+public:
+	Vector_scale(double L, rhs &R) : l(L), r(R) {}
+	const double &operator[](int i) { return l*r[i]; }
+};
+
+template<class lhs, class rhs> //вычислена будет только сумма двух координат: L[i] + R[i], а не L + R
+Vector_sum<lhs,rhs> operator+(lhs &L, rhs &R) { return Vector_sum<lhs,rhs>(L, R); } 
+
+template<class rhs> //вычислено будет только произведение одной координаты: L*R[i], а не L * R
+Vector_scale<rhs> operator*(double L, rhs &R) { return Vector_scale<rhs>(L, R); }
+
+//ограничим общность - только для Vector
+template <class E>
+class VecExpression { //сужение общности определяемых операций(теперь они определены только для Vector)
+public:
+	int size() const { return static_cast<E const&>(*this).size(); }
+	double operator[](int i) const { return static_cast<E const&>(*this)[i]; }
+	operator E&() { return static_cast<E&>(*this); }
+	operator E const&() const { return static_cast<const E&>(*this); }
+};
+
+class Vector : public VecExpression<Vector> { //сам класс Vector
+	vector<double> data;
+public:
+	double &operator[](int i) { return data[i]; }
+	double operator[](int i) const { return data[i]; }
+	int size() const { return data.size(); }
+	Vector(int n) : data(n) {}
+	template <class E>
+	Vector(VecExpression<E> const& vec) {
+		E const& v = vec;
+		data.resize(v.size());
+		for (int i = 0; i != v.size(); ++i)
+			data[i] = v[i];
+	}
+};
+
+template <class lhs, class rhs>
+class Vector_sum : public VecExpression<Vector_sum<lhs, rhs> > { //сумма
+	lhs const& l;
+	rhs const& r;
+public:
+	Vector_sum(VecExpression<lhs> const& L, VecExpression<rhs> const& R) : l(L), r(R) {}
+	int size() const { return r.size(); }
+	double operator[](int i) const { return l[i] + r[i]; }
+};
+
+template <class rhs>
+class Vector_scale : public VecExpression<Vector_scale<rhs> > { //умножение на скаляр
+	double l;
+	rhs const& r;
+public:
+	Vector_scale(double L, VecExpression<rhs> const& R) : l(L), r(R) {}
+	int size() const { return r.size(); }
+	double operator[](int i) const { return l*r[i]; }
+};
+
+template <class lhs, class rhs> //Шаблон функции, запоминающих выражения с векторами 
+Vector_sum<lhs, rhs> const operator+(VecExpression<lhs> const& L, VecExpression<rhs> const& R) {
+	return Vector_sum<lhs, rhs>(L, R);
+}
+
+template <class rhs> //Шаблон функции, запоминающих выражения с векторами 
+Vector_scale<rhs> const operator*(double L, VecExpression<rhs> const& R) {
+	return Vector_scale<rhs>(L, R);
+}
+
+int main() {
+
+	system("pause");
+	return 0;
+}
