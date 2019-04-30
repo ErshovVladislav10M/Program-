@@ -18,8 +18,8 @@ class Complex_sum {
 	rhs &r;
 public:
 	Complex_sum(lhs &L, rhs &R) : l(L), r(R) {}
-	const double &Re() { return l.x + r.x; }
-	const double &Im() { return l.y + r.y; }
+	const double &Re() { return l.Re() + r.Re(); }
+	const double &Im() { return l.Im() + r.Im(); }
 };
 
 template<class lhs, class rhs> 
