@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Complex{
+	double x;
+	double y;
+public:
+	Complex(double xx, double yy) : x(xx), y(yy) {}
+	double &Re() { return x; }
+	double &Im() { return y; }
+};
+
+template<class lhs, class rhs>
+class Complex_sum {
+	lhs &l;
+	rhs &r;
+public:
+	Complex_sum(lhs &L, rhs &R) : l(L), r(R) {}
+	const double &Re() { return l.x + r.x; }
+	const double &Im() { return l.y + r.y; }
+};
+
+template<class lhs, class rhs> 
+Complex_sum<lhs,rhs> operator+(lhs &L, rhs &R) { return Complex_sum<lhs,rhs>(L, R); } 
+
+int main() {
+
+	system("pause");
+	return 0;
+}
