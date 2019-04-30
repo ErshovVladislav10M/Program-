@@ -8,8 +8,8 @@ class Fraction{
 	int b;
 public:
 	Fraction(int aa, int bb) : a(aa), b(bb) {}
-	int &top() { return a; }
-	int &bot() { return b; }
+	int &num() { return a; }
+	int &den() { return b; }
 };
 
 template<class lhs, class rhs>
@@ -18,8 +18,8 @@ class Fraction_sum {
 	rhs &r;
 public:
 	Fraction_sum(lhs &L, rhs &R) : l(L), r(R) {}
-	const int &top() { return l.a*r.b + r.a*l.b; }
-	const int &bot() { return l.b*r.b; }
+	const int &num() { return l.num()*r.den() + r.num()*l.den(); }
+	const int &den() { return l.den()*r.den(); }
 };
 
 template<class lhs, class rhs>
@@ -28,8 +28,8 @@ class Fraction_multi {
 	rhs &r;
 public:
 	Fraction_multi(lhs &L, rhs &R) : l(L), r(R) {}
-	const int &top() { return l.a*r.a; }
-	const int &bot() { return l.b*r.b; }
+	const int &num() { return l.num()*r.num(); }
+	const int &den() { return l.den()*r.den(); }
 };
 
 template<class lhs, class rhs> 
