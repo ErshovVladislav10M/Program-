@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Fraction{
+	int a;
+	int b;
+public:
+	Fraction(int aa, int bb) : a(aa), b(bb) {}
+	int &top() { return a; }
+	int &bot() { return b; }
+};
+
+template<class lhs, class rhs>
+class Fraction_sum {
+	lhs &l;
+	rhs &r;
+public:
+	Fraction_sum(lhs &L, rhs &R) : l(L), r(R) {}
+	const int &top() { return l.a*r.b + r.a*l.b; }
+	const int &bot() { return l.b*r.b; }
+};
+
+template<class lhs, class rhs>
+class Fraction_multi {
+	lhs &l;
+	rhs &r;
+public:
+	Fraction_multi(lhs &L, rhs &R) : l(L), r(R) {}
+	const int &top() { return l.a*r.a; }
+	const int &bot() { return l.b*r.b; }
+};
+
+template<class lhs, class rhs> 
+Fraction_sum<lhs,rhs> operator+(lhs &L, rhs &R) { return Fraction_sum<lhs,rhs>(L, R); } 
+
+template<class lhs, class rhs>
+Fraction_multi<lhs, rhs> operator*(lhs &L, rhs &R) { return Fraction_multi<lhs, rhs>(L, R); }
+
+int main() {
+
+	system("pause");
+	return 0;
+}
