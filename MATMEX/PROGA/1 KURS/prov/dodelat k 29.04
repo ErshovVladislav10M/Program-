@@ -5,13 +5,13 @@ using namespace std;
 
 struct Item {
 	virtual ~Item() {}
-	virtual Item *read(ifstream st) {}
+	virtual Item *read(ifstream &st) {}
 };
 
 struct Integer : Item {
 	int n;
 	Integer(int p) { n = p; }
-	Item *read(ifstream st) {
+	Item *read(ifstream &st) {
 		int p;
 		st >> p;
 		return new Integer(p);
@@ -21,10 +21,10 @@ struct Integer : Item {
 struct String : Item {
 	string str;
 	String(string a) { str = a; }
-	Item *read(ifstream st) {
+	Item *read(ifstream &st) {
 		char c = st.get();
 		string b;
-		while (c != '"'){
+		while (c != '"') {
 			b += c;
 			c = st.get();
 		}
@@ -35,8 +35,8 @@ struct String : Item {
 struct List : Item {
 	vector<Item *> A;
 	List(vector<Item *> B) { A = B; }
-	Item *read(ifstream st) {
-		vector<Item *> B;	
+	Item *read(ifstream &st) {
+		vector<Item *> B;
 		int i = 0;
 		char c = st.get(), k;
 		while (c != char(-1)) {
@@ -45,7 +45,7 @@ struct List : Item {
 			if (c != '"' && c != '[') {
 				int p = c - '0';
 				k = st.get();
-				while(k != ' '){
+				while (k != ' ') {
 					p *= 10;
 					p += k - '0';
 					k = st.get();
@@ -58,7 +58,7 @@ struct List : Item {
 			if (c == '"') {
 				string b;
 				k = st.get();
-				while (k != '"'){
+				while (k != '"') {
 					b += k;
 					k = st.get();
 				}
@@ -80,8 +80,9 @@ struct List : Item {
 
 int main() {
 	ifstream st("g.txt");
-	vector<Item *> A = read(st);
-	
+	Item *B = nullptr;
+	Item *A = B->read(st);
+
 	system("pause");
 	return 0;
 }
