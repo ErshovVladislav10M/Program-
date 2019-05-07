@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+//решение в лоб
 enum Error { OK, LN, SQRT };
 
 Error errcode;
@@ -30,4 +31,23 @@ int main(){
 		cerr << "Internal error." << endl;
 		return EXIT_FAILURE;
 	}
+}
+
+//решение через C - строки
+double f(double x){
+	if (x <= 0) throw "Logarithm undefined.";
+	if (x > exp(10)) throw "Square root undefined.";
+	return sqrt(10 - log(x));
+}
+
+int main(){
+	double x, y;
+	cin >> x;
+	try { y = f(x); }
+	catch (char *msg){
+		cerr << msg << endl;
+		return EXIT_FAILURE;
+	}
+	cout << "Result=" << y << endl;
+	return EXIT_SUCCESS;
 }
