@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+int div1(int a, int b){
+	if (b == 0) throw "DivisionByZero.";
+	return a / b;
+}
+
+int main(){
+	int a, b, y;
+	cin >> a >> b;
+	try { y = div1(a, b); }
+	catch (const char *msg){
+		cerr << msg << endl;
+		return EXIT_FAILURE;
+	}
+	cout << "Result=" << y << endl;
+	return EXIT_SUCCESS;
+}
