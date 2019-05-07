@@ -48,6 +48,7 @@ struct List : Item {
 				while(k != ' '){
 					p *= 10;
 					p += k - '0';
+					k = st.get();
 				}
 				B[i] = new Integer(p);
 				i++;
