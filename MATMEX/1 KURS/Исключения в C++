@@ -35,8 +35,8 @@ int main(){
 
 //решение через C - строки(самое короткое)
 double f(double x){
-	if (x <= 0) throw "Logarithm undefined.";
-	if (x > exp(10)) throw "Square root undefined.";
+	if (x <= 0) throw "Logarithm undefined."; //возвращается const char *
+	if (x > exp(10)) throw "Square root undefined."; //возвращается const char *
 	return sqrt(10 - log(x));
 }
 
@@ -44,7 +44,7 @@ int main(){
 	double x, y;
 	cin >> x;
 	try { y = f(x); }
-	catch (char *msg){
+	catch (const char *msg){ //условие работы catch - совпадение класса, возвращаемого throw
 		cerr << msg << endl;
 		return EXIT_FAILURE;
 	}
@@ -56,8 +56,8 @@ int main(){
 class LnException {};
 class SqrtException {};
 double f(double x){
-	if (x <= 0) throw LnException();
-	if (x > exp(10)) throw SqrtException();
+	if (x <= 0) throw LnException(); //возвращается LnException
+	if (x > exp(10)) throw SqrtException(); //возвращается SqrtException
 	return sqrt(10 - log(x));
 }
 
