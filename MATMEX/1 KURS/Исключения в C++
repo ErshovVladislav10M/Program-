@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+enum Error { OK, LN, SQRT };
+
+Error errcode;
+
+double f(double x){
+	if (x <= 0) { errcode = LN; return 0; }
+	if (x>exp(10)) { errcode = SQRT; return 0; }
+	errcode = OK;
+	return sqrt(10 - log(x));
+}
+
+int main(){
+	double x, y;
+	cin >> x;
+	y = f(x);
+	switch (errcode){
+	case OK:
+		cout << "Result=" << y << endl;
+		return EXIT_SUCCESS;
+	case LN:
+		cerr << "Logarithm undefined." << endl;
+		return EXIT_FAILURE;
+	case SQRT:
+		cerr << "Square root undefined." << endl;
+		return EXIT_FAILURE;
+	default:
+		cerr << "Internal error." << endl;
+		return EXIT_FAILURE;
+	}
+}
