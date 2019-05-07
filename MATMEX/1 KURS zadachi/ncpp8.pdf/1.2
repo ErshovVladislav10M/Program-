@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+class FileNotFound {};
+class Overwriting {};
+
+bool g(string a) {
+	ifstream st("C:\\Users\\st055883\\Documentsa\\" + a + ".txt");
+	if (st) return 1;
+	return 0;
+}
+
+void f(string a, string b){
+	if (!g(a)) throw FileNotFound();
+	if (g(b)) throw Overwriting();
+	ifstream st("C:\\Users\\st055883\\Documentsa\\" + a + ".txt");
+	ofstream st1("C:\\Users\\st055883\\Documentsa\\" + b + ".txt");
+	st1 << st.rdbuf();
+}
+
+int main(){
+	string a, b;
+	cin >> a >> b;
+	while (true)
+		try { f(a, b); break; }
+	    catch (FileNotFound){
+			cerr << "нет исходного файла" << endl;
+			cout << "Введите новое название исходного файла:";
+			cin >> a;
+		}
+		catch (Overwriting) {
+			cerr << "нет конечного файла" << endl;
+			cout << "Введите новое название конечного файла:";
+			cin >> b;
+		}
+	return EXIT_SUCCESS;
+}
