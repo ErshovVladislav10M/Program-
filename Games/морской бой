@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+bool check(int A[10][10], int l, int l){
+	if(A[i][l] == 1) return true;
+	return false;
+}
+
+void print(int A[10][10]){
+	for(int i = 0; i < 10; i++){
+	  for(int l = 0; l < 10; l++)
+	    cout << A[i][l] << " ";
+	  cout << endl;
+	}
+}
+
+void game(int A[10][10], int B[10][10]){
+	for(int i = 0)
+}
+int main() {
+	int A[10][10], B[10][10];
+	
+	return 0;
+}
