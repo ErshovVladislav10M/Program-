@@ -1,0 +1,38 @@
+#include <iostream>
+using namespace std;
+
+class OutOfMemory {};
+class OutOfRange {};
+
+struct Vector{
+	double *A;
+	int real_size = 0;
+	Vector(int size){
+		try { input(size); }
+	    catch (OutOfMemory){
+			append(size);
+			input(size);
+		}
+	}
+	void input(int size){
+	    if(real_size < size) throw OutOfMemory();
+	    for(int i = 0; i < size; i++)
+	        cin >> A[i];
+	}
+	void append(int size){
+		double *B = new double[size];
+		for(int i = 0; i < size; i++)
+		    B[i] = A[i];
+		A = B;
+		delete[] B;
+	}
+	double get(int i){
+		try{}
+		catch(){}
+	} 
+};
+
+int main(){
+	
+	return EXIT_SUCCESS;
+}
