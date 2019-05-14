@@ -1,0 +1,81 @@
+//Написать две шаблонные структуры Point и Line с параметром «тип, используемый для хранения числа».Они
+//должны описывать точки и прямые на плоскости.Должны быть реализованы функции вычисления пересечения
+//прямых(результат — точка) и проведения прямой по двум точкам, а также расстояния между точками и от точки до
+//прямой, площади и периметра треугольника по трем вершинам.
+
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Point 
+{
+	T x;
+	T y;
+	Point(T xx, T yy): x(xx), y(yy) {}
+};
+
+template<class T>
+struct Line
+{
+	T a;
+	T b;
+	T c;
+	Line(T aa, T bb, T cc) : a(aa), b(bb), c(cc) {}
+	Point<T> search(Line<T> B)
+	{
+		T k = -a / b;
+		T k1 = -B.a / B.b;
+		T d = -c / b;
+		T d1 = -B.c / B.b;
+		if (k == k1 && d == d1)
+		{
+			cout << "oshibka, paralel'no" << endl;
+		}
+		if (k == k1 && d != d1)
+		{
+			cout << "oshibka, sovpadaet" << endl;
+		}
+		T tmp_x = (d1 - d) / (k - k1);
+		T tmp_y = k*tmp_x + d;
+		return Point<T>(tmp_x, tmp_y);
+	}
+	Line stroit(Point<T> A, Point<T> B) 
+	{
+		T tmp_a = A.y - B.y;
+		T tmp_b = B.x - A.x;
+		T tmp_c = A.x*B.y - B.x*A.y;
+		return Line<T>(tmp_a, tmp_b, tmp_c);
+	}
+};
+
+template<class T>
+T distance(Point<T> A, Point<T> B)
+{
+	return sqrt((B.x - A.x)*(B.x - A.x) + (B.y - A.y)*(B.y - A.y));
+}
+
+template<class T>
+T distance(Point<T> A, Line<T> B)
+{
+	return abs(B.a*A.x + B.b*A.y + B.c) / sqrt(B.a*B.a + B.b*B.b);
+}
+
+template<class T>
+T perimetr(Point<T> A, Point<T> B, Point<T> C)
+{
+	return distance(A, B) + distance(B, C) + distance(C, A);
+}
+
+template<class T>
+T plochad(Point<T> A, Point<T> B, Point<T> C)
+{
+	return abs(((A.x - C.x)*(B.y - C.y) - (A.y - C.y)*(B.x - C.x)) / 2);
+}
+
+int main()
+{
+	
+	system("pause");
+	return 0;
+}
