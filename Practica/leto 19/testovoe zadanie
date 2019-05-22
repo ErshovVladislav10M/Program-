@@ -1,0 +1,21 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+using namespace std;
+
+int main() {
+	string str = "BC121;F1;AH32;1;0;0.5998;0.5998;FB;28;-28X150;", str1;
+	istringstream st(str);
+	ostringstream st1(str1);
+	char c;
+	string a;
+	while(st >> c){
+		if(c != ';')
+		    a += c;
+		else{
+		    st1 << a;	
+		    a = '\0';
+		}
+	}
+	return 0;
+}
