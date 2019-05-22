@@ -7,15 +7,21 @@ int main() {
 	string str = "BC121;F1;AH32;1;0;0.5998;0.5998;FB;28;-28X150;", str1;
 	istringstream st(str);
 	ostringstream st1(str1);
-	char c;
+	char c = st.get();
 	string a;
-	while(st >> c){
-		if(c != ';')
+	while(c != '5'){
+		if(c != ';'){
 		    a += c;
+		    cout << c << " " << a << endl;
+		}
 		else{
-		    st1 << a;	
+		    st1 << a << " ";
+		    //cout << st1.rdbuf() << endl;
 		    a = '\0';
 		}
+		c = st.get();
 	}
+	cout << st.rdbuf() << endl;
+	cout << st1.rdbuf() << endl;
 	return 0;
 }
