@@ -1,0 +1,24 @@
+print('hello world') #hello world
+print("hello world") #hello world
+print('he\'s car') #he's car
+print ('hello\nworld') #enter
+print('hello' + " world") #hello world
+print ('he'*4)
+print(6/3) #2.0
+print (5 ** 2) #25
+print(6//4) #1
+print(6%4) #2
+print(input('input: ')) #ввод чего-либо
+print(float(input()) + float(input())) #2, 3 = 5.0
+print(int('2')+int('5')) #7
+x = 5
+print(x) #5
+x = 'str'
+print(x) #str
+del x #удаление x
+if 5 > 6:
+  print ('wtf?')
+elif 5 == 6:
+  print('hmmm')
+else:
+  print('right')
