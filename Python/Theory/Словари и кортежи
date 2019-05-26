@@ -8,7 +8,7 @@ print(13 in ages)
 print(ages.get("John"))
 print(ages.get("Vlad", "nety v ages"))
 
-#кортежи
+#кортежи(нельзя менять)
 words = ("spam", "eggs", "sausages")
 print(words[0])
 words[1] = "cheese" #TypeError
