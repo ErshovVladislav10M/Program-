@@ -4,21 +4,75 @@ print('he\'s car') #he's car
 print ('hello\nworld') #enter
 print('hello' + " world") #hello world
 print ('he'*4)
+
 print(6/3) #2.0
 print (5 ** 2) #25
 print(6//4) #1
 print(6%4) #2
+
 print(input('input: ')) #ввод чего-либо
-print(float(input()) + float(input())) #2, 3 = 5.0
+print(float(input()) + float(input())) #2, 3: итог 5.0
 print(int('2')+int('5')) #7
 x = 5
 print(x) #5
-x = 'str'
-print(x) #str
+x = 'str11'
+print(x) #str11
 del x #удаление x
-if 5 > 6:
+
+#конструкция if
+if 5 > 6: 
   print ('wtf?')
 elif 5 == 6:
   print('hmmm')
 else:
   print('right')
+ 
+#конструкция while
+i = 0
+while i < 5:
+  print(i*'ha')
+  i += 2
+  if i == 4: #break
+    break
+  else: #continue
+    continue
+
+#списки
+A = [4, 5, 'wow']
+print (A[1]) #5
+print(A[2]) #wow
+print(A + [1, '!!!']) #добавление элементов
+str1 = 'hello world'
+print(str1[0]) #h
+B = [4, [2, 3], 7]
+print(B[1][0]) #2
+print(B) #вывод всего списка
+print(B * 2) #удвоение своими элементами
+print(4 in B) #проверка наличия
+print(7 not in B) #False
+B.append(11) #добавление в конец
+print(len(B)) #количество элементов
+B.insert(0, 13) #добавоение на 0 место
+print (B.index(4)) #индекс первого совпадения
+
+#range
+print(list(range(4))) #coздание списка [0,1,2,3]
+print(list(range(1,4))) #список [1,2,3]
+print(list(range(0,4,2))) #список [0,2]
+
+#цикл for
+words = ["hello", "world", "spam", "eggs"]
+for word in words:
+  print(word + "!")
+for i in range(2):
+  print(i) #0, 1
+
+#функции
+def my_func():
+   print("spam")
+   return 34
+print(my_func())
+def multiply (a, b):
+  return a*b
+operation = multiply
+print(operation (2,5)) #10
