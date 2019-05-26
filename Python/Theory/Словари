@@ -7,3 +7,13 @@ print(13 in ages)
 #метод get
 print(ages.get("John"))
 print(ages.get("Vlad", "nety v ages"))
+
+#кортежи
+words = ("spam", "eggs", "sausages")
+print(words[0])
+words[1] = "cheese" #TypeError
+#можно без скобок
+my_tuple = "one", "two", "three"
+print(my_tuple[0])
+#пустой
+tpl = ()
