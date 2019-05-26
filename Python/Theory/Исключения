@@ -17,3 +17,21 @@ except ZeroDivisionError:
    print("Divided by zero")
 except (ValueError, TypeError):
    print("Error occurred")
+
+#блок finally выполняется всегда
+try:
+   print(1 / 0)
+except ZeroDivisionError:
+   print("Divided by zero")
+finally:
+   print("This code will run no matter what")
+
+#вызов исключения
+#raise ValueError
+#raise NameError("Invalid name!")
+#try:
+#повторный вызов исключения
+#   num = 5 / 0
+#except:
+#   print("An error occurred")
+#   raise
