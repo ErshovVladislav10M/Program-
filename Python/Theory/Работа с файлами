@@ -1,0 +1,32 @@
+#открытие файлов
+myfile = open("filename.txt") #по умолчанию на чтение
+
+#чтение
+file = open("filename.txt", "w")
+str1 = file.read() #само чтение
+str2 = file.read(3) #чтение 3 байт
+print(file.readlines())
+ #список из строк
+for line in file:
+ #построчное чтение
+    print(line)
+
+#запись
+file1 = open("filename.txt", "r")
+file1 = open("filename.txt")
+msg = file.write("This has been written to a file")
+ #сама запись
+print(msg) #количество записанных байт 
+
+#дописывание
+open("filename.txt", "a")
+
+#двоичная запись
+open("filename.txt", "wb")
+
+#закрытие
+mylife.close()
+
+#автоматическое закрытие
+with open("filename.txt") as f:
+   print(f.read())
