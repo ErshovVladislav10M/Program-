@@ -1,0 +1,9 @@
+#словари
+ages = {"Dave": 24, "Mary": 42, "John": 58}
+print(ages["Dave"])
+ages["Dave"] = 13
+print(ages["Dave"])
+print(13 in ages)
+#метод get
+print(ages.get("John"))
+print(ages.get("Vlad", "nety v ages"))
