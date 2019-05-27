@@ -1,0 +1,38 @@
+#списки
+A = [4, 5, 'wow']
+print (A[1]) #5
+print(A[2]) #wow
+print(A + [1, '!!!']) #добавление элементов
+str1 = 'hello world'
+print(str1[0]) #h
+B = [4, [2, 3], 7]
+print(B[1][0]) #2
+print(B) #вывод всего списка
+print(B * 2) #удвоение своими элементами
+print(4 in B) #проверка наличия
+print(7 not in B) #False
+B.append(11) #добавление в конец
+print(len(B)) #количество элементов
+B.insert(0, 13) #добавоение на 0 место
+print (B.index(4)) #индекс первого совпадения
+
+#range
+print(list(range(4))) #coздание списка [0,1,2,3]
+print(list(range(1,4))) #список [1,2,3]
+print(list(range(0,4,2))) #список [0,2]
+
+#срезы
+C = [2,4,6,8,0,'qwer']
+print(C[2:5])
+ #[6,8,0]
+print(C[:2]) #с нулевого
+print(C[2:]) #до последнего
+print(C[0:6:2]) #с шагом два
+print(C[6:0:-2]) #в обратном порядке
+print(C[2:-2]) #до второго с конца не включительно
+
+#списковое включение
+cubes = [i**3 for i in range(5)]
+print(cubes) #[1,8,27,64]
+evens=[i**2 for i in range(10) if i**2 % 2 == 0]
+print(evens) #[0, 4, 16, 36, 64]
