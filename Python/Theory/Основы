@@ -37,29 +37,6 @@ while i < 5:
   else: #continue
     continue
 
-#списки
-A = [4, 5, 'wow']
-print (A[1]) #5
-print(A[2]) #wow
-print(A + [1, '!!!']) #добавление элементов
-str1 = 'hello world'
-print(str1[0]) #h
-B = [4, [2, 3], 7]
-print(B[1][0]) #2
-print(B) #вывод всего списка
-print(B * 2) #удвоение своими элементами
-print(4 in B) #проверка наличия
-print(7 not in B) #False
-B.append(11) #добавление в конец
-print(len(B)) #количество элементов
-B.insert(0, 13) #добавоение на 0 место
-print (B.index(4)) #индекс первого совпадения
-
-#range
-print(list(range(4))) #coздание списка [0,1,2,3]
-print(list(range(1,4))) #список [1,2,3]
-print(list(range(0,4,2))) #список [0,2]
-
 #цикл for
 words = ["hello", "world", "spam", "eggs"]
 for word in words:
