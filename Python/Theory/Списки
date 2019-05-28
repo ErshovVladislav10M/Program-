@@ -17,7 +17,7 @@ B.insert(0, 13) #добавоение на 0 место
 print (B.index(4)) #индекс первого совпадения
 
 #range
-print(list(range(4))) #coздание списка [0,1,2,3]
+print(list(range(4))) #создание списка [0,1,2,3]
 print(list(range(1,4))) #список [1,2,3]
 print(list(range(0,4,2))) #список [0,2]
 
