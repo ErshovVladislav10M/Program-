@@ -2,10 +2,10 @@ file1 = open("C:\\Users\\user\\Desktop\\Vladislav\\Programs\\Python\\f.txt", "r"
 file2 = open("C:\\Users\\user\\Desktop\\Vladislav\\Programs\\Python\\g.txt", "a")
 str1 = file1.read(1)
 
-while str1 != None:
+while len(str1) != 0:
     while str1 != ';':
         print(str1)
         file2.write(str1)
         str1 = file1.read(1)
-    file2.write('   ')
+    file2.write('  ')
     str1 = file1.read(1)
