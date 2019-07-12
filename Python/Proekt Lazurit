@@ -1,4 +1,5 @@
 from openpyxl import load_workbook
+import xlwt
 
 wb_val = load_workbook("C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\csv.xlsx", data_only = True)
 sheet_val = wb_val["Лист1"]
@@ -7,15 +8,13 @@ def f1():
     str1 = file1.read(1)
     while str1 != '~':
         while str1 != ';':
-            print(str1)
             file2.write(str1)
             str1 = file1.read(1)
         file2.write('     ')
         str1 = file1.read(1)
 
 for i in range(3, 10):
-    word = 'A' + str(i)
-    value = sheet_val[word].value
+    value = sheet_val['A' + str(i)].value
     file1 = open("C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\f.txt", "w")
     file1.write(value + ';~')
     file1.close()
@@ -23,3 +22,12 @@ for i in range(3, 10):
     file2 = open("C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\g.txt", "a")
     f1()
     file2.write('\n')
+    file2.close()
+
+book = xlwt.Workbook(encoding="utf-8")
+sheet1 = book.add_sheet("Python Sheet 1")
+
+for i in range(3, 10):
+    value = sheet_val['A' + str(i)].value
+    sheet1.write(i, 0, value + ';~')
+book.
