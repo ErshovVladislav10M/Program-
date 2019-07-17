@@ -12,38 +12,48 @@ def f(str01, t):
         t += 1
     return str02
 
-for i in range(28, 29):
+ans = 0
+k = 4
+for i in range(3, 11):
     str1 = sheet1.cell(row=i, column=1).value
     l = 0
 
-    sheet2['F' + str(i + 4)] = f(str1, l)
+    if i == 3 or sheet2['F' + str(i + k - 1)].value != f(str1, l):
+        sheet2['F' + str(i + k)] = f(str1, l)
+    else:
+        sheet2['F' + str(i + k)] = 'Масса/weight' + sheet2['F' + str(i + k - 1)].value
+        sheet2['O' + str(i + k)] = ans
+        ans = 0
+        k += 1
+        continue
     l += len(f(str1, l))
 
-    sheet2['G' + str(i + 4)] = f(str1, l)
+    sheet2['G' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
-    sheet2['I' + str(i + 4)] = f(str1, l)
+    sheet2['I' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
-    sheet2['J' + str(i + 4)] = f(str1, l)
+    sheet2['J' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
     if f(str1, l) == '1':
-        sheet2['K' + str(i + 4)] = '+'
+        sheet2['K' + str(i + k)] = '+'
     if f(str1, l) == '2':
-        sheet2['L' + str(i + 4)] = '+'
+        sheet2['L' + str(i + k)] = '+'
     l += len(f(str1, l))
 
-    sheet2['M' + str(i + 4)] = f(str1, l)
+    sheet2['M' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
-    sheet2['O' + str(i + 4)] = f(str1, l)
+    sheet2['O' + str(i + k)] = f(str1, l)
+    ans += float(f(str1, l))
     l += len(f(str1, l))
 
-    sheet2['H' + str(i + 4)] = f(str1, l)
+    sheet2['H' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
-    sheet2['H' + str(i + 4)] = f(str1, l)
+    sheet2['H' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
 wb2.save('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablon.xlsx')
