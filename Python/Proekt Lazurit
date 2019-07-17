@@ -1,33 +1,49 @@
 from openpyxl import load_workbook
-import xlwt
 
-wb_val = load_workbook("C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\csv.xlsx", data_only = True)
-sheet_val = wb_val["Лист1"]
+wb1 = load_workbook('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\csv.xlsx')
+wb2 = load_workbook('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablon.xlsx')
+sheet1 = wb1['Лист1']
+sheet2 = wb2['02']
 
-def f1():
-    str1 = file1.read(1)
-    while str1 != '~':
-        while str1 != ';':
-            file2.write(str1)
-            str1 = file1.read(1)
-        file2.write('     ')
-        str1 = file1.read(1)
+def f(str01, t):
+    str02 = ' '
+    while str01[t] != ';':
+        str02 += str01[t]
+        t += 1
+    return str02
 
-for i in range(3, 10):
-    value = sheet_val['A' + str(i)].value
-    file1 = open("C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\f.txt", "w")
-    file1.write(value + ';~')
-    file1.close()
-    file1 = open("C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\f.txt", "r")
-    file2 = open("C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\g.txt", "a")
-    f1()
-    file2.write('\n')
-    file2.close()
+for i in range(28, 29):
+    str1 = sheet1.cell(row=i, column=1).value
+    l = 0
 
-book = xlwt.Workbook(encoding="utf-8")
-sheet1 = book.add_sheet("Python Sheet 1")
+    sheet2['F' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
 
-for i in range(3, 10):
-    value = sheet_val['A' + str(i)].value
-    sheet1.write(i, 0, value + ';~')
-book.
+    sheet2['G' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
+
+    sheet2['I' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
+
+    sheet2['J' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
+
+    if f(str1, l) == '1':
+        sheet2['K' + str(i + 4)] = '+'
+    if f(str1, l) == '2':
+        sheet2['L' + str(i + 4)] = '+'
+    l += len(f(str1, l))
+
+    sheet2['M' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
+
+    sheet2['O' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
+
+    sheet2['H' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
+
+    sheet2['H' + str(i + 4)] = f(str1, l)
+    l += len(f(str1, l))
+
+wb2.save('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablon.xlsx')
