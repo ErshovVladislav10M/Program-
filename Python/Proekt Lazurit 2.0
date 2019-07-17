@@ -1,0 +1,29 @@
+from openpyxl import load_workbook
+
+wb1 = load_workbook('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\csv.xlsx')
+wb2 = load_workbook('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablon.xlsx')
+sheet1 = wb1['Лист1']
+sheet2 = wb2['02']
+
+def f(str1, l):
+    str2 = ' '
+    while str1[l] != ';':
+        str2 = str2 + str1[l]
+        l += 1
+    return str2
+
+for i in range(3, 10):
+    str1 = sheet1.cell(row=i, column=1).value
+    l = 0
+    str2 = ' '
+    while str1[l] != ';':
+        str2 = str2 + str1[l]
+        l += 1
+    print(str2)
+    sheet2['F7'] = str2
+    l += 1
+    str2 = ' '
+
+print(int.toString(12))
+
+wb2.save('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablon.xlsx')
