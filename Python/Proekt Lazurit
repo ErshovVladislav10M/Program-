@@ -17,6 +17,8 @@ weight = 0
 block_mass = 0
 k = 4
 str2 = ' '
+
+#цикл для каджой строки из файла csv
 for i in range(3, 9):
     #запись строки из файла csv
     str1 = sheet1.cell(row=i, column=1).value + ';'
@@ -62,16 +64,18 @@ for i in range(3, 9):
     weight += float(f(str1, l))
     l += len(f(str1, l))
 
-    #запись сортамента
-    sheet2['H' + str(i + k)] = f(str1, l)
-    l += len(f(str1, l))
-
-    #запись толщины профиля
-    sheet2['H' + str(i + k)] = f(str1, l)
+    #запись толщины\профиля
+    if f(str1, l) == ' PL' or f(str1, l) == ' FB' or f(str1, l) == ' ST':
+        l += len(f(str1, l))
+        sheet2['H' + str(i + k)] = f(str1, l)
+        l += len(f(str1, l))
+    else:
+        l += len(f(str1, l))
+        l += len(f(str1, l))
+        sheet2['H' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
     #выделение номера секции
-    l += len(f(str1, l))
     str3 = f(str1, l)
 
 #подведение итога по секции
