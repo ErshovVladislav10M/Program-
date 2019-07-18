@@ -5,6 +5,7 @@ wb2 = load_workbook('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablo
 sheet1 = wb1['Лист1']
 sheet2 = wb2['02']
 
+#функция выделения из строки подстроки до ';'
 def f(str01, t):
     str02 = ' '
     while str01[t] != ';':
@@ -12,57 +13,69 @@ def f(str01, t):
         t += 1
     return str02
 
-ans = 0
-ans2 = 0
+weight = 0
+block_mass = 0
 k = 4
 str2 = ' '
 for i in range(3, 9):
+    #запись строки из файла csv
     str1 = sheet1.cell(row=i, column=1).value + ';'
     l = 0
 
+    #запись номера узла или подведение его массы
     if i == 3 or str2 != f(str1, l):
         if i != 3:
             sheet2['F' + str(i + k)] = 'Масса/weight' + str2
-            sheet2['O' + str(i + k)] = ans
-            ans2 += ans
-            ans = 0
+            sheet2['O' + str(i + k)] = weight
+            block_mass += weight
+            weight = 0
             k += 2
         sheet2['F' + str(i + k)] = f(str1, l)
         str2 = f(str1, l)
     l += len(f(str1, l))    
 
+    #запись номера детали
     sheet2['G' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
+    #запись марки материала
     sheet2['I' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
+    #запись количества
     sheet2['J' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
+    #запись кода гибки
     if f(str1, l) == '1':
         sheet2['K' + str(i + k)] = '+'
     if f(str1, l) == '2':
         sheet2['L' + str(i + k)] = '+'
     l += len(f(str1, l))
 
+    #запись масссы детали
     sheet2['M' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
+    #запись массы деталей
     sheet2['O' + str(i + k)] = f(str1, l)
-    ans += float(f(str1, l))
+    weight += float(f(str1, l))
     l += len(f(str1, l))
 
+    #запись сортамента
     sheet2['H' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
+    #запись толщины профиля
     sheet2['H' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
 
+    #выделение номера секции
     l += len(f(str1, l))
     str3 = f(str1, l)
 
+#подведение итога по секции
 sheet2['F' + str(10 + k)] = 'Масса секции/Block mass' + str3
-sheet2['O' + str(10 + k)] = ans2
+sheet2['O' + str(10 + k)] = block_mass
 
 wb2.save('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablon.xlsx')
