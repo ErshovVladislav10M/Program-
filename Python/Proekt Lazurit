@@ -13,20 +13,23 @@ def f(str01, t):
     return str02
 
 ans = 0
+ans2 = 0
 k = 4
-for i in range(3, 11):
-    str1 = sheet1.cell(row=i, column=1).value
+str2 = ' '
+for i in range(3, 9):
+    str1 = sheet1.cell(row=i, column=1).value + ';'
     l = 0
 
-    if i == 3 or sheet2['F' + str(i + k - 1)].value != f(str1, l):
+    if i == 3 or str2 != f(str1, l):
+        if i != 3:
+            sheet2['F' + str(i + k)] = 'Масса/weight' + str2
+            sheet2['O' + str(i + k)] = ans
+            ans2 += ans
+            ans = 0
+            k += 2
         sheet2['F' + str(i + k)] = f(str1, l)
-    else:
-        sheet2['F' + str(i + k)] = 'Масса/weight' + sheet2['F' + str(i + k - 1)].value
-        sheet2['O' + str(i + k)] = ans
-        ans = 0
-        k += 1
-        continue
-    l += len(f(str1, l))
+        str2 = f(str1, l)
+    l += len(f(str1, l))    
 
     sheet2['G' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
@@ -55,5 +58,11 @@ for i in range(3, 11):
 
     sheet2['H' + str(i + k)] = f(str1, l)
     l += len(f(str1, l))
+
+    l += len(f(str1, l))
+    str3 = f(str1, l)
+
+sheet2['F' + str(10 + k)] = 'Масса секции/Block mass' + str3
+sheet2['O' + str(10 + k)] = ans2
 
 wb2.save('C:\\Users\\user\\Desktop\\Programs\\Python\\Lazurit\\shablon.xlsx')
