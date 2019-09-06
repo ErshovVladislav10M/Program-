@@ -34,17 +34,20 @@ int main(){
 }
 
 //решение через C - строки(самое короткое)
-double f(double x){
+double f(double x)
+{
 	if (x <= 0) throw "Logarithm undefined."; //возвращается const char *
 	if (x > exp(10)) throw "Square root undefined."; //возвращается const char *
 	return sqrt(10 - log(x));
 }
 
-int main(){
+int main()
+{
 	double x, y;
 	cin >> x;
 	try { y = f(x); }
-	catch (const char *msg){ //условие работы catch - совпадение класса, возвращаемого throw
+	catch (const char *msg) //условие работы catch - совпадение класса, возвращаемого throw
+	{ 
 		cerr << msg << endl;
 		return EXIT_FAILURE;
 	}
@@ -55,23 +58,50 @@ int main(){
 //классы без полей (самое адаптирующиеся решение)
 class LnException {};
 class SqrtException {};
-double f(double x){
+double f(double x)
+{
 	if (x <= 0) throw LnException(); //возвращается LnException
 	if (x > exp(10)) throw SqrtException(); //возвращается SqrtException
 	return sqrt(10 - log(x));
 }
 
-int main(){
+int main()
+{
 	double x, y;
 	cin >> x;
 	try { y = f(x); }
-	catch (LnException){
+	catch (LnException)
+	{
 		cerr << "Logarithm undefined." << endl;
 		return EXIT_FAILURE;
 	}
-	catch (SqrtException){
+	catch (SqrtException)
+	{
 		cerr << "Square root undefined." << endl;
 		return EXIT_FAILURE;
+	}
+	cout << "Result=" << y << endl;
+	return EXIT_SUCCESS;
+}
+
+//повтор после ошибки
+double f(double x)
+{
+	if (x <= 0) throw "Logarithm undefined.";
+	if (x>exp(10) throw "Square root undefined.";
+	return sqrt(10 - log(x));
+}
+int main()
+{
+	double x, y;
+	cin >> x;
+	while (true)
+		try { y = f(x); break; }
+	catch (char *msg)
+	{
+		cerr << msg << endl;
+		cout << "Введите новое значение параметра:";
+		cin >> x;
 	}
 	cout << "Result=" << y << endl;
 	return EXIT_SUCCESS;
