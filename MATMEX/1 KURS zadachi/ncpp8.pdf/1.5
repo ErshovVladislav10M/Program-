@@ -1,0 +1,41 @@
+#include <iostream>
+
+using namespace std;
+
+struct OffTheField 
+{
+	int x, y, a;
+	OffTheField(int xx, int yy, int aa) : x(xx), y(yy), a(aa) {};
+};
+
+struct IllegalCommand
+{
+	int x, y, a;
+	IllegalCommand(int xx, int yy, int aa) : x(xx), y(yy), a(aa) {};
+};
+
+struct Robot
+{
+	int x = 0, y = 0;
+	int Field[10][10];
+	void Move(int a)
+	{
+		if (a > 3 || a < 0) throw IllegalCommand(x, y, a);
+		if (a == 0 && x == 0 || a == 1 && y == 9 || a == 2 && x == 9 || a == 3 && y == 0) throw OffTheField(x, y, a);
+		if (a == 0) x -= 1;
+		if (a == 1) y += 1;
+		if (a == 2) x += 1;
+		if (a == 3) y -= 1;
+	}
+};
+
+int main()
+{
+	Robot AA;
+	int n;
+	while (true)
+		try { cin >> n; if (n == -1) break; AA.Move(n); }
+	catch (IllegalCommand e) { cout << "Error IllegalCommand: " << e.x << " " << e.y << " " << e.a << endl; }
+	catch (OffTheField e) { cout << "Error OffTheField: " << e.x << " " << e.y << " " << e.a << endl; }
+	return EXIT_SUCCESS;
+}
