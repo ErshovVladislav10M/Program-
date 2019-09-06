@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+
+struct Ex
+{
+	double x;
+	Ex(double xx) : x(xx) {}
+};
+
+struct Bar
+{
+	double y;
+	Bar() : y(0) {}
+	void set(double a)
+	{
+		if (a + y > 100) throw Ex(a * y);
+		else y = a;
+	}
+};
+
+int main()
+{
+	Bar AA;
+	int n;
+	while (true)
+		try { cin >> n; if (n == 0) break; AA.set(n); }
+	catch (Ex e)
+	{
+		cout << "Error: " << e.x << endl;
+	}
+	return EXIT_SUCCESS;
+}
