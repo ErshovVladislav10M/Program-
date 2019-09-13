@@ -3,9 +3,9 @@
 
 using namespace std;
 
-class TooLong{};
-class OutOfString{};
-class TooManyA{};
+class TooLong {};
+class OutOfString {};
+class TooManyA {};
 
 struct STRING
 {
@@ -16,14 +16,14 @@ struct STRING
 	{
 		int i = 0;
 		size = 0;
-		while(B[i] != 0)
+		while (B[i] != 0)
 		{
+			size++;
+			if (size > 50) throw TooLong();
 			A[i] = B[i];
 			if (B[i] == 'a') sizeA++;
-			size++;
 			i++;
 		}
-		if (size > 50) throw TooLong();
 		if (sizeA > 10) throw TooManyA();
 	}
 	void change(int a, char c)
@@ -32,7 +32,7 @@ struct STRING
 		A[a] = c;
 		if (c == 'a') sizeA++;
 		if (sizeA > 10) throw TooManyA();
-	}	
+	}
 };
 
 int main()
@@ -42,14 +42,14 @@ int main()
 	char c;
 	string B;
 	while (true)
-		try 
+		try
 	{
-		cin >> n; 
+		cin >> n;
 		if (n == 1) { cin >> a; cin >> c; AA.change(a, c); }
 		if (n == 2) { cin >> B; AA.write(B.c_str()); }
 	}
 	catch (TooLong) { cout << "Error: TooLong" << endl; }
-	catch (TooManyA) 
+	catch (TooManyA)
 	{
 		cout << "Error: TooManyA" << endl;
 		return EXIT_FAILURE;
