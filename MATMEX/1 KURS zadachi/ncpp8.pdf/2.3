@@ -1,0 +1,21 @@
+#include <iostream>
+#include <memory>
+
+using namespace std;
+
+int col = 1;
+
+struct Foo
+{
+	int n;
+	Foo() { n = col; col++; }
+	~Foo() { cout << n << endl; }
+};
+
+int main()
+{
+	try { Foo A[5]; unique_ptr <Foo[]> B{ new Foo[5] }; throw "qwerty"; }
+	catch (const char *) {}
+	system("pause");
+	return 0;
+}
