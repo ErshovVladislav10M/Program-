@@ -9,8 +9,8 @@ int col = 1;
 struct Foo
 {
 	int n;
-	Foo() { n = col; A.insert(col); col++; }
-	~Foo() { A.erase(n); cout << n << endl; }
+	Foo() { n = col; A.insert(col); col++; cout << "create " << n << endl;}
+	~Foo() { A.erase(n); cout << "del " << n << endl; }
 };
 
 int main()
