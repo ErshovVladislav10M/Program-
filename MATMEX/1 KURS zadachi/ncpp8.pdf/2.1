@@ -10,7 +10,7 @@ struct Foo
 {
 	int n;
 	Foo() { n = col; A.insert(col); col++; }
-	~Foo() { A.erase(n); }
+	~Foo() { A.erase(n); cout << n << endl; }
 };
 
 Foo a, B[3];
@@ -23,12 +23,13 @@ void f()
 	Foo C[2];
 }
 
-int main() 
+int main()
 {
 	for (auto x : A) cout << x << " ";
 	cout << endl;
 	f();
 	for (auto x : A) cout << x << " ";
 	cout << endl;
+	system("pause");
 	return 0;
 }
