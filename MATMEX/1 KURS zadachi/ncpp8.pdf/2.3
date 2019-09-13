@@ -8,8 +8,8 @@ int col = 1;
 struct Foo
 {
 	int n;
-	Foo() { n = col; col++; }
-	~Foo() { cout << n << endl; }
+	Foo() { n = col; col++; cout << "create " << n << endl;}
+	~Foo() { cout << "del " << n << endl; }
 };
 
 int main()
