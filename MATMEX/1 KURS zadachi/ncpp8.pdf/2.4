@@ -1,0 +1,28 @@
+#include <iostream>
+#include <memory>
+
+using namespace std;
+
+class Error {};
+
+int col = 1;
+
+struct Foo
+{
+	int n;
+	Foo() 
+	{ 
+		n = col;
+		col++;
+		if (col > 7) throw Error();
+	}
+	~Foo() { cout << n << endl; }
+};
+
+int main()
+{
+	try { Foo A[10]; }
+	catch (Error) { cout << "Error" << endl; }
+	system("pause");
+	return 0;
+}
