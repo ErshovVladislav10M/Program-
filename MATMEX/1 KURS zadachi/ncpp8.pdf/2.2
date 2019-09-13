@@ -1,0 +1,22 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+set <int> A;
+int col = 1;
+
+struct Foo
+{
+	int n;
+	Foo() { n = col; A.insert(col); col++; }
+	~Foo() { A.erase(n); cout << n << endl; }
+};
+
+int main()
+{
+	try { Foo A[5], *B = new Foo[5]; throw "qwerty"; }
+	catch (const char *) {}
+	system("pause");
+	return 0;
+}
