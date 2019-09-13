@@ -15,8 +15,9 @@ struct Foo
 		n = col;
 		col++;
 		if (col > 7) throw Error();
+		cout << "create " << n << endl;
 	}
-	~Foo() { cout << n << endl; }
+	~Foo() { cout << "del " << n << endl; }
 };
 
 int main()
