@@ -14,7 +14,7 @@ struct Node
 template<class T>
 Node<T> * fff(Node<T> *f, int n)
 {
-	Node *p = f;
+	Node<T> *p = f;
 	int i = 0;
 	while (p != nullptr)
 	{
