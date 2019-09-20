@@ -14,7 +14,7 @@ template<class T>
 Node<T> * fff(Node<T> *f)
 {
 	if (f == nullptr) return nullptr;
-	Node *p = f;
+	Node<T> *p = f;
 	while (p->n != nullptr)
 	{
 		p = p->n; 
