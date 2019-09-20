@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	int i;
+	Node(int dd, Node<T> *nn = nullptr, int ii) : d(dd), n(nn), i(ii+1) {}
+};
+
+template<class T>
+Node<T> * fff(Node<T> *f, int n)
+{
+	Node *p = f;
+	int i = 0;
+	while (p != nullptr)
+	{
+		p = p->n;
+		i++;
+		if (i == n) return p;
+	}
+	return nullptr;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
