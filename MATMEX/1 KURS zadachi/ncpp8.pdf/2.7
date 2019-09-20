@@ -1,0 +1,35 @@
+#include <iostream>
+#include <memory>
+#include <set>
+#include <vector>
+
+using namespace std;
+
+class Error {};
+
+set <int> A;
+int col = 1;
+
+struct Foo1
+{
+	int n;
+	Foo1() { n = col; A.insert(col); col++; }
+	~Foo1() { A.erase(n); cout << n << endl; }
+};
+
+/*struct Vector
+{
+	unique_ptr <Foo1[]> B{ new Foo1[10] };
+	Vector() { cout << "create" << endl; }
+	~Vector() { cout << "delete" << endl; }
+};*/
+
+int main()
+{
+	vector <Foo1> AA, BB;
+	AA = BB;
+	//try { Vector AA; throw Error(); }
+	//catch (Error) {}
+	system("pause");
+	return 0;
+}
