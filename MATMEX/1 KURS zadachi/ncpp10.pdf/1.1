@@ -6,22 +6,19 @@ template<class T>
 struct Node
 {
 	T d;
-	Node<T> *n; // указатель на следующий узел
-				// из того же типа элементов
+	Node<T> *n;
 	Node(int dd, Node<T> *nn = nullptr) : d(dd), n(nn) {}
 };
 
 template<class T>
-int length(Node *f)
+int length(Node<T> *f)
 {
-	Node *p = f; // указатель p пробегает все элементы
-				 // списка, начиная с того, на который
-				 // указывает f
+	Node *p = f;
 	int i = 0;
 	while (p != nullptr)
 	{
-		++i; // подсчет числа элементов
-		p = p->n; // переход к следующему элементу
+		++i;
+		p = p->n; 
 	}
 	return i;
 }
