@@ -11,10 +11,15 @@ struct Node
 };
 
 template<class T>
-Node<T> * length(Node<T> *f)
+Node<T> * fff(Node<T> *f)
 {
+	if (f == nullptr) return nullptr;
 	Node *p = f;
-	return p->n;
+	while (p->n != nullptr)
+	{
+		p = p->n; 
+	}
+	return p;
 }
 
 int main()
