@@ -1,0 +1,53 @@
+#include <iostream>
+
+using namespace std;
+
+//определение пространтсва имен
+namespace AA
+{
+	int n;
+	bool j;
+	int A[10];
+}
+
+//определений может быть много, объединяются в одно пространство
+namespace AA
+{
+	double a;
+	void f()
+	{
+		cout << "kek" << endl;
+	}
+	
+}
+
+int main()
+{
+	//использование элементов пространства
+	AA::f();
+
+	system("pause");
+	return 0;
+}
+
+//теперь можно использовать без AA::
+using AA::f;
+
+//импорт всех имен
+using namespace AA;
+
+//создание второго название пространства
+namespace myspace = AA;
+
+//импорт элементов из пространства в пространство
+namespace BB
+{
+	using AA::j;
+}
+
+//безымянное пространство(элементы статические)
+namespace
+{
+	bool j;
+	int A[10];
+}
