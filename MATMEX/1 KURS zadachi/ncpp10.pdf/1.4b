@@ -8,7 +8,7 @@ struct Node
 	T d;
 	Node<T> *n;
 	int i;
-	Node(int dd, Node<T> *nn = nullptr, int ii) : d(dd), n(nn), i(ii+1) {}
+	Node(int dd, int ii, Node<T> *nn = nullptr) : d(dd), n(nn), i(ii+1) {}
 };
 
 template<class T>
