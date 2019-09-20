@@ -13,7 +13,7 @@ struct Node
 template<class T>
 void fff(Node<T> *f)
 {
-	Node *p = f;
+	Node<T> *p = f;
 	while (p != nullptr)
 	{
 		cout << p->d << endl;
