@@ -1,0 +1,46 @@
+#include <iostream>
+
+using namespace std;
+
+//СВЯЗНЫЕ СПИСКИ
+
+//элемент списка
+struct Node
+{
+	int d; // элемент данных
+	Node *n; // указатель на следующий узел
+	Node(int dd, Node *nn = nullptr) : d(dd), n(nn) {}
+};
+
+/*
+//элемент списка c шаблонным типом
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n; // указатель на следующий узел
+				// из того же типа элементов
+	Node(int dd, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};*/
+
+//функция считает длину списка
+int length(Node *f)
+{
+	Node *p = f; // указатель p пробегает все элементы
+				 // списка, начиная с того, на который
+				 // указывает f
+	int i = 0;
+	while (p != nullptr)
+	{
+		++i; // подсчет числа элементов
+		p = p->n; // переход к следующему элементу
+	}
+	return i;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
