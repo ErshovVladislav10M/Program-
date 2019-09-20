@@ -1,0 +1,37 @@
+#include <iostream>
+#include <memory>
+
+using namespace std;
+
+class Error {};
+
+int col = 1;
+
+struct Foo
+{
+	int n;
+	Foo() 
+	{ 
+		n = col;
+		col++;
+		if (col > 7) throw Error();
+		cout << "create " << n << endl;
+	}
+	~Foo() { cout << "del " << n << endl; }
+};
+
+struct Bar
+{
+	unique_ptr <Foo[]> B{ new Foo[10] };
+	Bar() { cout << "create" << endl; }
+	~Bar() { cout << "delete" << endl; }
+};
+};
+
+int main()
+{
+	try { Bar AA; throw Error(); }
+	catch (Error) {}
+	system("pause");
+	return 0;
+}
