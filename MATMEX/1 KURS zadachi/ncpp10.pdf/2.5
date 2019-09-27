@@ -1,0 +1,32 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+template<class T>
+void ins(Node<T> *&f, T d, int k)
+{
+	Node<T> **t = &f;
+	int i = 0;
+	while (*t != nullptr && k > i)
+	{
+		t = &(*t)->n;
+		i++;
+	}
+	*t = new Node<T>(d, *t);
+}
+
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
