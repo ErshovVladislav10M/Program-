@@ -11,11 +11,10 @@ struct Node
 };
 
 template<class T>
-Node<T> * cop(Node<T> *f, Node<T> *p = nullptr)
+Node<T> * cop(Node<T> *f)
 {
-	if (f != nullptr) p->n = cop(f->n, p->n);
-	p = new Node<T>(f->d);
-	return p;
+	if (f == nullptr) return nullptr;
+	return new Node<T> (f->d, cop(f->n));
 }
 
 
