@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	bool j;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+template<class T>
+void add_first(Node<T> *&f, int d)
+{
+	f = new Node<T>(d, f);
+}
+
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
