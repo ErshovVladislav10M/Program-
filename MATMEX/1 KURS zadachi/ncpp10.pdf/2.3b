@@ -12,7 +12,7 @@ struct Node
 };
 
 template<class T>
-void add_last(Node<T> *f, int d, int k)
+void add_last(Node<T> *f, T d, int k)
 {
 	int i = 0;
 	while (f != nullptr && k > i)
