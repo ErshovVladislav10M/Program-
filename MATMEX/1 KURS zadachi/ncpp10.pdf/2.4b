@@ -1,1 +1,36 @@
+#include <iostream>
 
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+Node<int>* create()
+{
+	Node<int> *p = new Node<int>;
+	Node<int> *f;
+	int k, a;
+	cin >> k;
+	cin >> a;
+	f = new Node<int>(a, p);
+	for(int i = 1; i < k; i++)
+	{
+		cin >> a;
+		p->d = a;
+		p = p->n;
+	}
+	return f;
+}
+
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
