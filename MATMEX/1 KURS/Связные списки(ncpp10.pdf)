@@ -9,7 +9,7 @@ struct Node
 {
 	int d; // элемент данных
 	Node *n; // указатель на следующий узел
-	Node(int dd, Node *nn = nullptr) : d(dd), n(nn) {}
+	Node(int dd = 0, Node *nn = nullptr) : d(dd), n(nn) {}
 };
 
 /*
@@ -17,10 +17,10 @@ struct Node
 template<class T>
 struct Node
 {
-	T d;
-	Node<T> *n; // указатель на следующий узел
-				// из того же типа элементов
-	Node(int dd, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+T d;
+Node<T> *n; // указатель на следующий узел
+// из того же типа элементов
+Node(int dd, Node<T> *nn = nullptr) : d(dd), n(nn) {}
 };*/
 
 //функция считает длину списка
@@ -36,6 +36,22 @@ int length(Node *f)
 		p = p->n; // переход к следующему элементу
 	}
 	return i;
+}
+
+//добавление первого элемента в список
+void add_first(Node *&f, int d)
+{
+	Node *p;
+	p = new Node;
+	p->d = d;
+	p->n = f;
+	f = p;
+}
+
+//то же самое скоращено
+void add_first(Node *&f, int d)
+{
+	f = new Node(d, f);
 }
 
 int main()
