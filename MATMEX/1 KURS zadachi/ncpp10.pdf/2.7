@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+template<class T>
+Node<T> *cop(Node<T> *f)
+{
+	Node<T> *p = nullptr;
+	Node<T> *tmp = f;
+	while (tmp != nullptr)
+	{
+		tmp = f->n;
+		f->n = p;
+		p = f;
+	}
+	return p;
+}
+
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
