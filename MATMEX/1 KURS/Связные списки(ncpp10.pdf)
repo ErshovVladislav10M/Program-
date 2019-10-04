@@ -54,6 +54,16 @@ void add_first(Node *&f, int d)
 	f = new Node(d, f);
 }
 
+//удаление первого элемента
+void del_first(Node *&f)
+{
+	Node *p;
+	if (f == nullptr) return;
+	p = f;
+	f = f->n;
+	delete p;
+}
+
 int main()
 {
 
