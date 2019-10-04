@@ -13,9 +13,9 @@ struct Node
 template<class T>
 void del(Node<T> *&f)
 {
-	Node<T> *p;
 	while (f != nullptr) 
 	{
+		Node<T> *p;
 		p = f;
 		f = f->n;
 		delete p;
