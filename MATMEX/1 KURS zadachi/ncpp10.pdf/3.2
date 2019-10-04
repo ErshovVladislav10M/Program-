@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+template<class T>
+void del_first(Node<T> *&f)
+{
+	Node<T> *p;
+	if (f->n == nullptr) return;
+	while (f->n->n != nullptr)
+		f = f->n;
+	p = f->n;
+	f->n = nullptr;
+	delete p;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
