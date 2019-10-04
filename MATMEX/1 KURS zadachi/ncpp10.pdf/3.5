@@ -1,0 +1,82 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	bool j;
+	T d;
+	Node<T> *n;
+	Node(bool jj, int dd = 0, Node<T> *nn = nullptr) : j(jj), d(dd), n(nn) {}
+};
+
+template<class T>
+Node<T> * create() {
+	Node<T> *p = new Node<T>(0, 0, nullptr);
+	Node<T> **t = &p;
+	for (int i = 1; i < 5; i++)
+		*t = new Node<T>((i+1) % 2, i, *t);
+	return p;
+}
+
+template<class T>
+void out(Node<T> *p) 
+{
+	while(p != nullptr)
+	{
+		cout << p->d << " ";
+		p = p->n;
+	}
+}
+
+template<class T>
+void del(Node<T> *&f)
+{
+	if (f == nullptr) return;
+	if (f->n == nullptr && f->j == 0) return;
+	if (f->n == nullptr && f->j == 1)
+	{
+		Node<T> *p = f;
+		f = f->n;
+		delete p;
+		return;
+	}
+	if (f->n->n == nullptr && f->n->j == 0) return;
+	if (f->n->n == nullptr && f->j == 0)
+	{
+		Node<T> *p = f->n;
+		f = f->n->n;
+		delete p;
+		return;
+	}	
+	while (f->n->n != nullptr) 
+	{
+		if (f->n->j == 1)
+		{
+			Node<T> *p = f->n;
+			f = f->n->n;
+			delete p;
+		}
+		else f = f->n;
+		if (f->n == nullptr && f->j == 0) return;
+		if (f->n == nullptr && f->j == 1)
+		{
+			Node<T> *p = f;
+			f = f->n;
+			delete p;
+			return;
+		}
+	}
+}
+
+int main()
+{
+	Node<int> *AA = create<int>();
+	out(AA);
+	del(AA);
+	cout << endl;
+	out(AA);
+	system("pause");
+	return 0;
+}
