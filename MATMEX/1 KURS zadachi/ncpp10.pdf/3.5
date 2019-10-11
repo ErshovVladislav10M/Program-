@@ -16,7 +16,7 @@ Node<T> * create() {
 	Node<T> *p = new Node<T>(0, 0, nullptr);
 	Node<T> **t = &p;
 	for (int i = 1; i < 5; i++)
-		*t = new Node<T>((i+1) % 2, i, *t);
+		*t = new Node<T>(i % 2, i, *t);
 	return p;
 }
 
@@ -25,7 +25,7 @@ void out(Node<T> *p)
 {
 	while(p != nullptr)
 	{
-		cout << p->d << " ";
+		cout << p->d << " " << p->j << endl;
 		p = p->n;
 	}
 }
