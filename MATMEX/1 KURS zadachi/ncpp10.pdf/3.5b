@@ -16,14 +16,14 @@ Node<T> * create() {
 	Node<T> *p = new Node<T>(0, 0, nullptr);
 	Node<T> **t = &p;
 	for (int i = 1; i < 5; i++)
-		*t = new Node<T>(i % 2, 2*i, *t);
+		*t = new Node<T>(i % 2, 2 * i, *t);
 	return p;
 }
 
 template<class T>
-void out(Node<T> *p) 
+void out(Node<T> *p)
 {
-	while(p != nullptr)
+	while (p != nullptr)
 	{
 		cout << p->d << " " << p->j << endl;
 		p = p->n;
@@ -34,9 +34,9 @@ template<class T>
 void del(Node<T> *&f)
 {
 	Node<T> **t = &f;
-	while (*t != nullptr)
+	while ((*t) != nullptr)
 	{
-		if (*t->j == 1)
+		if ((*t)->j == 1)
 		{
 			Node<T> *p = *t;
 			*t = (*t)->n;
