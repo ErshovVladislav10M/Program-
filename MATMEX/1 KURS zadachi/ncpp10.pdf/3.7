@@ -1,0 +1,73 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+template<class T>
+Node<T> * create() {
+	Node<T> *p;
+	Node<T> **t = &p;
+	for (int i = 2; i <= 1000; i++)
+	{
+		*t = new Node<T>(i, nullptr);
+		t = &(*t)->n;
+	}
+	return p;
+}
+
+template<class T>
+void out(Node<T> *p)
+{
+	while (p != nullptr)
+	{
+		cout << p->d << endl;
+		p = p->n;
+	}
+}
+
+template<class T>
+void del(Node<T> *&f)
+{
+	Node<T> **t = &f, **y = &f;
+	int a = (*y)->d;
+	while ((*y) != nullptr)
+	{
+		while ((*t) != nullptr)
+		{
+			if ((*t)->d % a == 0 && (*t)->d != a)
+			{
+				Node<T> *p = *t;
+				*t = (*t)->n;
+				delete p;
+				if(*t != nullptr) t = &(*t)->n;
+				else continue;
+			}
+			else t = &(*t)->n;
+		}
+		t = y;
+		if ((*y)->n != nullptr)
+		{
+			y = &(*y)->n;
+			a = (*y)->d;
+		}
+		else break;
+	}
+}
+
+int main()
+{
+	Node<int> *AA = create<int>();
+	//out(AA);
+	del(AA);
+	cout << endl;
+	out(AA);
+	system("pause");
+	return 0;
+}
