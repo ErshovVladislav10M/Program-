@@ -1,0 +1,78 @@
+#include <iostream>
+
+using namespace std;
+
+struct Node
+{
+	int data;
+	Node* next;
+	Node* prev;
+};
+
+struct queue
+{
+	Node* head;
+	Node* tail;
+
+	queue(int a, int b)
+	{
+		head = new Node;
+		head->data = b;
+		head->next = tail;
+		head->prev = nullptr;
+		tail = new Node;
+		tail->data = a;
+		tail->next = nullptr;
+		tail->prev = head;
+	}
+
+	void push(int a)
+	{
+		Node* temp = new Node;
+		temp->data = a;
+		temp->next = head;
+		temp->prev = nullptr;
+		head = temp;
+	}
+
+	int pop()
+	{
+		Node* temp = tail;
+		int a;
+		if (temp->prev == nullptr)
+		{
+			a = temp->data;
+			delete temp;
+			tail = nullptr;
+			head = nullptr;
+			return a;
+		}
+		a = temp->data;
+		tail = temp->prev;
+		tail->next = nullptr;
+		delete temp;
+		return a;
+	}
+
+	~queue() 
+	{
+		while (head != nullptr) 
+		{
+			Node* temp = head;
+			head = head->next;
+			delete temp;
+		}
+	}
+};
+
+int main()
+{
+	int a, b;
+	cin >> a >> b;
+	queue obj1(a, b);
+	obj1.push(a);
+	cout << obj1.pop() << endl;
+	cout << obj1.pop() << endl;
+	system("pause");
+	return 0;
+}
