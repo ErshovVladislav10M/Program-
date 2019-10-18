@@ -1,0 +1,110 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+template<class T>
+Node<T> * create() {
+	Node<T> *p;
+	Node<T> **t = &p;
+	for (int i = 1; i <= 5; i++)
+	{
+		*t = new Node<T>(7 * i % 5, nullptr);
+		t = &(*t)->n;
+	}
+	return p;
+}
+
+template<class T>
+Node<T> * sliynie(Node<T> *&f, Node<T> *&g)
+{
+	Node<T> *p, **t = &p;
+	while (f != nullptr || g != nullptr)
+	{
+		if (f == nullptr)
+		{
+			(*t) = g;
+			return p;
+		}
+		if (g == nullptr)
+		{
+			(*t) = f;
+			return p;
+		}
+		if (f->d < g->d)
+		{
+			*t = f;
+			f = f->n;
+			(*t)->n = nullptr;
+			t = &(*t)->n;
+		}
+		else
+		{
+			*t = g;
+			g = g->n;
+			(*t)->n = nullptr;
+			t = &(*t)->n;
+		}
+	}
+	return p;
+}
+
+template<class T>
+int dlina(Node<T> *f)
+{
+	int i = 0;
+	while (f != nullptr)
+	{
+		i++;
+		f = f->n;
+	}
+	return i;
+}
+
+template<class T>
+Node<T> * sort(Node<T> *f)
+{
+	if (f->n == nullptr) return f;
+	if (f == nullptr) return f;
+
+	int l = dlina(f);
+	cout << l << " ";
+	Node<T> **p = &f, **t = &f;
+	for(int i = 0; i < l/2 - 1; i++)
+		t = &(*t)->n;
+	out((*t)->n);
+	Node<T> *end = sort((*t)->n);
+	(*t)->n = nullptr;
+	Node<T> *start = sort(*p);
+
+	return sliynie(end, start);
+}
+
+template<class T>
+void out(Node<T> *p)
+{
+	if (p == nullptr) cout << "nullptr" << endl;
+	while (p != nullptr)
+	{
+		cout << p->d << endl;
+		p = p->n;
+	}
+	cout << endl;
+}
+
+int main()
+{
+	Node<int> *AA = create<int>();
+	out(AA);
+	AA = sort(AA);
+	out(AA);
+	system("pause");
+	return 0;
+}
