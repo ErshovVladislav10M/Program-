@@ -1,0 +1,14 @@
+template<class T>
+Node<T> * fifth(Node<T> *f, T a)
+{
+	Node<T> **t = &f;
+	i = 0;
+	while (*t != nullptr)
+	{
+		if (a == (*t)->d) i++;
+		if (i == 5) break;
+		t = &(*t)->n;
+	}
+	if (i < 5) throw NoSuchEntry();
+	return *t;
+}
