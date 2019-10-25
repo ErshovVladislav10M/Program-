@@ -1,0 +1,31 @@
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node<T> *p;
+	Node(T dd = 0, Node<T> *nn = nullptr, Node<T> *pp = nullptr) : d(dd), n(nn), p(pp) {}
+};
+
+template<class T>
+Node<T> * find6X7Y(Node<T> *f, T x, T y)
+{
+	Node<T> **t = &f;
+	i = 0;
+	while (*t != nullptr)
+	{
+		if ((*t)->d == y) i++;
+		if (i == 7) break;
+		t = &(*t)->n;
+	}
+	if (i < 7) return nullptr;
+	i = 0;
+	while (*t != nullptr)
+	{
+		if ((*t)->d == x) i++;
+		if (i == 6) break;
+		t = &(*t)->p;
+	}
+	if (i < 6) return nullptr;
+	return *t;
+}
