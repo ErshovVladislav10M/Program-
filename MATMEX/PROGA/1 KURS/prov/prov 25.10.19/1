@@ -1,4 +1,12 @@
 template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node(int dd = 0, Node<T> *nn = nullptr) : d(dd), n(nn) {}
+};
+
+template<class T>
 Node<T> * fifth(Node<T> *f, T a)
 {
 	Node<T> **t = &f;
