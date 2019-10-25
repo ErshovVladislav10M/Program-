@@ -1,0 +1,47 @@
+template<class T>
+struct Node
+{
+	T d;
+	Node<T> *n;
+	Node<T> *p;
+	Node(T dd = 0, Node<T> *nn = nullptr, Node<T> *pp = nullptr) : d(dd), n(nn), p(pp) {}
+};
+
+template<class T>
+void remove_surr(Node<T> *&p)
+{
+	if (p == nullptr) return;
+	remove(p->n);
+	remove(p->d);
+	remove(p);
+}
+
+template<class T>
+void remove(Node<T> *&p)
+{
+	if (p == nullptr) return;
+	if (p->n == nullptr && p->p == nullptr)
+	{
+		delete p;
+		return;
+	}
+	if (p->n == nullptr)
+	{
+		Node<T> *tmp = p;
+		p->p->n = nullptr;
+		delete tmp;
+		return;
+	}
+	if (p->p == nullptr)
+	{
+		Node<T> *tmp = p;
+		p->n->p = nullptr;
+		delete tmp;
+		return;
+	}
+
+	Node<T> *tmp = p;
+	p->n->p = tmp->p;
+	p->p->n = tmp->n;
+	delete tmp;
+}
