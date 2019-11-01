@@ -1,0 +1,40 @@
+#include <iostream>
+
+using namespace std;
+
+//структура узла дерева
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+//печать дерева
+template<class T>
+void print(BNode<T> *r, int offset = 0)
+{
+	if (r == nullptr) return;
+	print(r->right, offset + 3);
+	for (int i = 0; i<offset; i++)
+		cout << ’ ’;
+	cout << r->data << endl;
+	print(r->left, offset + 3);
+}
+
+int main()
+{
+	//создание дерева (4<-2->5)<-1->(6<-3)
+	BNode<int> *tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6)));
+	//print(tree1);
+
+	system("pause");
+	return 0;
+}
