@@ -2,7 +2,7 @@
 
 using namespace std;
 
-//структура узла дерева
+//структура узла  двоичного дерева
 template<class T>
 struct BNode
 {
@@ -12,16 +12,39 @@ struct BNode
 	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
 };
 
-//печать дерева
+//печать двоичного дерева
 template<class T>
-void print(BNode<T> *r, int offset = 0)
+void print2(BNode<T> *r, int offset = 0)
 {
 	if (r == nullptr) return;
-	print(r->right, offset + 3);
+	print2(r->right, offset + 3);
 	for (int i = 0; i<offset; i++)
 		cout << ’ ’;
 	cout << r->data << endl;
-	print(r->left, offset + 3);
+	print2(r->left, offset + 3);
+}
+
+//узел дерева с произвольным числом потомков
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T> *down; //указатель на левого сына
+	ANode<T> *right; //указатель на брата справа
+	ANode(T dd, ANode<T> *d = nullptr, ANode<T> *r = nullptr) :
+		data(dd), down(d), right(r) {}
+};
+
+//печать дерева с произвольным числом потомков
+template<class T>
+void printn(ANode<T> *r, int offset = 0)
+{
+	if (r == nullptr) return;
+	for (int i = 0; i<offset; i++)
+		cout << ’ ’;
+	cout << r->data << endl;
+	printn(r->down, offset + 3);
+	printn(r->right, offset);
 }
 
 int main()
@@ -33,7 +56,23 @@ int main()
 			new BNode<int>(5)),
 		new BNode<int>(3,
 			new BNode<int>(6)));
-	//print(tree1);
+	print2(tree1);
+
+	//создание дерева с произвольным числом потомков
+	ANode<int> *tree2 = new ANode<int>(1,
+		new ANode<int>(2,
+			new ANode<int>(5,
+				nullptr,
+				new ANode<int>(6,
+					nullptr,
+					new ANode<int>(7))),
+			new ANode<int>(3,
+				new ANode<int>(8),
+				new ANode<int>(4,
+					new ANode<int>(9,
+						nullptr,
+						new ANode<int>(10))))));
+	printn(tree2);
 
 	system("pause");
 	return 0;
