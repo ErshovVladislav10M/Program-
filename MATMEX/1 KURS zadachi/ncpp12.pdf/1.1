@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+BNode *prav_vnuk(BNode<T> *r)
+{
+	if (r == nullptr || r->right == nullptr || r->right->right == nullptr) return nullptr;
+	return r->right->right;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
