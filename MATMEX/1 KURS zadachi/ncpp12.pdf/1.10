@@ -1,0 +1,40 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+BNode<T> *shag_l(BNode<T> *r)
+{
+	if (r->left == nullptr) return r;
+	return shag_r(r->left);
+}
+
+template<class T>
+BNode<T> *shag_r(BNode<T> *r)
+{
+	if (r->right == nullptr) return r;
+	return shag_l(r->right);
+}
+
+int main()
+{
+	BNode<int> *tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6)));
+
+	BNode<int> *AA = shag_r<int>(tree1);
+	system("pause");
+	return 0;
+}
