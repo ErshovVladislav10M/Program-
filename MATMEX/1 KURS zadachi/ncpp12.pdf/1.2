@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+int kol_son(BNode<T> *r)
+{
+	if (r == nullptr) return 0;
+	int i = 0;
+	if (r->left != nullptr) i++;
+	if (r->right != nullptr) i++;
+	return i;
+}
+
+template<class T>
+int kol_vnuk(BNode<T> *r)
+{
+	if (r == nullptr) return 0;
+	return kol_son(r->left) + kol_son(r->left);
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
