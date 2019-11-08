@@ -1,0 +1,20 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode<T>* root;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr, BNode<T> ro = nullptr) :data(dd), left(l), right(r), root(ro){}
+};
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
