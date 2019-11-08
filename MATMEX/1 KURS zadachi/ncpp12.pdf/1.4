@@ -1,0 +1,25 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+BNode<T> *dobav(BNode<T> *r, T a)
+{
+	return new BNode<T>(a, nullptr, r);
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
