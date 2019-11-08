@@ -1,0 +1,27 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+void dobav_l_son(BNode<T> *r, T a)
+{
+	BNode<T> *p = new BNode<T>(a, r->left, r->right);
+	r->right = nullptr;
+	r->left = p;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
