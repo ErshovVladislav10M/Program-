@@ -1,0 +1,27 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+void udol(BNode<T> *r)
+{
+	BNode<T> *tmp = r;
+	r = r->left;
+	delete tmp;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
