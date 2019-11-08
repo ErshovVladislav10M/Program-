@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T>* down;
+	ANode<T>* right;
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r) {}
+};
+
+template<class T>
+ANode<T> kol_son(ANode<T>* r, T d1, T d2)
+{
+	ANode<T>* p = r->down;
+	while (p != nullptr)
+	{
+		if (p == d1)
+		{
+			ANode<T>* q = p->down;
+			while (q != nullptr)
+				if (q->data == d2) return p;
+		}
+		p = p->right;
+	}
+	return nullptr;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
