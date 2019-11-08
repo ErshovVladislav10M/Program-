@@ -19,7 +19,7 @@ void print2(BNode<T> *r, int offset = 0)
 	if (r == nullptr) return;
 	print2(r->right, offset + 3);
 	for (int i = 0; i<offset; i++)
-		cout << ’ ’;
+		cout << " ";
 	cout << r->data << endl;
 	print2(r->left, offset + 3);
 }
@@ -41,7 +41,7 @@ void printn(ANode<T> *r, int offset = 0)
 {
 	if (r == nullptr) return;
 	for (int i = 0; i<offset; i++)
-		cout << ’ ’;
+		cout << " ";
 	cout << r->data << endl;
 	printn(r->down, offset + 3);
 	printn(r->right, offset);
