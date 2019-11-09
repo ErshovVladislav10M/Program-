@@ -1,0 +1,25 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+int sum(BNode<int>* p)
+{
+	if (p == nullptr) return 0;
+	return p->data + sum(p->left) + sum(p->right);
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
