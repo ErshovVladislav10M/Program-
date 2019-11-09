@@ -7,18 +7,18 @@ template<class T>
 struct BNode
 {
 	T data;
-	BNode<T> *left;
-	BNode<T> *right;
-	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r) {}
 };
 
 //печать двоичного дерева
 template<class T>
-void print2(BNode<T> *r, int offset = 0)
+void print2(BNode<T>* r, int offset = 0)
 {
 	if (r == nullptr) return;
 	print2(r->right, offset + 3);
-	for (int i = 0; i<offset; i++)
+	for (int i = 0; i < offset; i++)
 		cout << " ";
 	cout << r->data << endl;
 	print2(r->left, offset + 3);
@@ -29,18 +29,18 @@ template<class T>
 struct ANode
 {
 	T data;
-	ANode<T> *down; //указатель на левого сына
-	ANode<T> *right; //указатель на брата справа
-	ANode(T dd, ANode<T> *d = nullptr, ANode<T> *r = nullptr) :
+	ANode<T>* down; //указатель на левого сына
+	ANode<T>* right; //указатель на брата справа
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :
 		data(dd), down(d), right(r) {}
 };
 
 //печать дерева с произвольным числом потомков
 template<class T>
-void printn(ANode<T> *r, int offset = 0)
+void printn(ANode<T>* r, int offset = 0)
 {
 	if (r == nullptr) return;
-	for (int i = 0; i<offset; i++)
+	for (int i = 0; i < offset; i++)
 		cout << " ";
 	cout << r->data << endl;
 	printn(r->down, offset + 3);
@@ -50,7 +50,7 @@ void printn(ANode<T> *r, int offset = 0)
 int main()
 {
 	//создание дерева (4<-2->5)<-1->(6<-3)
-	BNode<int> *tree1 = new BNode<int>(1,
+	BNode<int>* tree1 = new BNode<int>(1,
 		new BNode<int>(2,
 			new BNode<int>(4),
 			new BNode<int>(5)),
@@ -59,7 +59,7 @@ int main()
 	print2(tree1);
 
 	//создание дерева с произвольным числом потомков
-	ANode<int> *tree2 = new ANode<int>(1,
+	ANode<int>* tree2 = new ANode<int>(1,
 		new ANode<int>(2,
 			new ANode<int>(5,
 				nullptr,
@@ -76,4 +76,50 @@ int main()
 
 	system("pause");
 	return 0;
+}
+
+//обход дерева в глубину
+template<class T> //подсчет узлов
+int count(BNode<T>* p)
+{
+	if (p == nullptr) return 0;
+	return 1 + count(p->left) + count(p->right);
+}
+
+//обход в глубину с помощью стека
+template<class T> //подсчет узлов
+int count1(BNode<T>* p)
+{
+	int c = 0;
+	Stack<BNode<T>*> S;
+	BNode<T>* t;
+	if (p == nullptr) return 0;
+	S.push(p);
+	while (!S.empty())
+	{
+		c++;
+		t = S.pop();
+		if (t->left != nullptr) S.push(t->left);
+		if (t->right != nullptr) S.push(t->right);
+	}
+	return c;
+}
+
+//обход в ширину с помощью очереди
+template<class T> //подсчет узлов
+int count1(BNode<T>* p)
+{
+	int c = 0;
+	Queue<BNode<T>*> S;
+	BNode<T>* t;
+	if (p == nullptr) return 0;
+	S.push(p);
+	while (!S.empty())
+	{
+		c++;
+		t = S.pop();
+		if (t->left != nullptr) S.push(t->left);
+		if (t->right != nullptr) S.push(t->right);
+	}
+	return c;
 }
