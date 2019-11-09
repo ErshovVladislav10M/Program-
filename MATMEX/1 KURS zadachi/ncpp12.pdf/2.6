@@ -1,0 +1,53 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T>* down;
+	ANode<T>* right;
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r) {}
+};
+
+template<class T>
+void vstav(ANode<T>* r, T a)
+{
+	r->down = new ANode<T>(a, r->down, r->down->right);
+}
+
+template<class T>
+void printn(ANode<T>* r, int offset = 0)
+{
+	if (r == nullptr) return;
+	for (int i = 0; i < offset; i++)
+		cout << " ";
+	cout << r->data << endl;
+	printn(r->down, offset + 3);
+	printn(r->right, offset);
+}
+
+int main()
+{
+	ANode<int>* tree2 = new ANode<int>(1,
+		new ANode<int>(2,
+			new ANode<int>(5,
+				nullptr,
+				new ANode<int>(6,
+					nullptr,
+					new ANode<int>(7))),
+			new ANode<int>(3,
+				new ANode<int>(8),
+				new ANode<int>(4,
+					new ANode<int>(9,
+						nullptr,
+						new ANode<int>(10))))));
+	printn(tree2);
+	vstav(tree2, 19);
+	cout << endl << endl;
+	printn(tree2);
+
+	system("pause");
+	return 0;
+}
