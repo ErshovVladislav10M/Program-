@@ -1,0 +1,39 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T>* down;
+	ANode<T>* right;
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r) {}
+};
+
+template<class T>
+ANode<T> element(ANode<T>* r, int A[5])
+{
+	ANode<T>* p = r;
+	for (int i = 0; i < 5; i++)
+	{
+		p = p->down;
+		while(p != nullptr)
+		{
+			if (p->data == A[i])
+			{
+				p = p->down;
+				break;
+			}
+			p = p->right;
+		}
+	}
+	return p;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
