@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+int min(BNode<int>* p)
+{
+	if (p == nullptr) return 1000;
+	int m;
+	if (min(p->left) < min(p->right)) m = min(p->left);
+	else m = min(p->right);
+	if (m < p->data) return m;
+	else return p->data;
+}
+
+int main()
+{
+	BNode<int>* tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6)));
+	cout << min(tree1) << endl;
+
+	system("pause");
+	return 0;
+}
