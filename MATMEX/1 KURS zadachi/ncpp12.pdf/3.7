@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode<T>* root;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr, BNode<T>* rr = nullptr) :data(dd), left(l), right(r), root(rr) {}
+};
+
+template<class T>
+BNode<T>* ucopy(BNode<T>* p, BNode<T>* root = p)
+{
+	return new BNode<T>(p->data, ucopy(p->left, root), ucopy(p->right, root), root);
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
