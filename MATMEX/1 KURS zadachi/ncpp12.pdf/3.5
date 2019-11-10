@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+BNode<T> find(BNode<T>* p, T a)
+{
+	if (p == nullptr)return nullptr;
+	if (a == p->data) return p;
+	if (find(p->right) == nullptr) return find(p->left);
+	else return find(p->right);
+
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
