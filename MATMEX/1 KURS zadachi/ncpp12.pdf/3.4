@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+int eval(BNode<int>* p)
+{
+	if (p->left == nullptr && p->right == nullptr) return p->data;
+	if (p->data == 1) return eval(p->left) + eval(p->right);
+	if (p->data == 2) return eval(p->left) - eval(p->right);
+	if (p->data == 3) return eval(p->left) * eval(p->right);
+	if (p->data == 4) return eval(p->left) / eval(p->right);
+}
+
+int main()
+{
+	BNode<int>* tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6),
+			new BNode<int>(7)));
+	cout << eval(tree1) << endl;
+
+	system("pause");
+	return 0;
+}
