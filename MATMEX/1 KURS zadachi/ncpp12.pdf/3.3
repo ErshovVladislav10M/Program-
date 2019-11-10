@@ -13,7 +13,9 @@ struct BNode
 
 int min(BNode<int>* p)
 {
-	if (p == nullptr) return 1000;
+	if (p->left == nullptr && p->right == nullptr) return p->data;
+	if (p->left == nullptr) return min(p->right);
+	if (p->right == nullptr) return min(p->left);
 	int m;
 	if (min(p->left) < min(p->right)) m = min(p->left);
 	else m = min(p->right);
