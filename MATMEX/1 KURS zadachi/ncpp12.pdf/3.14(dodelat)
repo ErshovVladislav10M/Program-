@@ -61,17 +61,3 @@ int main()
 	system("pause");
 	return 0;
 }
-
-//template<class T> //создание структуры
-//struct Stack
-//{
-//	list<T> data; //данные
-//	Stack<T>* p; //следующий элемент
-//	Stack(list<T> A, Stack<T>* pp = nullptr) :data(AA), p(pp) {}
-//};
-//
-//template<class T> //добавление элемента
-//void dobav(Stack<T>& A, list<T> B)
-//{
-//	A = new Stack<T>(B, A);
-//}
