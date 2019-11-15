@@ -1,0 +1,52 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r){}
+};
+
+template<class T>
+void enlarge(BNode<T>*& p, T d)
+{
+	if (p == nullptr) 
+	{
+		p = new BNode<T>(d);
+		return;
+	}
+	enlarge(p->left, d);
+	enlarge(p->right, d);
+}
+
+template<class T>
+void print2(BNode<T>* r, int offset = 0)
+{
+	if (r == nullptr) return;
+	print2(r->right, offset + 3);
+	for (int i = 0; i < offset; i++)
+		cout << " ";
+	cout << r->data << endl;
+	print2(r->left, offset + 3);
+}
+
+int main()
+{
+	BNode<int>* tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6)));
+	print2(tree1);
+	cout << endl;
+	enlarge(tree1, 2);
+	print2(tree1);
+
+	system("pause");
+	return 0;
+}
