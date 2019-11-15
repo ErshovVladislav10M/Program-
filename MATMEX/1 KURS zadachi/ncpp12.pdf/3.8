@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r){}
+};
+
+template<class T>
+void reflect(BNode<T>*& p)
+{
+	if(p->left != nullptr) reflect(p->left);
+	if(p->right != nullptr) reflect(p->right);
+	BNode<T> *tmp = p->right;
+	p->right = p->left;
+	p->left = tmp;
+	delete tmp;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
