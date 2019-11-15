@@ -1,1 +1,77 @@
+#include <iostream>
 
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r){}
+};
+
+int max = 0;
+BNode<int>* r = nullptr;
+
+template<class T>
+void deepest_leaf1(BNode<T>* p, int i = 0)
+{
+	if (p->left == nullptr && p->right == nullptr)
+	{
+		if (max < i)
+		{
+			max = i;
+			r = p;
+		}
+		return;
+	}
+	deepest_leaf1(p->left, i + 1, r);
+	deepest_leaf1(p->right, i + 1, r);
+}
+
+template<class T>
+BNode<T>* deepest_leaf(BNode<T>* p, BNode<T>*& r = nullptr)
+{
+	deepest_leaf1(p, 0, r);
+	return r;
+}
+
+template<class T>
+void print2(BNode<T>* p, int offset = 0)
+{
+	if (p == nullptr) return;
+	print2(p->right, offset + 3);
+	for (int i = 0; i < offset; i++)
+		cout << " ";
+	cout << p->data << endl;
+	print2(p->left, offset + 3);
+}
+
+int main()
+{
+	BNode<int>* tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6)));
+	print2(deepest_leaf(tree1));
+
+	system("pause");
+	return 0;
+}
+
+//template<class T> //создание структуры
+//struct Stack
+//{
+//	list<T> data; //данные
+//	Stack<T>* p; //следующий элемент
+//	Stack(list<T> A, Stack<T>* pp = nullptr) :data(AA), p(pp) {}
+//};
+//
+//template<class T> //добавление элемента
+//void dobav(Stack<T>& A, list<T> B)
+//{
+//	A = new Stack<T>(B, A);
+//}
