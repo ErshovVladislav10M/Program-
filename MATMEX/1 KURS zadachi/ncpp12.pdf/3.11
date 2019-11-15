@@ -23,17 +23,40 @@ void destroy(BNode<T>*& p)
 template<class T>
 void del0(BNode<T>*& p)
 {
-	if (p->data == 4)
+	if (p->data == 0)
 	{
-		destroy(p);
+		destroy(p->left);
+		destroy(p->right);
+		p = nullptr;
 		return;
 	}
 	if (p->left != nullptr) del0(p->left);
 	if (p->right != nullptr) del0(p->right);
 }
 
+template<class T>
+void print2(BNode<T>* r, int offset = 0)
+{
+	if (r == nullptr) return;
+	print2(r->right, offset + 3);
+	for (int i = 0; i < offset; i++)
+		cout << " ";
+	cout << r->data << endl;
+	print2(r->left, offset + 3);
+}
+
 int main()
 {
+	BNode<int>* tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6)));
+	print2(tree1);
+	cout << endl;
+	del0(tree1);
+	print2(tree1);
 
 	system("pause");
 	return 0;
