@@ -1,0 +1,58 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r){}
+};
+
+template<class T>
+int alt_sum(BNode<T>* p)
+{
+	if (p->left == nullptr && p->right == nullptr) return 0;
+	int sum = 0;
+	if (p->left != nullptr)
+	{
+		sum += p->left->data;
+		sum += alt_sum(p->left);
+	}
+	if (p->right != nullptr)
+	{
+		sum -= p->right->data;
+		sum += alt_sum(p->right);
+	}
+	return sum;
+}
+
+template<class T>
+void print2(BNode<T>* p, int offset = 0)
+{
+	if (p == nullptr) return;
+	print2(p->right, offset + 3);
+	for (int i = 0; i < offset; i++)
+		cout << " ";
+	cout << p->data << endl;
+	print2(p->left, offset + 3);
+}
+
+int main()
+{
+	BNode<int>* tree1 = new BNode<int>(1,
+		new BNode<int>(2,
+			new BNode<int>(4),
+			new BNode<int>(5)),
+		new BNode<int>(3,
+			new BNode<int>(6)));
+	print2(tree1);
+	cout << endl;
+
+	cout << alt_sum(tree1) << endl;
+
+	system("pause");
+	return 0;
+}
