@@ -1,0 +1,69 @@
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T>* down;
+	ANode<T>* right;
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r){}
+};
+
+ANode<int>* input(istringstream& str)
+{
+	char c;
+	str.get(c);
+	if (c == ',')
+	{
+		p->right = input(str);
+		return p;
+	}
+	/*if (c == ' ') str.get(c);
+	if (c == '.') return nullptr;
+	if (c == ')') return nullptr;*/
+	int a;
+	str.putback(c);
+	str >> a;
+	ANode<int>* p = new ANode<int>(a);
+	str.get(c);
+	if (c == ',')
+	{
+		p->right = input(str);
+		return p;
+	}
+	if (c == ')')
+	{
+		return p;
+	}
+	if (c == '(')
+	{
+		p->down = input(str);
+	}
+	return p;
+}
+
+template<class T>
+void printn(ANode<T>* r, int offset = 0)
+{
+	if (r == nullptr) return;
+	for (int i = 0; i < offset; i++)
+		cout << " ";
+	cout << r->data << endl;
+	printn(r->down, offset + 3);
+	printn(r->right, offset);
+}
+
+int main()
+{
+	string a = "4(5(6,73),8(11(2(17))))";
+	istringstream str(a);
+	ANode<int>* tree1 = input(str);
+	printn(tree1);
+	cout << endl;
+
+	system("pause");
+	return 0;
+}
