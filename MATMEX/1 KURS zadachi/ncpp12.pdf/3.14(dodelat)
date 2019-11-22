@@ -11,11 +11,8 @@ struct BNode
 	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r){}
 };
 
-int max = 0;
-BNode<int>* r = nullptr;
-
 template<class T>
-void deepest_leaf1(BNode<T>* p, int i = 0)
+void deepest_leaf1(BNode<T>* p, int& max, BNode<T>*& r, int i = 0)
 {
 	if (p->left == nullptr && p->right == nullptr)
 	{
@@ -26,14 +23,16 @@ void deepest_leaf1(BNode<T>* p, int i = 0)
 		}
 		return;
 	}
-	deepest_leaf1(p->left, i + 1, r);
-	deepest_leaf1(p->right, i + 1, r);
+	if (p->left != nullptr)	deepest_leaf1(p->left, max, r, i + 1);
+	if (p->right != nullptr) deepest_leaf1(p->right, max, r, i + 1);
 }
 
 template<class T>
-BNode<T>* deepest_leaf(BNode<T>* p, BNode<T>*& r = nullptr)
+BNode<T>* deepest_leaf(BNode<T>* p)
 {
-	deepest_leaf1(p, 0, r);
+	int max = 0;
+	BNode<int>* r = nullptr;
+	deepest_leaf1(p, max, r, 0);
 	return r;
 }
 
@@ -57,6 +56,9 @@ int main()
 		new BNode<int>(3,
 			new BNode<int>(6)));
 	print2(deepest_leaf(tree1));
+	cout << endl;
+
+	print2(tree1);
 
 	system("pause");
 	return 0;
