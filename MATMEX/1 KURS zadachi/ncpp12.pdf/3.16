@@ -1,0 +1,61 @@
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r){}
+};
+
+BNode<int>* input(istringstream& str)
+{
+	char c;
+	str.get(c);
+	if (c == ',') str.get(c);
+	if (c == '.') return nullptr;
+	if (c == ')') return nullptr;
+	BNode<int>* p = new BNode<int>(c - '0');
+	str.get(c);
+	if (c == ',')
+	{
+		return p;
+	}
+	if (c == ')')
+	{
+		return p;
+	}
+	if (c == '(')
+	{
+		p->left = input(str);
+		p->right = input(str);
+	}
+	return p;
+}
+
+template<class T>
+void print2(BNode<T>* p, int offset = 0)
+{
+	if (p == nullptr) return;
+	print2(p->right, offset + 3);
+	for (int i = 0; i < offset; i++)
+		cout << " ";
+	cout << p->data << endl;
+	print2(p->left, offset + 3);
+}
+
+int main()
+{
+	string a = "4(5(6,7),8(1(2(.,7),.),.))";
+	istringstream str(a);
+	BNode<int>* tree1 = input(str);
+	print2(tree1);
+	cout << endl;
+
+	system("pause");
+	return 0;
+}
