@@ -1,0 +1,66 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+void print(stack<int> X, stack<int> Y)
+{
+	while (X.size() > 0)
+	{
+		cout << endl << X.top() << " " << Y.top();
+		X.pop();
+		Y.pop();
+	}
+}
+
+int sum(int maze[8][8])
+{
+	int sum1 = 0;
+	for (int i = 0; i < 8; i++)
+		for (int l = 0; l < 8; l++)
+			sum1 += maze[i][l];
+	return sum1;
+}
+
+void put(int x, int y, int maze[8][8], stack<int>& X, stack<int>& Y)
+{
+	if (sum(maze) == 64)
+	{
+		X.push(x);
+		Y.push(y);
+		return;
+	}
+	X.push(x);
+	Y.push(y);
+	maze[x][y] = 1;
+	if (maze[x + 1][y] == 0)
+		put(x + 1, y, maze, X, Y);
+	if (maze[x][y + 1] == 0)
+		put(x, y + 1, maze, X, Y);
+	if (maze[x - 1][y] == 0)
+		put(x - 1, y, maze, X, Y);
+	if (maze[x][y - 1] == 0)
+		put(x, y - 1, maze, X, Y);
+	if (maze[x + 1][y] == 1 && maze[x][y + 1] == 1 && maze[x - 1][y] == 1 && maze[x][y - 1] == 1)
+	{
+		X.pop();
+		Y.pop();
+		return;
+	}
+}
+
+int main()
+{
+	stack<int> X, Y;
+	int maze[8][8];
+	for (int i = 0; i < 8; i++)
+		for (int l = 0; l < 5; l++)
+			maze[i][l] = 0;
+	int x, y;
+	cin >> x >> y;
+	put(x, y, maze, X, Y);
+	print(X, Y);
+
+	system("pause");
+	return 0;
+}
