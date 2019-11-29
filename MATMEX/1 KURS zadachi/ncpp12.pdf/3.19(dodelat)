@@ -41,7 +41,7 @@ void put(int x, int y, int maze[8][8], stack<int>& X, stack<int>& Y)
 		put(x - 1, y, maze, X, Y);
 	if (maze[x][y - 1] == 0)
 		put(x, y - 1, maze, X, Y);
-	if (maze[x + 1][y] == 1 && maze[x][y + 1] == 1 && maze[x - 1][y] == 1 && maze[x][y - 1] == 1)
+	if (sum(maze) < 64)
 	{
 		X.pop();
 		Y.pop();
