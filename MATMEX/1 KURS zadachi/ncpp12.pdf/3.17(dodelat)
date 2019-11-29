@@ -9,21 +9,14 @@ struct ANode
 	T data;
 	ANode<T>* down;
 	ANode<T>* right;
-	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r){}
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r) {}
 };
 
 ANode<int>* input(istringstream& str)
 {
 	char c;
 	str.get(c);
-	if (c == ',')
-	{
-		p->right = input(str);
-		return p;
-	}
-	/*if (c == ' ') str.get(c);
-	if (c == '.') return nullptr;
-	if (c == ')') return nullptr;*/
+	if (c == ')') return nullptr;
 	int a;
 	str.putback(c);
 	str >> a;
@@ -41,6 +34,10 @@ ANode<int>* input(istringstream& str)
 	if (c == '(')
 	{
 		p->down = input(str);
+		str.get(c);
+		if (c == ')') return p;
+		if (c == ',')p->right = input(str);
+		else str.putback(c);
 	}
 	return p;
 }
@@ -58,7 +55,7 @@ void printn(ANode<T>* r, int offset = 0)
 
 int main()
 {
-	string a = "4(5(6,73),8(11(2(17))))";
+	string a = "4(5(6,73),8(11(2(17)),13(19,23)))";
 	istringstream str(a);
 	ANode<int>* tree1 = input(str);
 	printn(tree1);
