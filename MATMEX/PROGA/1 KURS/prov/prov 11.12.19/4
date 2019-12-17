@@ -1,0 +1,27 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T>* down;
+	ANode<T>* right;
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r) {}
+};
+
+template<class T>
+void addAGL(ANode<T>*& r, T d)
+{
+	if (r == nullptr) return;
+	if (r->down == nullptr) r->down = new ANode<T>(0);
+	else addAGL(r->down);
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
