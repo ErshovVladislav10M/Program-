@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T>* down;
+	ANode<T>* right;
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r) {}
+};
+
+template<class T>
+ANode<T>* first_d(ANode<T>* r, T d)
+{
+	if (r->data == d) return r->down;
+	ANode<T>* p = r->down;
+	if (p->data == d) return p->down;
+	if (first_d(p->down) != nullptr) return first_d(p->down);
+	if (first_d(p->right) != nullptr) return first_d(p->right);
+	return nullptr;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
