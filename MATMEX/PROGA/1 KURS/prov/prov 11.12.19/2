@@ -1,0 +1,44 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+void delLeftmostLeaf(BNode<T>*& r)
+{
+	if (r == nullptr) return;
+	if (r->left == nullptr && r->right == nullptr) delete r;
+	if (r->left != nullptr)
+	{
+		if (r->left->left == nullptr && r->left->right == nullptr)
+		{
+			delete r->left;
+			r->left = nullptr;
+		}
+		else delLeftmostLeaf(r->left);
+	}
+	else
+	{
+		if (r->right->left == nullptr && r->right->right == nullptr)
+		{
+			delete r->right;
+			r->right = nullptr;
+		}
+		else delLeftmostLeaf(r->right);
+	}
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
