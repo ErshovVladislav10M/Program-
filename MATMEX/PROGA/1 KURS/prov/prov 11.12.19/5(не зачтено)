@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T> *left;
+	BNode<T> *right;
+	BNode(T dd, BNode<T> *l = nullptr, BNode<T> *r = nullptr) :data(dd), left(l), right(r) {}
+};
+
+template<class T>
+BNode<T> search2(BNode<T>* r, T d1, T d2)
+{
+	if (r == nullptr) return nullptr;
+	if (r->left != nullptr)
+		if (r->data == d1 && r->left->data == d2) return r;
+	if (search2(r->left) != nullptr) return search2(r->left);
+	if (search2(r->right) != nullptr) return search2(r->right);
+	return nullptr;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
