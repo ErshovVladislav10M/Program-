@@ -1,0 +1,51 @@
+#include <iostream>
+
+using namespace std;
+
+class CheckFailed {};
+
+template<class T>
+struct Node
+{
+	T data;
+	Node<T>* next;
+	Node(int dd = 0, Node<T>* nn = nullptr) : data(dd), next(nn) {}
+};
+
+template<class T>
+void delete1(Node<T>*& head, int i)
+{
+	int j = 0;
+	while (head->next != nullptr && j < i)
+	{
+		Node<T>* p = head;
+		head = head->next;
+		delete p;
+		j++;
+	}
+}
+
+template<class T>
+void delete_before(Node<T>*& head, bool a/*bool(*f)(T)*/)
+{
+	Node<T>* p = head;
+	int i = 0;
+	while (p->next != nullptr)
+	{
+		p = p->next;
+		i++;
+		if (a)
+		{
+			delete1(head, i);
+			return;
+		}
+	}
+	throw CheckFailed();
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
