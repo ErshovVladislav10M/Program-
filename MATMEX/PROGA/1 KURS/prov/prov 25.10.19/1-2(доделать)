@@ -26,7 +26,7 @@ void delete1(Node<T>*& head, int i)
 }
 
 template<class T>
-void delete_before(Node<T>*& head, bool a/*bool(*f)(T)*/)
+void delete_before(Node<T>*& head, bool(*f)(T))
 {
 	Node<T>* p = head;
 	int i = 0;
@@ -34,7 +34,7 @@ void delete_before(Node<T>*& head, bool a/*bool(*f)(T)*/)
 	{
 		p = p->next;
 		i++;
-		if (a)
+		if (f(p))
 		{
 			delete1(head, i);
 			return;
