@@ -1,45 +1,118 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <sstream>
 
 using namespace std;
 
-struct Object
+struct Item
 {
-	virtual ~Object() {}
+	virtual ~Item() {}
+	virtual Item* read(istringstream& st) {}
 };
 
-struct vseml
-{
-	Object* obj;
-};
-
-struct Integer : Object
+struct Integer : Item
 {
 	int data;
-	Integer(int a) :data(a) {}
+	Integer(int n) :data(n) {}
+	Item* read(istringstream& st) 
+	{
+		int n;
+		st >> n;
+		return new Integer(n);
+	}
 };
 
-struct Double : Object
+struct Double : Item
 {
 	double data;
 	Double(double a) :data(a) {}
+	Item* read(istringstream& st)
+	{
+		double a;
+		st >> a;
+		return new Double(a);
+	}
 };
 
-struct String : Object
+struct String : Item
 {
 	string data;
 	String(string a) :data(a) {}
+	Item* read(istringstream& st) 
+	{
+		char c = st.get();
+		string b;
+		while (c != '"') {
+			b += c;
+			c = st.get();
+		}
+		return new String(b);
+	}
 };
 
-struct List : Object
+struct List : Item
 {
-	list<vseml> data;
-	List(list<vseml> a) { data = a; }
-};
+	list<Item*> data;
+	List(list<Item*> a) { data = a; }
+	List(const list<Item*>& a) { data = a; }
+	List(list<Item*>&& a) { data = a; } 
+	Item* read(istringstream& st) 
+	{
+		list<Item*> B;
+		char c = st.get(), k;
+		while (c != char(-1))
+		{
+			if (c == ']') return new List(B);
+			if (c == ',') st >> c;
+			if (c != '"' && c != '[') 
+			{
+				int p = c - '0';
+				k = st.get();
+				while (k != ' ') 
+				{
+					p *= 10;
+					p += k - '0';
+					k = st.get();
+				}
+				B.push_back(new Integer(p));
+				st >> c;
+				continue;
+			}
+			if (c == '"')
+			{
+				string b;
+				k = st.get();
+				while (k != '"') 
+				{
+					b += k;
+					k = st.get();
+				}
+				B.push_back(new String(b));
+				st >> c;
+				continue;
+			}
+			if (c == '[') {
+				B.push_back(read(st));
+				st >> c;
+				continue;
+			}
+		}
+		return new List(B);
+	}
+	~List()
+	{
+		while (!empty(data))
+		{
+			data.pop_back();
+		}
+	}
+};	
 
 int main()
 {
+	string str = "[3,5.2,[2]]";
+	istringstream st(str);
 
 	system("pause");
 	return 0;
