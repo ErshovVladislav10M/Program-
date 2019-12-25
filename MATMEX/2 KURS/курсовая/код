@@ -9,6 +9,11 @@ struct Object
 	virtual ~Object() {}
 };
 
+struct vseml
+{
+	Object* obj;
+};
+
 struct Integer : Object
 {
 	int data;
@@ -29,8 +34,8 @@ struct String : Object
 
 struct List : Object
 {
-	list<Object> data;
-	List(list<Object> a) { data = a; }
+	list<vseml> data;
+	List(list<vseml> a) { data = a; }
 };
 
 int main()
