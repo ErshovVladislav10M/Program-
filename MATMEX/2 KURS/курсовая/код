@@ -9,6 +9,8 @@ struct Item
 {
 	virtual ~Item() {}
 	virtual Item* read(istringstream& st) {}
+	virtual string type() {}
+	virtual ostringstream write() {}
 };
 
 struct Integer : Item
@@ -21,17 +23,35 @@ struct Integer : Item
 		st >> n;
 		return new Integer(n);
 	}
+	string type()
+	{
+		return "INTEGER";
+	}
+	ostringstream write()
+	{
+		ostringstream st;
+		st << data;
+	}
 };
 
-struct Double : Item
+struct Real : Item
 {
 	double data;
-	Double(double a) :data(a) {}
+	Real(double a) :data(a) {}
 	Item* read(istringstream& st)
 	{
 		double a;
 		st >> a;
-		return new Double(a);
+		return new Real(a);
+	}
+	string type()
+	{
+		return "REAL";
+	}
+	ostringstream write()
+	{
+		ostringstream st;
+		st << data;
 	}
 };
 
@@ -49,14 +69,23 @@ struct String : Item
 		}
 		return new String(b);
 	}
+	string type()
+	{
+		return "STRING";
+	}
+	ostringstream write()
+	{
+		ostringstream st;
+		st << data;
+	}
 };
 
 struct List : Item
 {
 	list<Item*> data;
 	List(list<Item*> a) { data = a; }
-	List(const list<Item*>& a) { data = a; }
-	List(list<Item*>&& a) { data = a; } 
+	//List(const list<Item*>& a) { data = a; }
+	//List(list<Item*>&& a) { data = a; } 
 	Item* read(istringstream& st) 
 	{
 		list<Item*> B;
@@ -100,6 +129,16 @@ struct List : Item
 		}
 		return new List(B);
 	}
+	string type()
+	{
+		return "LIST";
+	}
+	/*ostringstream write()
+	{
+		ostringstream st;
+		if(type() == )
+		st << data;
+	}*/
 	~List()
 	{
 		while (!empty(data))
