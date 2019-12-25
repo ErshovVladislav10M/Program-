@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct ANode
+{
+	T data;
+	ANode<T>* down;
+	ANode<T>* right;
+	ANode(T dd, ANode<T>* d = nullptr, ANode<T>* r = nullptr) :data(dd), down(d), right(r) {}
+};
+
+template<class T>
+void down_max1(ANode<T>* r, ANode<T>*& p)
+{
+	if (r->data > p->data) p = r;
+	if (r->right != nullptr) down_max1(r->right, p);
+}
+
+template<class T>
+ANode<T>* down_max(ANode<T>* r)
+{
+	if (r == nullptr) return nullptr;
+	if (r->down == nullptr) return r;
+	ANode<T>* tmp = r->down;
+	down_max1(r->down, tmp);
+	return down_max(tmp);
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
