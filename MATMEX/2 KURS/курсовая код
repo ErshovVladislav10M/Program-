@@ -1,0 +1,68 @@
+#include <iostream>
+#include <string>
+#include <list>
+
+using namespace std;
+
+struct Tree
+{
+	Tree* left;
+	Tree* right;
+
+	Tree(const Tree*& A)
+	{
+		left = A->left;
+		right = A->right;
+	}
+
+	Tree(Tree*&& A)
+	{
+		left = A->left;
+		right = A->right;
+	}
+
+	void dlt(Tree*& A)
+	{
+		if (A->left != nullptr) dlt(A->left);
+		if (A->right != nullptr) dlt(A->right);
+		delete A;
+	}
+
+	virtual ~Tree()
+	{
+		dlt(left);
+		dlt(right);
+	}
+};
+
+struct Integer : Tree
+{
+	int data;
+	Integer(int a) :data(a) {}
+};
+
+struct Double : Tree
+{
+	double data;
+	Double(double a) :data(a) {}
+};
+
+struct String : Tree
+{
+	string data;
+	String(string a) :data(a) {}
+};
+
+template <class T>
+struct List : Tree
+{
+	list<T> data;
+	List(list<T> a) { data = a; }
+};
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
