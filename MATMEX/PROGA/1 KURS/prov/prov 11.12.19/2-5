@@ -1,0 +1,41 @@
+/*2-5. Написать функцию sum_alt с параметром-указателем на корень дерева, возвращающую сумму данных в узлах
+дерева, в которую правые сыновья своих отцов входят со знаком «+», а левые — со знаком «−». Данные корня в этой
+сумме не участвуют.*/
+
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct BNode
+{
+	T data;
+	BNode<T>* left;
+	BNode<T>* right;
+	BNode(T dd, BNode<T>* l = nullptr, BNode<T>* r = nullptr) :data(dd), left(l), right(r){}
+};
+
+template<class T>
+int sum_alt(BNode<T>* p)
+{
+	if (p->left == nullptr && p->right == nullptr) return 0;
+	int sum = 0;
+	if (p->left != nullptr)
+	{
+		sum -= p->left->data;
+		sum += sum_alt(p->left);
+	}
+	if (p->right != nullptr)
+	{
+		sum += p->right->data;
+		sum += sum_alt(p->right);
+	}
+	return sum;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
