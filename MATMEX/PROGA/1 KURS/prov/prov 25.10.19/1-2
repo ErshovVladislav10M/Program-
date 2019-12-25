@@ -25,6 +25,14 @@ void delete1(Node<T>*& head, int i)
 	}
 }
 
+template <class T>
+bool f(T a)
+{
+	if (a == 0) return 1;
+	if (a == 11) throw CheckFailed();
+	return 0;
+}
+
 template<class T>
 void delete_before(Node<T>*& head, bool(*f)(T))
 {
@@ -34,13 +42,12 @@ void delete_before(Node<T>*& head, bool(*f)(T))
 	{
 		p = p->next;
 		i++;
-		if (f(p))
+		if (f(p->data))
 		{
 			delete1(head, i);
 			return;
 		}
 	}
-	throw CheckFailed();
 }
 
 int main()
