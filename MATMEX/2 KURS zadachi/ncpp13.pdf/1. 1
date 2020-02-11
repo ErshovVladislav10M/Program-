@@ -1,0 +1,17 @@
+#include <iostream>
+
+using namespace std;
+
+int digit(int x, int n)
+{
+	int a = (x >> n);
+	return a & 1;
+}
+
+int main()
+{
+	int x = 4, n = 2;
+	cout << digit(x, n) << endl;
+	system("pause");
+	return 0;
+}
