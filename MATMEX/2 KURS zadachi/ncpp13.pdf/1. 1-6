@@ -65,17 +65,12 @@ void insert1(int k, T data, DSNode<T>&* p, int i = 0)
 }
 
 template<class T>
-void del2(DSNode<T>&* p)
-{
-
-}
-
-template<class T>
 void del1(int k, DSNode<T>&* p, int i = 0)
 {
 	if (p->key == k)
 	{
-		
+		DSNode<T>* tmp = p;
+		while(p->Zero != nullptr)
 		del2(p);
 	}
 	if (digit(k, i) == 0) del1(k, p->Zero, i + 1);
