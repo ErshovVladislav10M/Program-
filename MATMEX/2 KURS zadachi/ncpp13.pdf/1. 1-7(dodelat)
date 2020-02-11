@@ -1,0 +1,178 @@
+#include <iostream>
+
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+int digit(int x, int n)
+{
+	int a = (x >> n);
+	return a & 1;
+}
+
+template<class T>
+struct DSNode
+{
+	int key;
+	T data;
+	DSNode<T>* Zero;
+	DSNode<T>* One;
+	DSNode(int k, T d, DSNode<T>* z = nullptr, DSNode<T>* o = nullptr) : key(k), data(d), Zero(z), One(o) {}
+};
+
+template<class T>
+struct DSTree
+{
+	DSNode<T>* root;
+
+	DSTree(DSNode<T>* r) : root(r) {}
+
+	void print() { print2(root); }
+	DSNode<T>* search(int k) { return search1(k, root); }
+	void insert(int k, T data) { if (search(k) == nullptr) insert1(k, data, root); }
+	void del(int k) 
+	{
+		if (root->key == k)
+		{
+			DSNode<T>* tmp = root;
+			root = nullptr;
+			delete tmp;
+		}
+		else del1(k, root);
+	}
+
+	~DSTree() { DELETE(root); }
+};
+
+template<class T>
+void print1(DSNode<T>* r, int offset = 0)
+{
+	if (r == nullptr) return;
+	print1(r->Zero, offset + 3);
+	for (int i = 0; i < offset; i++) cout << " ";
+	cout << r->key << " " << r->data << endl;
+	print1(r->One, offset + 3);
+}
+
+template<class T>
+DSNode<T>* search1(int k, DSNode<T>* p, int i = 0)
+{
+	if (p == nullptr) return nullptr;
+	if (k == p->key) return p;
+	if (digit(k, i) == 0) return search1(k, p->Zero, i + 1);
+	else return search1(k, p->One, i + 1);
+}
+
+template<class T>
+void insert1(int k, T data, DSNode<T>*& p, int i = 0)
+{
+	if (p->key == k) return;
+	if (digit(k, i) == 0)
+		if (p->Zero != nullptr) insert1(k, data, p->Zero, i + 1);
+		else p->Zero = new DSNode<T>(k, data);
+	else
+		if (p->One != nullptr) insert1(k, data, p->One, i + 1);
+		else p->One = new DSNode<T>(k, data);
+}
+
+template<class T>
+void del2(DSNode<T>*& p)
+{
+	if (p->Zero != nullptr)
+	{
+		if (p->Zero->Zero == nullptr && p->Zero->One == nullptr)
+		{
+			p->key = p->Zero->key;
+			p->data = p->Zero->data;
+			DSNode<T>* tmp = p->Zero;
+			p->Zero = nullptr;
+			delete tmp;
+			return;
+		}
+	}
+	else
+		if (p->One->Zero == nullptr && p->One->One == nullptr)
+		{
+			p->key = p->One->key;
+			p->data = p->One->data;
+			DSNode<T>* tmp = p->One;
+			p->One = nullptr;
+			delete tmp;
+			return;
+		}
+	DSNode<T>* tmp = p;
+	while (tmp->Zero != nullptr && tmp->One != nullptr)
+	{
+		if (p->Zero != nullptr) tmp = tmp->Zero;
+		else tmp = tmp->One;
+	}
+}
+
+template<class T>
+void del1(int k, DSNode<T>*& p, int i = 0)
+{
+	if (p->Zero->key == k || p->One->key == k)
+	{
+		if (p->Zero->key == k) DSNode<T>* tmp = p->Zero;
+		else DSNode<T>* tmp = p->One;
+		if (tmp->Zero != nullptr || tmp->One != nullptr) del2(tmp);
+		else
+			if (p->Zero->key == k)
+			{
+				p->Zero = nullptr;
+				delete tmp;
+			}
+			else
+			{
+				p->One = nullptr;
+				delete tmp;
+			}
+		return;
+	}
+	if (digit(k, i) == 0) del1(k, p->Zero, i + 1);
+	else del1(k, p->One, i + 1);
+}
+
+template<class T>
+void DELETE(DSNode<T>* p)
+{
+	if (p->One != nullptr)
+	{
+		DELETE(p->One);
+		p->One = nullptr;
+	}
+	if (p->Zero != nullptr)
+	{
+		DELETE(p->Zero);
+		p->Zero = nullptr;
+	}
+	delete p;
+}
+
+DSTree<int>* read(ifstream st)
+{
+	int n;
+	st >> n;
+	DSNode<int>* tmp = new DSNode<int>(n, 0);
+	DSTree<int>* A = new DSTree<int>(tmp);
+	while (st >> n)
+	{
+		tmp = A.search(n);
+		if (tmp != nullptr)	A.insert(n, 0);
+		else tmp->data++;
+	}
+	return A;
+}
+
+int main()
+{
+	string a;
+	cin >> a;
+	ifstream st(a + ".txt");
+	DSTree<int>* A = read(st);
+	A.print();
+
+	system("pause");
+	return 0;
+}
