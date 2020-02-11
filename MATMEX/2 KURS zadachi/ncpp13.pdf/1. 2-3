@@ -1,0 +1,45 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T>
+struct DSNode
+{
+	int key;
+	T data;
+	DSNode* Zero;
+	DSNode* One;
+	DSNode(int k, T d, DSNode* z = nullptr, DSNode* o = nullptr) : key(k), data(d), Zero(z), One(o) {}
+};
+
+template<class T>
+struct DSTree
+{
+	DSNode* root;
+	DSTree(DSNode* r) : root(r) {}
+	void DELETE(DSNode* p)
+	{
+		if (p->One != nullptr)
+		{
+			DELETE(p->One);
+			p->One = nullptr;
+		}
+		if (p->Zero != nullptr)
+		{
+			DELETE(p->Zero);
+			p->Zero = nullptr;
+		}
+		delete p;
+	}
+	~DSTree()
+	{
+		DELETE(root);
+	}
+};
+
+int main()
+{
+	
+	system("pause");
+	return 0;
+}
