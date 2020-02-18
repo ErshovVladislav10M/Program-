@@ -44,6 +44,7 @@ struct DSTree
 	}
 	void searchMask1(int mask) { searchMask1_1(mask, root); }
 	void searchMask2(int mask, int k) { searchMask2_1(mask, k, root); }
+	void replace() { replace_1(root); }
 
 	~DSTree() { DELETE(root); }
 };
@@ -141,6 +142,15 @@ void searchMask2_1(int mask, int key, DSNode<T>* p, int i = 0)
 }
 
 template<class T>
+void replace_1(DSNode<T>*& p)
+{
+	if (p == nullptr) return;
+	if ((p->key - 5) mod 3 == 0) p->key = 10 - (p->key - 5) / 3;
+	replace_1(p->Zero);
+	replace_1(p->One);
+}
+
+template<class T>
 void DELETE(DSNode<T>* p)
 {
 	if (p->One != nullptr)
@@ -169,6 +179,67 @@ DSTree<int>* read(ifstream& st)
 		else tmp->data++;
 	}
 	return A;
+}
+
+template<class T>
+DSNode<T>* create_1(DSNode<T>*& p, DSNode<T>*& pp, int a)
+{
+	if (p->Zero == nullptr && p->One == nullptr)
+	{
+		if (a == 0) pp->Zero = nullptr;
+		else pp->One = nullptr;
+		return p;
+	}
+	if (p->Zero != nullptr) return create_1(p->Zero, p, 0);
+	else return create_1(p->One, p, 1);
+}
+
+template<class T>
+DSTree<T>* create(DSTree<T>* A, DSTree<T>* B)
+{
+	if (A->root == nullptr && B->root == nullptr) return nullptr;
+	if(A->root != nullptr) DSTree<T>* C = new DSTree<T>(A->root);
+	else DSTree<T>* C = new DSTree<T>(B->root);
+	DSNode<T>* tmp = nullptr;
+	while (A->root != nullptr)
+	{
+		if (A->root->Zero != nullptr)
+		{
+			tmp = create_1(A->root->Zero, A->root, 0);
+			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+			continue;
+		}
+		if (A->root->One != nullptr)
+		{
+			tmp = create_1(A->root->One, A->root, 1);
+			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+			continue;
+		}
+		if (C->search(A->root->key) == nullptr) C->insert(A->root->key, A->root->data);
+		tmp = A->root;
+		A->root = nullptr;
+		delete tmp;
+	}
+	DSNode<T>* tmp = nullptr;
+	while (B->root != nullptr)
+	{
+		if (B->root->Zero != nullptr)
+		{
+			tmp = create_1(B->root->Zero, B->root, 0);
+			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+			continue;
+		}
+		if (B->root->One != nullptr)
+		{
+			tmp = create_1(B->root->One, B->root, 1);
+			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+			continue;
+		}
+		if (C->search(B->root->key) == nullptr) C->insert(B->root->key, B->root->data);
+		tmp = B->root;
+		B->root = nullptr;
+		delete tmp;
+	}
 }
 
 int main()
