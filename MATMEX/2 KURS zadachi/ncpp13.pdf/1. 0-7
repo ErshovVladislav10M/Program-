@@ -27,11 +27,10 @@ struct DSTree
 	DSNode<T>* root;
 
 	DSTree(DSNode<T>* r) : root(r) {}
-
-	void print() { print2(root); }
+	void print() { print1(root); }
 	DSNode<T>* search(int k) { return search1(k, root); }
 	void insert(int k, T data) { if (search(k) == nullptr) insert1(k, data, root); }
-	void del(int k) 
+	void del(int k)
 	{
 		if (root->key == k)
 		{
@@ -39,7 +38,9 @@ struct DSTree
 			root = nullptr;
 			delete tmp;
 		}
-		else del1(k, root);
+		else
+			if (digit(k, 0) == 0) del1(k, root->Zero, 0, root);
+			else del1(k, root->One, 1, root);
 	}
 
 	~DSTree() { DELETE(root); }
@@ -77,61 +78,42 @@ void insert1(int k, T data, DSNode<T>*& p, int i = 0)
 }
 
 template<class T>
-void del2(DSNode<T>*& p)
+DSNode<T>* del2(DSNode<T>*& p, DSNode<T>*& pp, int a)
 {
-	if (p->Zero != nullptr)
+	if (p->Zero == nullptr && p->One == nullptr)
 	{
-		if (p->Zero->Zero == nullptr && p->Zero->One == nullptr)
-		{
-			p->key = p->Zero->key;
-			p->data = p->Zero->data;
-			DSNode<T>* tmp = p->Zero;
-			p->Zero = nullptr;
-			delete tmp;
-			return;
-		}
+		if (a == 0) pp->Zero = nullptr;
+		else pp->One = nullptr;
+		return p;
 	}
-	else
-		if (p->One->Zero == nullptr && p->One->One == nullptr)
-		{
-			p->key = p->One->key;
-			p->data = p->One->data;
-			DSNode<T>* tmp = p->One;
-			p->One = nullptr;
-			delete tmp;
-			return;
-		}
-	DSNode<T>* tmp = p;
-	while (tmp->Zero != nullptr && tmp->One != nullptr)
-	{
-		if (p->Zero != nullptr) tmp = tmp->Zero;
-		else tmp = tmp->One;
-	}
+	if (p->Zero != nullptr) return del2(p->Zero, p, 0);
+	else return del2(p->One, p, 1);
 }
 
 template<class T>
-void del1(int k, DSNode<T>*& p, int i = 0)
+void del1(int k, DSNode<T>*& p, DSNode<T>*& pp, int a, int i = 1)
 {
-	if (p->Zero->key == k || p->One->key == k)
-	{
-		if (p->Zero->key == k) DSNode<T>* tmp = p->Zero;
-		else DSNode<T>* tmp = p->One;
-		if (tmp->Zero != nullptr || tmp->One != nullptr) del2(tmp);
+	if (p == nullptr) return;
+	if (k == p->key)
+		if (p->Zero != nullptr && p->One != nullptr)
+		{
+			DSNode<T>* tmp = del2(p, pp);
+			tmp->One = p->One;
+			tmp->Zero = p->Zero;
+			if (a == 0) pp->Zero = tmp;
+			else pp->One = tmp;
+			delete p;
+			return;
+		}
 		else
-			if (p->Zero->key == k)
-			{
-				p->Zero = nullptr;
-				delete tmp;
-			}
-			else
-			{
-				p->One = nullptr;
-				delete tmp;
-			}
-		return;
-	}
-	if (digit(k, i) == 0) del1(k, p->Zero, i + 1);
-	else del1(k, p->One, i + 1);
+		{
+			if (a == 0) pp->Zero = nullptr;
+			else pp->One = nullptr;
+			delete p;
+			return;
+		}
+	if (digit(k, i) == 0) del1(k, p->Zero, 0, p, i + 1);
+	else del1(k, p->One, 1, p, i + 1);
 }
 
 template<class T>
@@ -150,7 +132,7 @@ void DELETE(DSNode<T>* p)
 	delete p;
 }
 
-DSTree<int>* read(ifstream st)
+DSTree<int>* read(ifstream& st)
 {
 	int n;
 	st >> n;
@@ -158,8 +140,8 @@ DSTree<int>* read(ifstream st)
 	DSTree<int>* A = new DSTree<int>(tmp);
 	while (st >> n)
 	{
-		tmp = A.search(n);
-		if (tmp != nullptr)	A.insert(n, 0);
+		tmp = A->search(n);
+		if (tmp != nullptr)	A->insert(n, 0);
 		else tmp->data++;
 	}
 	return A;
@@ -171,7 +153,7 @@ int main()
 	cin >> a;
 	ifstream st(a + ".txt");
 	DSTree<int>* A = read(st);
-	A.print();
+	A->print();
 
 	system("pause");
 	return 0;
