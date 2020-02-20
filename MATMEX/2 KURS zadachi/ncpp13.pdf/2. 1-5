@@ -1,0 +1,277 @@
+#include <iostream>
+
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+template<class P>
+bool f(P x, P n)
+{
+	if (x < n) return 0;
+	else return 1;
+}
+
+template<class T, class P>
+struct DSNode
+{
+	P key;
+	T data;
+	DSNode<T, P>* right;
+	DSNode<T, P>* left;
+	DSNode(P k, T d, DSNode<T>* z = nullptr, DSNode<T>* o = nullptr) : key(k), data(d), right(z), left(o) {}
+};
+
+template<class T, class P>
+struct DSTree
+{
+	DSNode<T, P>* root;
+
+	DSTree(DSNode<T, P>* r) : root(r) {}
+	//void print() { print_1(root); }
+	DSNode<T, P>* search(P k) { return search_1(k, root); }
+	DSNode<T, P>* search(P k, T data) { return search_1(k, data, root); }
+	DSNode<T, P>* search_max() { return search_max_1(root); }
+	DSNode<T, P>* search_2vel()
+	{
+		if (root == nullptr) EXIT_FAILURE;
+		if (root->right == nullptr)
+			if (root->left == nullptr) EXIT_FAILURE;
+			else return root->left;
+		if (root->right->left == nullptr && root->right->right == nullptr) return root;
+		return search_2vel_1(root); 
+	}
+	//void insert(int k, T data) { if (search(k) == nullptr) insert_1(k, data, root); }
+	/*void del(int k)
+	{
+		if (root->key == k)
+		{
+			DSNode<T>* tmp = root;
+			root = nullptr;
+			delete tmp;
+		}
+		else
+			if (digit(k, 0) == 0) del1(k, root->right, 0, root);
+			else del_1(k, root->left, 1, root);
+	}*/
+	//void searchMask1(int mask) { searchMask1_1(mask, root); }
+	//void searchMask2(int mask, int k) { searchMask2_1(mask, k, root); }
+	//void replace() { replace_1(root); }
+
+	~DSTree() { DELETE(root); }
+};
+
+template<class T, class P>
+DSNode<T, P>* search_1(P k, DSNode<T, P>* p)
+{
+	if (p == nullptr) return nullptr;
+	if (k == p->key) return p;
+	if (f(k, p->key)) return search_1(k, p->right);
+	else return search_1(k, p->left);
+}
+
+template<class T, class P>
+DSNode<T, P>* search_1(P k, T data, DSNode<T, P>* p, int i = 0)
+{
+	if (p == nullptr) return nullptr;
+	if (k == p->key && data == p->data) return p;
+	if (f(k, p->key)) return search_1(k, p->right);
+	else return search_1(k, p->left);
+}
+
+template<class T, class P>
+DSNode<T, P>* search_max_1(DSNode<T, P>* p)
+{
+	if (p == nullptr) return nullptr;
+	if (p->left == nullptr) return p;
+	else return search_max_1(p->left);
+}
+
+template<class T, class P>
+DSNode<T, P>* search_2vel_1(DSNode<T, P>* p)
+{
+	if (p->right == nullptr) return p->left;
+	if (p->right->left == nullptr && p->right->right == nullptr) return p;
+	return search_2vel_1(p->right);
+}
+
+//template<class T>
+//void insert_1(int k, T data, DSNode<T>*& p, int i = 0)
+//{
+//	if (p->key == k) return;
+//	if (digit(k, i) == 0)
+//		if (p->right != nullptr) insert_1(k, data, p->right, i + 1);
+//		else p->right = new DSNode<T>(k, data);
+//	else
+//		if (p->left != nullptr) insert_1(k, data, p->left, i + 1);
+//		else p->left = new DSNode<T>(k, data);
+//}
+
+//template<class T>
+//DSNode<T>* del_2(DSNode<T>*& p, DSNode<T>*& pp, int a)
+//{
+//	if (p->right == nullptr && p->left == nullptr)
+//	{
+//		if (a == 0) pp->right = nullptr;
+//		else pp->left = nullptr;
+//		return p;
+//	}
+//	if (p->right != nullptr) return del_2(p->right, p, 0);
+//	else return del_2(p->left, p, 1);
+//}
+
+//template<class T>
+//void del_1(int k, DSNode<T>*& p, DSNode<T>*& pp, int a, int i = 1)
+//{
+//	if (p == nullptr) return;
+//	if (k == p->key)
+//		if (p->right != nullptr && p->left != nullptr)
+//		{
+//			DSNode<T>* tmp = del_2(p, pp);
+//			tmp->left = p->left;
+//			tmp->right = p->right;
+//			if (a == 0) pp->right = tmp;
+//			else pp->left = tmp;
+//			delete p;
+//			return;
+//		}
+//		else
+//		{
+//			if (a == 0) pp->right = nullptr;
+//			else pp->left = nullptr;
+//			delete p;
+//			return;
+//		}
+//	if (digit(k, i) == 0) del_1(k, p->right, 0, p, i + 1);
+//	else del_1(k, p->left, 1, p, i + 1);
+//}
+
+//template<class T>
+//void searchMask1_1(int mask, DSNode<T>* p, int i = 0)
+//{
+//	if (p->key & mask == mask) cout << p->key << " " << p->data << endl;
+//	searchMask1_1(mask, p->left, i + 1);
+//	if (digit(mask, i) == 0) searchMask1_1(mask, p->right, i + 1);
+//}
+
+//template<class T>
+//void searchMask2_1(int mask, int key, DSNode<T>* p, int i = 0)
+//{
+//	if (p->key & mask == key & mask) cout << p->key << " " << p->data << endl;
+//	if (digit(mask, i) == 0)
+//	{
+//		searchMask2_1(mask, key, p->right, i + 1);
+//		searchMask2_1(mask, key, p->left, i + 1);
+//	}
+//	else
+//		if (digit(key, i) == 1) searchMask2_1(mask, key, p->left, i + 1);
+//		else searchMask2_1(mask, key, p->right, i + 1);
+//}
+
+//template<class T>
+//void replace_1(DSNode<T>*& p)
+//{
+//	if (p == nullptr) return;
+//	if ((p->key - 5) mod 3 == 0) p->key = 10 - (p->key - 5) / 3;
+//	replace_1(p->right);
+//	replace_1(p->left);
+//}
+
+template<class T, class P>
+void DELETE(DSNode<T, P>* p)
+{
+	if (p->left != nullptr)
+	{
+		DELETE(p->left);
+		p->left = nullptr;
+	}
+	if (p->right != nullptr)
+	{
+		DELETE(p->right);
+		p->right = nullptr;
+	}
+	delete p;
+}
+
+//DSTree<int>* read(ifstream& st)
+//{
+//	int n;
+//	st >> n;
+//	DSNode<int>* tmp = new DSNode<int>(n, 0);
+//	DSTree<int>* A = new DSTree<int>(tmp);
+//	while (st >> n)
+//	{
+//		tmp = A->search(n);
+//		if (tmp != nullptr)	A->insert(n, 0);
+//		else tmp->data++;
+//	}
+//	return A;
+//}
+
+//template<class T>
+//DSNode<T>* create_1(DSNode<T>*& p, DSNode<T>*& pp, int a)
+//{
+//	if (p->right == nullptr && p->left == nullptr)
+//	{
+//		if (a == 0) pp->right = nullptr;
+//		else pp->left = nullptr;
+//		return p;
+//	}
+//	if (p->right != nullptr) return create_1(p->right, p, 0);
+//	else return create_1(p->left, p, 1);
+//}
+
+//template<class T>
+//DSTree<T>* create(DSTree<T>* A, DSTree<T>* B)
+//{
+//	if (A->root == nullptr && B->root == nullptr) return nullptr;
+//	if (A->root != nullptr) DSTree<T>* C = new DSTree<T>(A->root);
+//	else DSTree<T>* C = new DSTree<T>(B->root);
+//	DSNode<T>* tmp = nullptr;
+//	while (A->root != nullptr)
+//	{
+//		if (A->root->right != nullptr)
+//		{
+//			tmp = create_1(A->root->right, A->root, 0);
+//			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+//			continue;
+//		}
+//		if (A->root->left != nullptr)
+//		{
+//			tmp = create_1(A->root->left, A->root, 1);
+//			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+//			continue;
+//		}
+//		if (C->search(A->root->key) == nullptr) C->insert(A->root->key, A->root->data);
+//		tmp = A->root;
+//		A->root = nullptr;
+//		delete tmp;
+//	}
+//	DSNode<T>* tmp = nullptr;
+//	while (B->root != nullptr)
+//	{
+//		if (B->root->right != nullptr)
+//		{
+//			tmp = create_1(B->root->right, B->root, 0);
+//			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+//			continue;
+//		}
+//		if (B->root->left != nullptr)
+//		{
+//			tmp = create_1(B->root->left, B->root, 1);
+//			if (C->search(tmp->key) == nullptr) C->insert(tmp->key, tmp->data);
+//			continue;
+//		}
+//		if (C->search(B->root->key) == nullptr) C->insert(B->root->key, B->root->data);
+//		tmp = B->root;
+//		B->root = nullptr;
+//		delete tmp;
+//	}
+//}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
