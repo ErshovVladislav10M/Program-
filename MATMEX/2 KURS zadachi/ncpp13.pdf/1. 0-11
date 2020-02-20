@@ -5,11 +5,7 @@
 
 using namespace std;
 
-int digit(int x, int n)
-{
-	int a = (x >> n);
-	return a & 1;
-}
+int digit(int x, int n) { return (x >> n) & 1; }
 
 template<class T>
 struct DSNode
