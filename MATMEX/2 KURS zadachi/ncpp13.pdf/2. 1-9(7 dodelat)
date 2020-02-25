@@ -1,0 +1,210 @@
+#include <iostream>
+
+using namespace std;
+
+template<class T, class P>
+struct DSNode
+{
+	P key;
+	T data;
+	DSNode<T, P>* right;
+	DSNode<T, P>* left;
+	DSNode<T, P>* father;
+	DSNode(P k, T d, DSNode<T, P>* z = nullptr, DSNode<T, P>* o = nullptr, DSNode<T, P>* f = nullptr) : key(k), data(d), right(z), left(o), father(f) {}
+};
+
+template<class T, class P>
+struct DSTree
+{
+	DSNode<T, P>* root;
+
+	DSTree(DSNode<T, P>* r) : root(r) {}
+	DSNode<T, P>* search(P k) { return search_1(k, root); }
+	DSNode<T, P>* search_max() { return search_max_1(root); }
+	DSNode<T, P>* search_2vel()
+	{
+		if (root == nullptr) EXIT_FAILURE;
+		if (root->right == nullptr)
+			if (root->left == nullptr) EXIT_FAILURE;
+			else return root->left;
+			if (root->right->left == nullptr && root->right->right == nullptr) return root;
+			return search_2vel_1(root);
+	}
+	void insert(P k, T data) 
+	{
+		if (root == nullptr) root = new DSNode<T, P>(k, data);
+		else insert_1(k, data, root); 
+	}
+	void search(P k, DSNode<T, P>*& A, DSNode<T, P>*& B) { search_1(k, A, B, root); }
+	void del(P k)
+	{
+		if (root->key == k)
+		{
+			DSNode<T>* tmp = root;
+			root = nullptr;
+			delete tmp;
+		}
+		else
+			if (k < p->key) del_1(k, root->right, root, 0);
+			else del_1(k, root->left, root, 1);
+	}
+
+	~DSTree() { DELETE(root); }
+};
+
+template<class T, class P>
+DSNode<T, P>* search_1(P k, DSNode<T, P>* p)
+{
+	if (p == nullptr) return nullptr;
+	if (k == p->key) return p;
+	if (k < p->key) return search_1(k, p->right);
+	else return search_1(k, p->left);
+}
+
+template<class T, class P>
+DSNode<T, P>* search_max_1(DSNode<T, P>* p)
+{
+	if (p == nullptr) return nullptr;
+	if (p->left == nullptr) return p;
+	else return search_max_1(p->left);
+}
+
+template<class T, class P>
+DSNode<T, P>* search_2vel_1(DSNode<T, P>* p)
+{
+	if (p == nullptr) return nullptr;
+	if (p->right == nullptr) return p->left;
+	if (p->right->left == nullptr && p->right->right == nullptr) return p;
+	return search_2vel_1(p->right);
+}
+
+template<class T, class P>
+void insert_1(P k, T data, DSNode<T, P>* p)
+{
+	if (k == p->key) EXIT_FAILURE;
+	if (k < p->key)
+		if (p->right != nullptr) insert_1(k, data, p->right);
+		else p->right = new DSNode<T, P>(k, data, nullptr, nullptr, p);
+	else 
+		if (p->left != nullptr) insert_1(k, data, p->left);
+		else p->left = new DSNode<T, P>(k, data, nullptr, nullptr, p);
+}
+
+template<class T, class P>
+void search_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
+{
+	if (p == nullptr)
+	{
+		A = nullptr;
+		B = nullptr;
+		return;
+	}
+	if (k == p->key)
+	{
+		A = p; 
+		B = p;
+		return;
+	}
+	if (k < p->key)
+		if (p->right != nullptr)
+			if (k < p->right->key) search_1(k, A, B, p->right);
+			else
+			{
+				A = p->right;
+				B = p;
+				return;
+			}
+		else
+		{
+			A = nullptr;
+			B = p;
+			return;
+		}
+	else 
+		if (p->left != nullptr) 
+			if (k > p->left->key) search_1(k, A, B, p->left);
+			else
+			{
+				A = p;
+				B = p->left;
+				return;
+			}
+		else
+		{
+			A = p;
+			B = nullptr;
+			return;
+		}
+}
+
+template<class T, class P>
+DSNode<T, P>* del_2(DSNode<T, P>*& p)
+{
+	DSNode<T, P>* tmp = p;
+	while (tmp->left != nullptr)
+		tmp = tmp->left;
+	if (tmp->right != nullptr)
+	{
+		tmp->right->father = tmp->father;
+		tmp->father->left = tmp->right;
+	}
+	else tmp->father->left = nullptr;
+	return tmp;
+}
+
+template<class T, class P>
+void del_1(P k, DSNode<T, P>*& p)
+{
+	if (p == nullptr) return;
+	if (k == p->key)
+		if (p->right != nullptr && p->left != nullptr)
+		{
+			DSNode<T, P>* tmp = del_2(p->right);
+			p->key = tmp->key;
+			p->data = tmp->data;
+			delete tmp;
+			return;
+		}
+		else
+			if (p->right != nullptr)
+			{
+				if(p->key < p->father->key)	p->father->right = p->right;
+				else p->father->left = p->right;
+				p->right->father = p->father;
+				delete p;
+				return;
+			}
+			else
+			{
+				if (p->key < p->father->key) p->father->right = p->left;
+				else p->father->left = p->left;
+				p->left->father = p->father;
+				delete p;
+				return;
+			}
+	if (k < p->key) del_1(k, p->right);
+	else del_1(k, p->left);
+}
+
+template<class T, class P>
+void DELETE(DSNode<T, P>* p)
+{
+	if (p->left != nullptr)
+	{
+		DELETE(p->left);
+		p->left = nullptr;
+	}
+	if (p->right != nullptr)
+	{
+		DELETE(p->right);
+		p->right = nullptr;
+	}
+	delete p;
+}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
