@@ -23,9 +23,9 @@ struct DSTree
 	DSNode<T, P>* search_max() { return search_max_1(root); }
 	DSNode<T, P>* search_2vel()
 	{
-		if (root == nullptr) EXIT_FAILURE;
+		if (root == nullptr) return nullptr;
 		if (root->right == nullptr)
-			if (root->left == nullptr) EXIT_FAILURE;
+			if (root->left == nullptr) return nullptr;
 			else return root->left;
 			if (root->right->left == nullptr && root->right->right == nullptr) return root;
 			return search_2vel_1(root);
@@ -35,7 +35,7 @@ struct DSTree
 		if (root == nullptr) root = new DSNode<T, P>(k, data);
 		else insert_1(k, data, root); 
 	}
-	void search(P k, DSNode<T, P>*& A, DSNode<T, P>*& B) { search_1(k, A, B, root); }
+	void double(P k, DSNode<T, P>*& A, DSNode<T, P>*& B) { double_1(k, A, B, root); }
 	void del(P k)
 	{
 		if (root->key == k)
@@ -72,7 +72,6 @@ DSNode<T, P>* search_max_1(DSNode<T, P>* p)
 template<class T, class P>
 DSNode<T, P>* search_2vel_1(DSNode<T, P>* p)
 {
-	if (p == nullptr) return nullptr;
 	if (p->right == nullptr) return p->left;
 	if (p->right->left == nullptr && p->right->right == nullptr) return p;
 	return search_2vel_1(p->right);
@@ -85,13 +84,13 @@ void insert_1(P k, T data, DSNode<T, P>* p)
 	if (k < p->key)
 		if (p->right != nullptr) insert_1(k, data, p->right);
 		else p->right = new DSNode<T, P>(k, data, nullptr, nullptr, p);
-	else 
+	else
 		if (p->left != nullptr) insert_1(k, data, p->left);
 		else p->left = new DSNode<T, P>(k, data, nullptr, nullptr, p);
 }
 
 template<class T, class P>
-void search_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
+void double_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
 {
 	if (p == nullptr)
 	{
@@ -107,7 +106,7 @@ void search_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
 	}
 	if (k < p->key)
 		if (p->right != nullptr)
-			if (k < p->right->key) search_1(k, A, B, p->right);
+			if (k < p->right->key) double_1(k, A, B, p->right);
 			else
 			{
 				A = p->right;
@@ -122,7 +121,7 @@ void search_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
 		}
 	else 
 		if (p->left != nullptr) 
-			if (k > p->left->key) search_1(k, A, B, p->left);
+			if (k > p->left->key) double_1(k, A, B, p->left);
 			else
 			{
 				A = p;
