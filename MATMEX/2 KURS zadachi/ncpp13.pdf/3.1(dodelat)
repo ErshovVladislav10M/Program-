@@ -1,0 +1,302 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct AVLNode
+{
+	int key;
+	int data;
+	int size;
+	AVLNode* right;
+	AVLNode* left;
+	AVLNode* father;
+	AVLNode(int k, int d, int s, AVLNode* r = nullptr, AVLNode* l = nullptr, AVLNode* f = nullptr) : key(k), data(d), size(s), right(r), left(l), father(f) {}
+	void correct_h()
+	{
+		int n = 0, m = 0;
+		if (right != nullptr) m = right->size;
+		if (left != nullptr) n = left->size;
+		size = max(m, n) + 1;
+	}
+};
+
+//template<class T, class P>
+//struct DSTree
+//{
+//	AVLNode* root;
+//
+//	DSTree(AVLNode* r) : root(r) {}
+//	AVLNode* search(P k) { return search_1(k, root); }
+//	AVLNode* search_max() { return search_max_1(root); }
+//	AVLNode* search_2vel()
+//	{
+//		if (root == nullptr) return nullptr;
+//		if (root->right == nullptr)
+//			if (root->left == nullptr) return nullptr;
+//			else return root->left;
+//			if (root->right->left == nullptr && root->right->right == nullptr) return root;
+//			return search_2vel_1(root);
+//	}
+//	void insert(P k, T data) 
+//	{
+//		if (root == nullptr) root = new AVLNode(k, data);
+//		else insert_1(k, data, root); 
+//	}
+//	void doublee(P k, AVLNode*& A, AVLNode*& B) { doublee_1(k, A, B, root); }
+//	void search_mistake()
+//	{
+//		if (root == nullptr) return;
+//		search_mistake_1(root, root->key, root->key);
+//	}
+//	void del(P k)
+//	{
+//		if (root->key == k)
+//		{
+//			DSNode<T>* tmp = root;
+//			root = nullptr;
+//			delete tmp;
+//		}
+//		else
+//			if (k < p->key) del_1(k, root->right, root, 0);
+//			else del_1(k, root->left, root, 1);
+//	}
+//	AVLNode* sled_vel(AVLNode* p) { return sled_vel_1(p) }
+//
+//	~DSTree() { DELETE(root); }
+//};
+//
+//template<class T, class P>
+//AVLNode* search_1(P k, AVLNode* p)
+//{
+//	if (p == nullptr) return nullptr;
+//	if (k == p->key) return p;
+//	if (k < p->key) return search_1(k, p->right);
+//	else return search_1(k, p->left);
+//}
+//
+//template<class T, class P>
+//AVLNode* search_max_1(AVLNode* p)
+//{
+//	if (p == nullptr) return nullptr;
+//	if (p->left == nullptr) return p;
+//	else return search_max_1(p->left);
+//}
+//
+//template<class T, class P>
+//AVLNode* search_2vel_1(AVLNode* p)
+//{
+//	if (p->right == nullptr) return p->left;
+//	if (p->right->left == nullptr && p->right->right == nullptr) return p;
+//	return search_2vel_1(p->right);
+//}
+//
+//template<class T, class P>
+//void insert_1(P k, T data, AVLNode* p)
+//{
+//	if (k == p->key) EXIT_FAILURE;
+//	if (k < p->key)
+//		if (p->right != nullptr) insert_1(k, data, p->right);
+//		else p->right = new AVLNode(k, data, nullptr, nullptr, p);
+//	else
+//		if (p->left != nullptr) insert_1(k, data, p->left);
+//		else p->left = new AVLNode(k, data, nullptr, nullptr, p);
+//}
+//
+//template<class T, class P>
+//void doublee_1(P k, AVLNode*& A, AVLNode*& B, AVLNode* p)
+//{
+//	if (p == nullptr)
+//	{
+//		A = nullptr;
+//		B = nullptr;
+//		return;
+//	}
+//	if (k == p->key)
+//	{
+//		A = p; 
+//		B = p;
+//		return;
+//	}
+//	if (k < p->key)
+//		if (p->right != nullptr)
+//			if (k < p->right->key) doublee_1(k, A, B, p->right);
+//			else
+//			{
+//				A = p->right;
+//				B = p;
+//				return;
+//			}
+//		else
+//		{
+//			A = nullptr;
+//			B = p;
+//			return;
+//		}
+//	else 
+//		if (p->left != nullptr) 
+//			if (k > p->left->key) doublee_1(k, A, B, p->left);
+//			else
+//			{
+//				A = p;
+//				B = p->left;
+//				return;
+//			}
+//		else
+//		{
+//			A = p;
+//			B = nullptr;
+//			return;
+//		}
+//}
+//
+//template<class T, class P>
+//void search_mistake_1(AVLNode*& p, P k1, P k2, DSTree<T, P>*& tree)
+//{
+//	if(p->left == nullptr && p->right == nullptr)
+//		if (k1 == k2)
+//		{
+//			if (p->father->left == p && k1 >= p->key)
+//			{
+//				p->father->left = nullptr;
+//				insert(p->key, p->data);
+//				delete p;
+//			}
+//			if (p->father->right == p && k2 <= p->key)
+//			{
+//				p->father->right = nullptr;
+//				tree.insert(p->key, p->data);
+//				delete p;
+//			}
+//		}
+//		else
+//		{
+//			if (k1 >= p->key || k2 <= p->key)
+//				if (p->father->left == p)
+//				{
+//					p->father->left = nullptr;
+//					insert(p->key, p->data);
+//					delete p;
+//				}
+//				else 
+//				{
+//					p->father->right = nullptr;
+//					insert(p->key, p->data);
+//					delete p;
+//				}
+//		}
+//	if (p->left != nullptr) search_mistake_1(p->left, p->key, max(k2, p->key), tree);
+//	if (p->right != nullptr) search_mistake_1(p->right, min(k1, p->key), p->key, tree);
+//}
+//
+//template<class T, class P>
+//AVLNode* del_2(AVLNode*& p)
+//{
+//	AVLNode* tmp = p;
+//	while (tmp->left != nullptr)
+//		tmp = tmp->left;
+//	if (tmp->right != nullptr)
+//	{
+//		tmp->right->father = tmp->father;
+//		tmp->father->left = tmp->right;
+//	}
+//	else tmp->father->left = nullptr;
+//	return tmp;
+//}
+//
+//template<class T, class P>
+//void del_1(P k, AVLNode*& p)
+//{
+//	if (p == nullptr) return;
+//	if (k == p->key)
+//		if (p->right != nullptr && p->left != nullptr)
+//		{
+//			AVLNode* tmp = del_2(p->right);
+//			p->key = tmp->key;
+//			p->data = tmp->data;
+//			delete tmp;
+//			return;
+//		}
+//		else
+//			if (p->right != nullptr)
+//			{
+//				if(p->key < p->father->key)	p->father->right = p->right;
+//				else p->father->left = p->right;
+//				p->right->father = p->father;
+//				delete p;
+//				return;
+//			}
+//			else
+//			{
+//				if (p->key < p->father->key) p->father->right = p->left;
+//				else p->father->left = p->left;
+//				p->left->father = p->father;
+//				delete p;
+//				return;
+//			}
+//	if (k < p->key) del_1(k, p->right);
+//	else del_1(k, p->left);
+//}
+//
+//template<class T, class P>
+//AVLNode* sled_vel_1(AVLNode* p)
+//{
+//	if (p == nullptr) return nullptr;
+//	AVLNode* tmp = p;
+//	while (tmp->father != nullptr && tmp->father->left == tmp)
+//		tmp = tmp->father;
+//	if (tmp->left != nullptr)
+//		if(p->key < tmp->left->key) return tmp->left;
+//		else return nullptr;
+//	else
+//		if (p->key < tmp->key) return tmp;
+//		else return nullptr;
+//}
+//
+//
+//template<class T, class P>
+//void DELETE(AVLNode*& p)
+//{
+//	if (p->left != nullptr)
+//	{
+//		DELETE(p->left);
+//		p->left = nullptr;
+//	}
+//	if (p->right != nullptr)
+//	{
+//		DELETE(p->right);
+//		p->right = nullptr;
+//	}
+//	delete p;
+//}
+//
+//template<class T, class P>
+//void del_51(AVLNode*& p)
+//{
+//	if (p == nullptr) return nullptr;
+//	if (p->key < 51)
+//		if (p->left != nullptr) del_51(p->left);
+//		else del_51(sled_vel_1(p));
+//	else
+//		if (p->father != nullptr && p->father->key < 51)
+//		{
+//			p->father->left = nullptr;
+//			DELETE(p);
+//		}
+//		else
+//			if (p->father == nullptr)
+//			{
+//				p->right->father = nullptr;
+//				del_51(p->right);
+//				p->right = nullptr;
+//				DELETE(p);
+//			}
+//			else del_51(p->father);
+//}
+
+int main()
+{
+
+	system("pause");
+	return 0;
+}
