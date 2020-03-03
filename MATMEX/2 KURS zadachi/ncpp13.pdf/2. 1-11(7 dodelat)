@@ -219,14 +219,14 @@ void DELETE(DSNode<T, P>*& p)
 }
 
 template<class T, class P>
-void del_50(DSNode<T, P>*& p)
+void del_51(DSNode<T, P>*& p)
 {
 	if (p == nullptr) return nullptr;
-	if (p->key < 50)
-		if (p->left != nullptr) del_50(p->left);
-		else del_50(sled_vel_1(p));
+	if (p->key < 51)
+		if (p->left != nullptr) del_51(p->left);
+		else del_51(sled_vel_1(p));
 	else
-		if (p->father != nullptr && p->father->key < 50)
+		if (p->father != nullptr && p->father->key < 51)
 		{
 			p->father->left = nullptr;
 			DELETE(p);
@@ -235,11 +235,11 @@ void del_50(DSNode<T, P>*& p)
 			if (p->father == nullptr)
 			{
 				p->right->father = nullptr;
-				del_50(p->right);
+				del_51(p->right);
 				p->right = nullptr;
 				DELETE(p);
 			}
-			else del_50(p->father);
+			else del_51(p->father);
 }
 
 int main()
