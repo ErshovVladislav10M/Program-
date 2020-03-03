@@ -35,7 +35,7 @@ struct DSTree
 		if (root == nullptr) root = new DSNode<T, P>(k, data);
 		else insert_1(k, data, root); 
 	}
-	void double(P k, DSNode<T, P>*& A, DSNode<T, P>*& B) { double_1(k, A, B, root); }
+	void doublee(P k, DSNode<T, P>*& A, DSNode<T, P>*& B) { doublee_1(k, A, B, root); }
 	void del(P k)
 	{
 		if (root->key == k)
@@ -48,6 +48,7 @@ struct DSTree
 			if (k < p->key) del_1(k, root->right, root, 0);
 			else del_1(k, root->left, root, 1);
 	}
+	DSNode<T, P>* sled_vel(DSNode<T, P>* p) { return sled_vel_1(p) }
 
 	~DSTree() { DELETE(root); }
 };
@@ -90,7 +91,7 @@ void insert_1(P k, T data, DSNode<T, P>* p)
 }
 
 template<class T, class P>
-void double_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
+void doublee_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
 {
 	if (p == nullptr)
 	{
@@ -106,7 +107,7 @@ void double_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
 	}
 	if (k < p->key)
 		if (p->right != nullptr)
-			if (k < p->right->key) double_1(k, A, B, p->right);
+			if (k < p->right->key) doublee_1(k, A, B, p->right);
 			else
 			{
 				A = p->right;
@@ -121,7 +122,7 @@ void double_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
 		}
 	else 
 		if (p->left != nullptr) 
-			if (k > p->left->key) double_1(k, A, B, p->left);
+			if (k > p->left->key) doublee_1(k, A, B, p->left);
 			else
 			{
 				A = p;
@@ -186,7 +187,23 @@ void del_1(P k, DSNode<T, P>*& p)
 }
 
 template<class T, class P>
-void DELETE(DSNode<T, P>* p)
+DSNode<T, P>* sled_vel_1(DSNode<T, P>* p)
+{
+	if (p == nullptr) return nullptr;
+	DSNode<T, P>* tmp = p;
+	while (tmp->father != nullptr && tmp->father->left == tmp && tmp->father->left != nullptr)
+		tmp = tmp->father;
+	if (tmp->left != nullptr)
+		if(p->key < tmp->left->key) return tmp->left;
+		else return nullptr;
+	else
+		if (p->key < tmp->key) return tmp;
+		else return nullptr;
+}
+
+
+template<class T, class P>
+void DELETE(DSNode<T, P>*& p)
 {
 	if (p->left != nullptr)
 	{
@@ -199,6 +216,30 @@ void DELETE(DSNode<T, P>* p)
 		p->right = nullptr;
 	}
 	delete p;
+}
+
+template<class T, class P>
+void del_50(DSNode<T, P>*& p)
+{
+	if (p == nullptr) return nullptr;
+	if (p->key < 50)
+		if (p->left != nullptr) del_50(p->left);
+		else del_50(sled_vel_1(p));
+	else
+		if (p->father != nullptr && p->father->key < 50)
+		{
+			p->father->left = nullptr;
+			DELETE(p);
+		}
+		else
+			if (p->father == nullptr)
+			{
+				p->right->father = nullptr;
+				del_50(p->right);
+				p->right = nullptr;
+				DELETE(p);
+			}
+			else del_50(p->father);
 }
 
 int main()
