@@ -36,6 +36,11 @@ struct DSTree
 		else insert_1(k, data, root); 
 	}
 	void doublee(P k, DSNode<T, P>*& A, DSNode<T, P>*& B) { doublee_1(k, A, B, root); }
+	void search_mistake()
+	{
+		if (root == nullptr) return;
+		search_mistake_1(root, root->key, root->key);
+	}
 	void del(P k)
 	{
 		if (root->key == k)
@@ -138,6 +143,45 @@ void doublee_1(P k, DSNode<T, P>*& A, DSNode<T, P>*& B, DSNode<T, P>* p)
 }
 
 template<class T, class P>
+void search_mistake_1(DSNode<T, P>*& p, P k1, P k2, DSTree<T, P>*& tree)
+{
+	if(p->left == nullptr && p->right == nullptr)
+		if (k1 == k2)
+		{
+			if (p->father->left == p && k1 >= p->key)
+			{
+				p->father->left = nullptr;
+				insert(p->key, p->data);
+				delete p;
+			}
+			if (p->father->right == p && k2 <= p->key)
+			{
+				p->father->right = nullptr;
+				tree.insert(p->key, p->data);
+				delete p;
+			}
+		}
+		else
+		{
+			if (k1 >= p->key || k2 <= p->key)
+				if (p->father->left == p)
+				{
+					p->father->left = nullptr;
+					insert(p->key, p->data);
+					delete p;
+				}
+				else 
+				{
+					p->father->right = nullptr;
+					insert(p->key, p->data);
+					delete p;
+				}
+		}
+	if (p->left != nullptr) search_mistake_1(p->left, p->key, max(k2, p->key), tree);
+	if (p->right != nullptr) search_mistake_1(p->right, min(k1, p->key), p->key, tree);
+}
+
+template<class T, class P>
 DSNode<T, P>* del_2(DSNode<T, P>*& p)
 {
 	DSNode<T, P>* tmp = p;
@@ -191,7 +235,7 @@ DSNode<T, P>* sled_vel_1(DSNode<T, P>* p)
 {
 	if (p == nullptr) return nullptr;
 	DSNode<T, P>* tmp = p;
-	while (tmp->father != nullptr && tmp->father->left == tmp && tmp->father->left != nullptr)
+	while (tmp->father != nullptr && tmp->father->left == tmp)
 		tmp = tmp->father;
 	if (tmp->left != nullptr)
 		if(p->key < tmp->left->key) return tmp->left;
