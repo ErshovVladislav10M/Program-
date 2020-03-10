@@ -1,0 +1,33 @@
+CREATE TABLE Privivka(
+    Privivka_ID           INTEGER         NOT NULL,
+    DATA_privivka	      VARCHAR(8),
+    Document              VARCHAR(100),
+    Pet_ID                INTEGER         NOT NULL               
+)
+;
+
+CREATE TABLE Type_privivka(
+    Privivka_ID           INTEGER         NOT NULL,
+    Name	              VARCHAR(100),
+CONSTRAINT Privivkaa_PK PRIMARY KEY (Privivka_ID)
+)
+;
+
+ALTER TABLE Privivka ADD CONSTRAINT FK_Privivka_Type
+    FOREIGN KEY (Privivka_ID)
+    REFERENCES Type_privivka(Privivka_ID)
+;
+
+ALTER TABLE Privivka ADD CONSTRAINT FK_Pet1
+    FOREIGN KEY (Pet_ID)
+    REFERENCES Pet(Pet_ID)
+;    
+
+INSERT INTO Type_privivka(Privivka_ID, Name) VALUES (3, 'chuma');
+INSERT INTO Type_privivka(Privivka_ID, Name) VALUES (4, 'ospa');
+
+INSERT INTO Privivka(Privivka_ID, DATA_privivka, Document, Pet_ID) VALUES (3, '08.08.08', 'ABC', 10);
+INSERT INTO Privivka(Privivka_ID, DATA_privivka, Document, Pet_ID) VALUES (4, '09.09.09', 'ABS', 9);
+
+DROP TABLE Privivka;
+DROP TABLE Type_privivka;
