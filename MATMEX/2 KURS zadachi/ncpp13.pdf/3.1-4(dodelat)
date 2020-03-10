@@ -11,60 +11,131 @@ struct AVLNode
 	AVLNode* right;
 	AVLNode* left;
 	AVLNode* father;
-	AVLNode(int k, int d, int s, AVLNode* r = nullptr, AVLNode* l = nullptr, AVLNode* f = nullptr) : key(k), data(d), size(s), right(r), left(l), father(f) {}
+	AVLNode(int k, int d, int s, AVLNode* f = nullptr, AVLNode* r = nullptr, AVLNode* l = nullptr) : key(k), data(d), size(s), father(f), right(r), left(l) {}
 	void correct_h()
 	{
-		int n = 0, m = 0;
+		int n = -1, m = -1;
 		if (right != nullptr) m = right->size;
 		if (left != nullptr) n = left->size;
 		size = max(m, n) + 1;
 	}
+	int defect_h()
+	{
+		if (left == nullptr || right == nullptr) EXIT_FAILURE;
+		return right->size - left->size;
+	}
+	void print() { cout << key << " " << data << " " << size << " " << this << endl; }
 };
 
-//template<class T, class P>
-//struct DSTree
-//{
-//	AVLNode* root;
-//
-//	DSTree(AVLNode* r) : root(r) {}
-//	AVLNode* search(P k) { return search_1(k, root); }
-//	AVLNode* search_max() { return search_max_1(root); }
-//	AVLNode* search_2vel()
-//	{
-//		if (root == nullptr) return nullptr;
-//		if (root->right == nullptr)
-//			if (root->left == nullptr) return nullptr;
-//			else return root->left;
-//			if (root->right->left == nullptr && root->right->right == nullptr) return root;
-//			return search_2vel_1(root);
-//	}
-//	void insert(P k, T data) 
-//	{
-//		if (root == nullptr) root = new AVLNode(k, data);
-//		else insert_1(k, data, root); 
-//	}
-//	void doublee(P k, AVLNode*& A, AVLNode*& B) { doublee_1(k, A, B, root); }
-//	void search_mistake()
-//	{
-//		if (root == nullptr) return;
-//		search_mistake_1(root, root->key, root->key);
-//	}
-//	void del(P k)
-//	{
-//		if (root->key == k)
-//		{
-//			DSNode<T>* tmp = root;
-//			root = nullptr;
-//			delete tmp;
-//		}
-//		else
-//			if (k < p->key) del_1(k, root->right, root, 0);
-//			else del_1(k, root->left, root, 1);
-//	}
-//	AVLNode* sled_vel(AVLNode* p) { return sled_vel_1(p) }
-//
-//	~DSTree() { DELETE(root); }
-//};
+void DELETE(AVLNode*& p);
+void print_1(AVLNode* r, int offset = 0);
+
+struct AVLTree
+{
+	AVLNode* root;
+
+	AVLTree(AVLNode* r) : root(r) {}
+	void print() { print_1(root); }
+	void rotate_right(AVLNode*& p)
+	{
+		if (p->right == nullptr || p == nullptr) return;
+		AVLNode* tmp = p->right;
+		AVLNode* tmp1 = p->right->left;
+		if (p->father != nullptr)
+		{
+			if (p->father->left == p) p->father->left = tmp;
+			else p->father->right = tmp;
+			tmp->father = p->father;
+		}
+		else tmp->father = nullptr;
+		p->father = tmp;
+		tmp->left = p;
+		if (tmp1 != nullptr)	tmp1->father = p;
+		p->right = tmp1;
+		p->correct_h();
+		tmp->correct_h();
+		if (tmp->father != nullptr) tmp->father->correct_h();
+	}
+	void rotate_left(AVLNode*& p)
+	{
+		if (p->left == nullptr || p == nullptr) return;
+		AVLNode* tmp = p->left;
+		AVLNode* tmp1 = p->left->right;
+		if (p->father != nullptr)
+		{
+			if (p->father->left == p) p->father->left = tmp;
+			else p->father->right = tmp;
+			tmp->father = p->father;
+		}
+		else tmp->father = nullptr;
+		p->father = tmp;
+		tmp->right = p;
+		if (tmp1 != nullptr) tmp1->father = p;
+		p->left = tmp1;
+		p->correct_h();
+		tmp->correct_h();
+		if (tmp->father != nullptr) tmp->father->correct_h();
+	}
+
+	/*void l_round(node* n) {
+		n->bal = 0;
+		node* tmp = n->right;
+		node* tmp1 = n->right->left;
+		tmp->left = n;
+		tmp->left->right = tmp1;
+		tmp->bal++;
+		if (n == root)
+			root = tmp;
+		else re_n(root, n, tmp);
+	}*/
+
+	/*AVLNode* search(P k) { return search_1(k, root); }
+	AVLNode* search_max() { return search_max_1(root); }
+	AVLNode* search_2vel()
+	{
+		if (root == nullptr) return nullptr;
+		if (root->right == nullptr)
+			if (root->left == nullptr) return nullptr;
+			else return root->left;
+			if (root->right->left == nullptr && root->right->right == nullptr) return root;
+			return search_2vel_1(root);
+	}
+	void insert(P k, T data) 
+	{
+		if (root == nullptr) root = new AVLNode(k, data);
+		else insert_1(k, data, root); 
+	}
+	void doublee(P k, AVLNode*& A, AVLNode*& B) { doublee_1(k, A, B, root); }
+	void search_mistake()
+	{
+		if (root == nullptr) return;
+		search_mistake_1(root, root->key, root->key);
+	}
+	void del(P k)
+	{
+		if (root->key == k)
+		{
+			DSNode<T>* tmp = root;
+			root = nullptr;
+			delete tmp;
+		}
+		else
+			if (k < p->key) del_1(k, root->right, root, 0);
+			else del_1(k, root->left, root, 1);
+	}
+	AVLNode* sled_vel(AVLNode* p) { return sled_vel_1(p) }*/
+
+	~AVLTree() { DELETE(root); }
+};
+
+void print_1(AVLNode* r, int offset)
+{
+	if (r == nullptr) return;
+	print_1(r->right, offset + 3);
+	for (int i = 0; i < offset; i++) cout << " ";
+	cout << r->key << " " << r->data << endl;
+	print_1(r->left, offset + 3);
+}
 //
 //template<class T, class P>
 //AVLNode* search_1(P k, AVLNode* p)
@@ -252,24 +323,22 @@ struct AVLNode
 //		if (p->key < tmp->key) return tmp;
 //		else return nullptr;
 //}
-//
-//
-//template<class T, class P>
-//void DELETE(AVLNode*& p)
-//{
-//	if (p->left != nullptr)
-//	{
-//		DELETE(p->left);
-//		p->left = nullptr;
-//	}
-//	if (p->right != nullptr)
-//	{
-//		DELETE(p->right);
-//		p->right = nullptr;
-//	}
-//	delete p;
-//}
-//
+
+void DELETE(AVLNode*& p)
+{
+	if (p->left != nullptr)
+	{
+		DELETE(p->left);
+		p->left = nullptr;
+	}
+	if (p->right != nullptr)
+	{
+		DELETE(p->right);
+		p->right = nullptr;
+	}
+	delete p;
+}
+
 //template<class T, class P>
 //void del_51(AVLNode*& p)
 //{
@@ -297,6 +366,13 @@ struct AVLNode
 int main()
 {
 
+	AVLTree* tree = new AVLNode(5, 101, 1,
+		new AVLNode(4, 111, 0, tree->root),
+		/*new BNode<int>(4),
+		new BNode<int>(5)),*/
+		new AVLNode(6, 211, 0, root));
+			/*new BNode<int>(6)));*/
+	print(tree);
 	system("pause");
 	return 0;
 }
