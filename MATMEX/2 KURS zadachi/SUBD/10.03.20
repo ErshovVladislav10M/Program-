@@ -1,0 +1,9 @@
+SELECT * FROM Pet WHERE Nick = 'Partizan'
+
+SELECT Nick, Breed, Age FROM Pet ORDER BY Age
+
+SELECT * FROM Pet WHERE Description IS NOT NULL AND Description <> '' 
+
+SELECT AVG(Age) FROM Pet WHERE Breed = 'poodle'
+
+SELECT COUNT(DISTINCT Owner_ID) FROM Pet
