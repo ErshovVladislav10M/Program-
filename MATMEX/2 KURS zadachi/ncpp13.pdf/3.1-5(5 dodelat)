@@ -47,7 +47,7 @@ struct AVLTree
 		AVLNode* tmp3 = p->right->left;
 
 		p->right = tmp3;
-		p->right->father = p;
+		if(p->right != nullptr) p->right->father = p;
 		if (p->father != nullptr)
 		{
 			if (p->father->left == p) p->father->left = tmp2;
@@ -68,7 +68,7 @@ struct AVLTree
 		AVLNode* tmp3 = p->left->right;
 
 		p->left = tmp3;
-		p->left->father = p;
+		if(p->left != nullptr) p->left->father = p;
 		if (p->father != nullptr)
 		{
 			if (p->father->left == p) p->father->left = tmp2;
@@ -100,7 +100,7 @@ struct AVLTree
 		}
 		else rotate_left(p);
 	}
-	void correctm2(AVLNode*& p) //правый большой поворот
+	void correct2(AVLNode*& p) //правый большой поворот
 	{
 		if (p->right->left == nullptr)
 		{
@@ -167,10 +167,15 @@ int main()
 	 root->right->right = new AVLNode(2, 611, 0, root->right);
 	root->left = new AVLNode(6, 211, 0, root);
 	 root->left->left = new AVLNode(11, 1111, 0, root->left);
-	  root->left->left->left = new AVLNode(21, 3211, 0, root->left->left);
-	  root->left->left->right = new AVLNode(9, 4681, 0, root->left->left);
+	  root->left->left->right = new AVLNode(21, 3211, 0, root->left->left);
+	  //root->left->left->right = new AVLNode(9, 4681, 0, root->left->left);
 	AVLTree* tree = new AVLTree(root);
 
+	tree->correct_h();
+	tree->print();
+	cout << endl;
+
+	tree->rotate_right(tree->root->left->left);
 	tree->correct_h();
 	tree->print();
 	cout << endl;
@@ -178,7 +183,8 @@ int main()
 	tree->rotate_left(tree->root->left);
 	tree->correct_h();
 	tree->print();
+	cout << endl;
 
-	system("pause");
+	//system("pause");
 	return 0;
 }
