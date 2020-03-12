@@ -80,6 +80,46 @@ struct AVLTree
 		tmp2->right->father = tmp2;
 		tmp2->father = tmp;
 	}
+	void correctm2(AVLNode*& p) //левый большой поворот
+	{
+		if (p->left->right == nullptr)
+		{
+			rotate_left(p);
+			return;
+		}
+		if (p->left->left == nullptr)
+		{
+			rotate_right(p->right);
+			rotate_left(p);
+			return;
+		}
+		if (p->left->left->size < p->left->right->size)
+		{
+			rotate_right(p->right);
+			rotate_left(p);
+		}
+		else rotate_left(p);
+	}
+	void correctm2(AVLNode*& p) //правый большой поворот
+	{
+		if (p->right->left == nullptr)
+		{
+			rotate_right(p);
+			return;
+		}
+		if (p->right->right == nullptr)
+		{
+			rotate_left(p->left);
+			rotate_right(p);
+			return;
+		}
+		if (p->right->right->size < p->right->left->size)
+		{
+			rotate_left(p->left);
+			rotate_right(p);
+		}
+		else rotate_right(p);
+	}
 
 	~AVLTree() { DELETE(root); }
 };
