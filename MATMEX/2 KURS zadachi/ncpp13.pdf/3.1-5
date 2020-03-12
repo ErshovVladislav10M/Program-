@@ -21,8 +21,10 @@ struct AVLNode
 	}
 	int defect_h()
 	{
-		if (left == nullptr || right == nullptr) EXIT_FAILURE;
-		return right->size - left->size;
+		int n = 0, m = 0;
+		if (right != nullptr) m = right->size;
+		if (left != nullptr) n = left->size;
+		return m - n;
 	}
 	void print() { cout << key << " " << data << " " << size << " " << this << endl; }
 };
