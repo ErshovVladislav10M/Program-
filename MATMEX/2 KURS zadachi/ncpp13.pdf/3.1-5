@@ -89,13 +89,13 @@ struct AVLTree
 		}
 		if (p->left->left == nullptr)
 		{
-			rotate_right(p->right);
+			rotate_right(p->left);
 			rotate_left(p);
 			return;
 		}
 		if (p->left->left->size < p->left->right->size)
 		{
-			rotate_right(p->right);
+			rotate_right(p->left);
 			rotate_left(p);
 		}
 		else rotate_left(p);
@@ -109,13 +109,13 @@ struct AVLTree
 		}
 		if (p->right->right == nullptr)
 		{
-			rotate_left(p->left);
+			rotate_left(p->right);
 			rotate_right(p);
 			return;
 		}
 		if (p->right->right->size < p->right->left->size)
 		{
-			rotate_left(p->left);
+			rotate_left(p->right);
 			rotate_right(p);
 		}
 		else rotate_right(p);
@@ -175,12 +175,7 @@ int main()
 	tree->print();
 	cout << endl;
 
-	tree->rotate_right(tree->root->left->left);
-	tree->correct_h();
-	tree->print();
-	cout << endl;
-
-	tree->rotate_left(tree->root->left);
+	tree->correctm2(tree->root->left);
 	tree->correct_h();
 	tree->print();
 	cout << endl;
