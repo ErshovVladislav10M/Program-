@@ -40,6 +40,7 @@ struct AVLTree
 	AVLTree(AVLNode* r) : root(r) {}
 	void print() { print_1(root); }
 	void correct_h() { correct_h_1(root); }
+	void correct_h(AVLNode*& p) { correct_h_1(p); }
 	void rotate_right(AVLNode*& p)
 	{
 		if (p->right == nullptr || p == nullptr) return;
@@ -122,6 +123,16 @@ struct AVLTree
 		}
 		else rotate_right(p);
 	}
+	void rebalance(AVLNode*& p)
+	{
+		if (p == nullptr)return;
+		rebalance(p->left);
+		rebalance(p->right);
+		if (p->size == 2) correctm2(p);
+		if (p->size == -2) correct2(p);
+		correct_h(p);
+		if (p->father != nullptr) p->father->correct_h();
+	}
 
 	~AVLTree() { DELETE(root); }
 };
@@ -177,8 +188,8 @@ int main()
 	tree->print();
 	cout << endl;
 
-	tree->correctm2(tree->root->left);
-	tree->correct_h();
+	tree->rebalance(tree->root->left);
+	//tree->correct_h();
 	tree->print();
 	cout << endl;
 
