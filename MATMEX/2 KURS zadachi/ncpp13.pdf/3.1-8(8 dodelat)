@@ -138,40 +138,91 @@ struct AVLTree
 		correct_h();
 		rebalance(root);
 	}
-	void del_root()
+	void del_root_noleft()
 	{
 		if (root == nullptr) return;
-		if (root->right == nullptr && root->left == nullptr)
+		if (root->right == nullptr)
 		{
 			AVLNode* tmp = root;
 			root = nullptr;
 			delete tmp;
 			return;
 		}
-		if (root->right == nullptr)
+		AVLNode* tmp = root;
+		AVLNode* tmp1 = root->right;
+		tmp1->father = nullptr;
+		root->right = nullptr;
+		root = tmp1;
+		delete tmp;
+		correct_h();
+		rebalance(root);
+	}
+	void del_root_noright()
+	{
+		if (root == nullptr) return;
+		if (root->left == nullptr)
 		{
 			AVLNode* tmp = root;
-			AVLNode* tmp1 = root->left;
-			tmp1->father = nullptr;
-			root->left = nullptr;
-			root = tmp1;
+			root = nullptr;
 			delete tmp;
+			return;
 		}
-		else
+		AVLNode* tmp = root;
+		AVLNode* tmp1 = root->left;
+		tmp1->father = nullptr;
+		root->left = nullptr;
+		root = tmp1;
+		delete tmp;
+		correct_h();
+		rebalance(root);
+	}
+	void del_uzel_noleft(AVLNode*& p)
+	{
+		if (p == nullptr) return;
+		if (p->father == nullptr)
+		{
+			del_root_noleft();
+			return;
+		}
+		if (p->right == nullptr)
 		{
 			AVLNode* tmp = root;
-			AVLNode* tmp1 = root->right;
-			AVLNode* tmp2 = root->left;
-			tmp1->father = nullptr;
-			if(tmp2 != nullptr) tmp2->father = nullptr;
-			root->right = nullptr;
-			root->left = nullptr;
-			root = tmp1;
-			while (tmp1->left != nullptr) tmp1 = tmp1->left;
-			tmp1->left = tmp2;
-			if(tmp2 != nullptr) tmp2->father = tmp1;
+			p->father = nullptr;
 			delete tmp;
+			return;
 		}
+		AVLNode* tmp = p;
+		AVLNode* tmp1 = p->right;
+		p->right = nullptr;
+		tmp1->father = tmp->father;
+		if (p->father->left == p) p->father->left = tmp1;
+		else p->father->right = tmp1;
+		delete tmp;
+		correct_h();
+		rebalance(root);
+	}
+	void del_uzel_noright(AVLNode*& p)
+	{
+		if (p == nullptr) return;
+		if (p->father == nullptr)
+		{
+			del_root_noright();
+			return;
+		}
+		if (p->left == nullptr)
+		{
+			AVLNode* tmp = root;
+			p->father = nullptr;
+			delete tmp;
+			return;
+		}
+		AVLNode* tmp = p;
+		AVLNode* tmp1 = p->left;
+		p->left = nullptr;
+		tmp1->father = tmp->father;
+		if (p->father->left == p) p->father->left = tmp1;
+		else p->father->right = tmp1;
+		delete tmp;
 		correct_h();
 		rebalance(root);
 	}
@@ -245,7 +296,7 @@ int main()
 	tree->print();
 	cout << endl;
 
-	tree->del_root();
+	tree->del_uzel_noleft(tree->root->right);
 	tree->print();
 	cout << endl;
 
