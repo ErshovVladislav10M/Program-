@@ -1,0 +1,430 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 4; /* размер массива записей о сыновьях в каждом узле */
+
+template<class K, class T>
+struct BTNode; /* тип узла дерева */
+
+template<class K, class T>
+struct Item /* тип записи об одном сыне */
+{
+	K key;
+	T data;
+	BTNode<K, T>* down;
+};
+
+template<class K, class T>
+struct BTNode
+{
+	int n; /* реальное число сыновей */
+	Item ar[N];
+	//BTNode(int nn, Item<K, T> p0)
+};
+
+template<class K, class T>
+void DELETE(BTNode<K, T>*& p);
+template<class K, class T>
+void print_1(BTNode<K, T>* r, int offset = 0);
+
+template<class K, class T>
+struct BTTree 
+{
+	BTNode<K, T>* root; 
+	int height; 
+	BTTree(BTNode<K, T>* p) : root(p), height(0) {}
+	void print() { print_1(root); }
+
+	~BTTree() { DELETE(root); }
+};
+
+template<class K, class T>
+void print_1(BTNode<K, T>* r, int offset)
+{
+	if (r == nullptr) return;
+	int i = r->n;
+	while (i >= 0)
+	{
+		print_1(r->ar[i]->down, offset + 3*r->n);
+		i--;
+	}
+	for (int i = 0; i < offset; i++) cout << " ";
+	cout << r->key << " " << r->data << " " << r->size << endl;
+	//print_1(r->right, offset + 9);
+}
+
+template<class K, class T>
+void DELETE(BTNode<K, T>*& p)
+{
+	if (p == nullptr) return;
+	int i = p->n - 1;
+	while (i >= 0;)
+	{
+		DELETE(p->ar[i]->down);
+		p->ar[i] = nullptr;
+		i--;
+	}
+	delete p;
+}
+
+//#include <iostream>
+//#include <algorithm>
+//
+//using namespace std;
+//
+//struct BTNode<K, T>
+//{
+//	int key;
+//	int data;
+//	int size;
+//	BTNode<K, T>* right;
+//	BTNode<K, T>* left;
+//	BTNode<K, T>* father;
+//	BTNode<K, T>(int k, int d, int s, BTNode<K, T>* f = nullptr, BTNode<K, T>* r = nullptr, BTNode<K, T>* l = nullptr) : key(k), data(d), size(s), father(f), right(r), left(l) {}
+//	void correct_h()
+//	{
+//		int n = -1, m = -1;
+//		if (right != nullptr) m = right->size;
+//		if (left != nullptr) n = left->size;
+//		size = max(m, n) + 1;
+//	}
+//	int defect_h()
+//	{
+//		int n = -1, m = -1;
+//		if (right != nullptr) m = right->size;
+//		if (left != nullptr) n = left->size;
+//		return m - n;
+//	}
+//	void print() { cout << key << " " << data << " " << size << " " << this << endl; }
+//};
+//
+//void print_1(BTNode<K, T>* r, int offset = 0);
+//void correct_h_1(BTNode<K, T>*& p);
+//BTNode<K, T>* search_1(int key, BTNode<K, T>* p);
+//void rotate_right_1(BTNode<K, T>*& p);
+//void rotate_left_1(BTNode<K, T>*& p);
+//void rebalance_1(BTNode<K, T>*& p);
+//void correctm2_1(BTNode<K, T>*& p);
+//void correct2_1(BTNode<K, T>*& p);
+//void insert_1(int key, int data, BTNode<K, T>*& p);
+//void del_root_noleft_1(BTNode<K, T>*& p);
+//void del_root_noright_1(BTNode<K, T>*& p);
+//void del_uzel_noleft_1(BTNode<K, T>*& p);
+//void del_uzel_noright_1(BTNode<K, T>*& p);
+//void del_1(int key, BTNode<K, T>*& p);
+//void DELETE(BTNode<K, T>*& p);
+//
+//struct AVLTree
+//{
+//	BTNode<K, T>* root;
+//
+//	AVLTree(BTNode<K, T>* r) : root(r) {}
+//	void print() { print_1(root); }
+//	void correct_h() { correct_h_1(root); }
+//	void correct_h(BTNode<K, T>*& p) { correct_h_1(p); }
+//	BTNode<K, T>* search(int k) { return search_1(k, root); }
+//	void rotate_right(BTNode<K, T>*& p) { rotate_right_1(p); }
+//	void rotate_left(BTNode<K, T>*& p) { rotate_left_1(p); }
+//	void correctm2(BTNode<K, T>*& p) { correctm2_1(p); } //левый большой поворот
+//	void correct2(BTNode<K, T>*& p) { correct2_1(p); } //правый большой поворот
+//	void rebalance(BTNode<K, T>*& p) { rebalance_1(p); }
+//	void insert(int k, int d) { insert_1(k, d, root); }
+//	void del_root_noleft() { del_root_noleft_1(root); }
+//	void del_root_noright() { del_root_noright_1(root); }
+//	void del_uzel_noleft(BTNode<K, T>*& p) { del_uzel_noleft_1(p); }
+//	void del_uzel_noright(BTNode<K, T>*& p) { del_uzel_noright_1(p); }
+//	void del(int k) { del_1(k, root); }
+//};
+//
+//void print_1(BTNode<K, T>* r, int offset)
+//{
+//	if (r == nullptr) return;
+//	print_1(r->left, offset + 9);
+//	for (int i = 0; i < offset; i++) cout << " ";
+//	cout << r->key << " " << r->data << " " << r->size << endl;
+//	print_1(r->right, offset + 9);
+//}
+//
+//void correct_h_1(BTNode<K, T>*& p)
+//{
+//	if (p == nullptr) return;
+//	correct_h_1(p->right);
+//	correct_h_1(p->left);
+//	int n = -1, m = -1;
+//	if (p->right != nullptr) m = p->right->size;
+//	if (p->left != nullptr) n = p->left->size;
+//	p->size = max(m, n) + 1;
+//}
+//
+//BTNode<K, T>* search_1(int key, BTNode<K, T>* p)
+//{
+//	if (p == nullptr) EXIT_FAILURE;
+//	if (p->key == key) return p;
+//	if (p->key > key) return search_1(key, p->right);
+//	return search_1(key, p->left);
+//}
+//
+//void rotate_right_1(BTNode<K, T>*& p)
+//{
+//	if (p->right == nullptr || p == nullptr) return;
+//	BTNode<K, T>* tmp = p->father;
+//	BTNode<K, T>* tmp1 = p;
+//	BTNode<K, T>* tmp2 = p->right;
+//	BTNode<K, T>* tmp3 = p->right->left;
+//	p->right = tmp3;
+//	if (p->right != nullptr) p->right->father = p;
+//	if (p->father != nullptr)
+//	{
+//		if (p->father->left == p) p->father->left = tmp2;
+//		else p->father->right = tmp2;
+//		tmp2->father = p->father;
+//	}
+//	else tmp2->father = nullptr;
+//	tmp2->left = tmp1;
+//	tmp2->left->father = tmp2;
+//	tmp2->father = tmp;
+//}
+//
+//void rotate_left_1(BTNode<K, T>*& p)
+//{
+//	if (p->left == nullptr || p == nullptr) return;
+//	BTNode<K, T>* tmp = p->father;
+//	BTNode<K, T>* tmp1 = p;
+//	BTNode<K, T>* tmp2 = p->left;
+//	BTNode<K, T>* tmp3 = p->left->right;
+//	p->left = tmp3;
+//	if (p->left != nullptr) p->left->father = p;
+//	if (p->father != nullptr)
+//	{
+//		if (p->father->left == p) p->father->left = tmp2;
+//		else p->father->right = tmp2;
+//		tmp2->father = p->father;
+//	}
+//	else tmp2->father = nullptr;
+//	tmp2->right = tmp1;
+//	tmp2->right->father = tmp2;
+//	tmp2->father = tmp;
+//}
+//
+//void correctm2_1(BTNode<K, T>*& p)
+//{
+//	if (p->left->right == nullptr)
+//	{
+//		rotate_left_1(p);
+//		return;
+//	}
+//	if (p->left->left == nullptr)
+//	{
+//		rotate_right_1(p->left);
+//		rotate_left_1(p);
+//		return;
+//	}
+//	if (p->left->left->size < p->left->right->size)
+//	{
+//		rotate_right_1(p->left);
+//		rotate_left_1(p);
+//	}
+//	else rotate_left_1(p);
+//}
+//
+//void correct2_1(BTNode<K, T>*& p)
+//{
+//	if (p->right->left == nullptr)
+//	{
+//		rotate_right_1(p);
+//		return;
+//	}
+//	if (p->right->right == nullptr)
+//	{
+//		rotate_left_1(p->right);
+//		rotate_right_1(p);
+//		return;
+//	}
+//	if (p->right->right->size < p->right->left->size)
+//	{
+//		rotate_left_1(p->right);
+//		rotate_right_1(p);
+//	}
+//	else rotate_right_1(p);
+//}
+//
+//void rebalance_1(BTNode<K, T>*& p)
+//{
+//	if (p == nullptr) return;
+//	if (p->father != nullptr)
+//	{
+//		rebalance_1(p->father);
+//		return;
+//	}
+//	rebalance_1(p->left);
+//	rebalance_1(p->right);
+//	if (p->defect_h() >= 2) correct2_1(p);
+//	if (p->defect_h() <= -2) correctm2_1(p);
+//	correct_h_1(p);
+//	if (p->father != nullptr) p->father->correct_h();
+//}
+//
+//void insert_2(int key, int data, BTNode<K, T>*& p)
+//{
+//	if (p->key == key) return;
+//	if (p->key > key)
+//		if (p->right == nullptr) p->right = new BTNode<K, T>(key, data, 0, p->right);
+//		else insert_1(key, data, p->right);
+//	else
+//		if (p->left == nullptr) p->left = new BTNode<K, T>(key, data, 0, p->left);
+//		else insert_1(key, data, p->left);
+//}
+//
+//void insert_1(int k, int d, BTNode<K, T>*& p)
+//{
+//	insert_2(k, d, p);
+//	rebalance_1(p);
+//}
+//
+//void del_root_noleft_1(BTNode<K, T>*& p)
+//{
+//	if (p == nullptr) return;
+//	if (p->right == nullptr)
+//	{
+//		BTNode<K, T>* tmp = p;
+//		p = nullptr;
+//		delete tmp;
+//		return;
+//	}
+//	BTNode<K, T>* tmp = p;
+//	BTNode<K, T>* tmp1 = p->right;
+//	tmp1->father = nullptr;
+//	p->right = nullptr;
+//	p = tmp1;
+//	delete tmp;
+//	rebalance_1(p);
+//}
+//
+//void del_root_noright_1(BTNode<K, T>*& p)
+//{
+//	if (p == nullptr) return;
+//	if (p->left == nullptr)
+//	{
+//		BTNode<K, T>* tmp = p;
+//		p = nullptr;
+//		delete tmp;
+//		return;
+//	}
+//	BTNode<K, T>* tmp = p;
+//	BTNode<K, T>* tmp1 = p->left;
+//	tmp1->father = nullptr;
+//	p->left = nullptr;
+//	p = tmp1;
+//	delete tmp;
+//	rebalance_1(p);
+//}
+//
+//void del_uzel_noleft_1(BTNode<K, T>*& p)
+//{
+//	if (p == nullptr) return;
+//	if (p->father == nullptr)
+//	{
+//		del_root_noleft_1(p);
+//		return;
+//	}
+//	if (p->right == nullptr)
+//	{
+//		BTNode<K, T>* tmp = p;
+//		p->father = nullptr;
+//		delete tmp;
+//		return;
+//	}
+//	BTNode<K, T>* tmp = p;
+//	BTNode<K, T>* tmp1 = p->right;
+//	p->right = nullptr;
+//	tmp1->father = tmp->father;
+//	if (p->father->left == p) p->father->left = tmp1;
+//	else p->father->right = tmp1;
+//	delete tmp;
+//	rebalance_1(p);
+//}
+//
+//void del_uzel_noright_1(BTNode<K, T>*& p)
+//{
+//	if (p == nullptr) return;
+//	if (p->father == nullptr)
+//	{
+//		del_root_noright_1(p);
+//		return;
+//	}
+//	if (p->left == nullptr)
+//	{
+//		BTNode<K, T>* tmp = p;
+//		p->father = nullptr;
+//		delete tmp;
+//		return;
+//	}
+//	BTNode<K, T>* tmp = p;
+//	BTNode<K, T>* tmp1 = p->left;
+//	p->left = nullptr;
+//	tmp1->father = tmp->father;
+//	if (p->father->left == p) p->father->left = tmp1;
+//	else p->father->right = tmp1;
+//	delete tmp;
+//	rebalance_1(p);
+//}
+//
+//void del_2(int key, BTNode<K, T>*& p)
+//{
+//	if (p == nullptr) return;
+//	if (p->key == key)
+//	{
+//		if (p->right == nullptr)
+//		{
+//			del_uzel_noright_1(p);
+//			return;
+//		}
+//		if (p->left == nullptr)
+//		{
+//			del_uzel_noleft_1(p);
+//			return;
+//		}
+//		p->key = p->left->key;
+//		p->data = p->left->data;
+//		del_2(p->key, p->left);
+//		return;
+//	}
+//	if (p->key > key) del_2(key, p->right);
+//	else del_2(key, p->left);
+//}
+//
+//void del_1(int k, BTNode<K, T>*& p)
+//{
+//	del_1(k, p);
+//	rebalance_1(p);
+//}
+
+int main()
+{
+	/*BTNode<int, int>* root = new BTNode<int, int>(5, 101, 0);
+	root->right = new BTNode<K, T>(3, 111, 0, root);
+	 root->right->left = new BTNode<K, T>(4, 411, 0, root->right);
+	 root->right->right = new BTNode<K, T>(2, 611, 0, root->right);
+	root->left = new BTNode<K, T>(6, 211, 0, root);
+	 root->left->left = new BTNode<K, T>(11, 1111, 0, root->left);
+	  root->left->left->left = new BTNode<K, T>(21, 3211, 0, root->left->left);
+	  root->left->left->right = new BTNode<K, T>(9, 4681, 0, root->left->left);
+	AVLTree* tree = new AVLTree(root);
+
+	tree->correct_h();
+	tree->print();
+	cout << endl;
+
+	tree->rebalance(tree->root);
+	tree->print();
+	cout << endl;
+
+	tree->del(6);
+	tree->print();
+	cout << endl;*/
+
+	//system("pause");
+	return 0;
+}
