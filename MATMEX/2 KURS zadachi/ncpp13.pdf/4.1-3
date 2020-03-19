@@ -3,25 +3,35 @@
 
 using namespace std;
 
-const int N = 4; /* размер массива записей о сыновьях в каждом узле */
+const int N = 4;
 
 template<class K, class T>
-struct BTNode; /* тип узла дерева */
+struct BTNode;
 
 template<class K, class T>
-struct Item /* тип записи об одном сыне */
+struct Item
 {
 	K key;
 	T data;
 	BTNode<K, T>* down;
+	Item(K k, T d, BTNode<K, T>* dd = nullptr) : key(k), data(d), down(dd) {}
 };
 
 template<class K, class T>
 struct BTNode
 {
-	int n; /* реальное число сыновей */
-	Item ar[N];
-	//BTNode(int nn, Item<K, T> p0)
+	int n;
+	Item<K, T>* ar[N];
+	BTNode(Item<K, T>* p0, Item<K, T>* p1 = nullptr, Item<K, T>* p2 = nullptr)
+	{
+		if (p1 == nullptr) n = 1;
+		else
+			if (p2 == nullptr) n = 2;
+			else n = 3;
+		ar[0] = p0;
+		ar[1] = p1;
+		ar[2] = p2;
+	}
 };
 
 template<class K, class T>
@@ -33,7 +43,8 @@ template<class K, class T>
 struct BTTree 
 {
 	BTNode<K, T>* root; 
-	int height; 
+	int height;
+
 	BTTree(BTNode<K, T>* p) : root(p), height(0) {}
 	void print() { print_1(root); }
 
@@ -44,63 +55,26 @@ template<class K, class T>
 void print_1(BTNode<K, T>* r, int offset)
 {
 	if (r == nullptr) return;
-	int i = r->n;
-	while (i >= 0)
+	for (int i = 0; i < r->n; i++) 
 	{
-		print_1(r->ar[i]->down, offset + 3*r->n);
-		i--;
+		for (int j = 0; j < offset; j++) cout << " ";
+		cout << r->ar[i]->key << " " << r->ar[i]->data << " " << endl;
+		print_1(r->ar[i]->down, offset + 3 * r->n);
 	}
-	for (int i = 0; i < offset; i++) cout << " ";
-	cout << r->key << " " << r->data << " " << r->size << endl;
-	//print_1(r->right, offset + 9);
 }
 
 template<class K, class T>
 void DELETE(BTNode<K, T>*& p)
 {
 	if (p == nullptr) return;
-	int i = p->n - 1;
-	while (i >= 0;)
+	for(int i = p->n - 1; i >= 0; i--)
 	{
 		DELETE(p->ar[i]->down);
 		p->ar[i] = nullptr;
-		i--;
 	}
 	delete p;
 }
 
-//#include <iostream>
-//#include <algorithm>
-//
-//using namespace std;
-//
-//struct BTNode<K, T>
-//{
-//	int key;
-//	int data;
-//	int size;
-//	BTNode<K, T>* right;
-//	BTNode<K, T>* left;
-//	BTNode<K, T>* father;
-//	BTNode<K, T>(int k, int d, int s, BTNode<K, T>* f = nullptr, BTNode<K, T>* r = nullptr, BTNode<K, T>* l = nullptr) : key(k), data(d), size(s), father(f), right(r), left(l) {}
-//	void correct_h()
-//	{
-//		int n = -1, m = -1;
-//		if (right != nullptr) m = right->size;
-//		if (left != nullptr) n = left->size;
-//		size = max(m, n) + 1;
-//	}
-//	int defect_h()
-//	{
-//		int n = -1, m = -1;
-//		if (right != nullptr) m = right->size;
-//		if (left != nullptr) n = left->size;
-//		return m - n;
-//	}
-//	void print() { cout << key << " " << data << " " << size << " " << this << endl; }
-//};
-//
-//void print_1(BTNode<K, T>* r, int offset = 0);
 //void correct_h_1(BTNode<K, T>*& p);
 //BTNode<K, T>* search_1(int key, BTNode<K, T>* p);
 //void rotate_right_1(BTNode<K, T>*& p);
@@ -116,12 +90,11 @@ void DELETE(BTNode<K, T>*& p)
 //void del_1(int key, BTNode<K, T>*& p);
 //void DELETE(BTNode<K, T>*& p);
 //
-//struct AVLTree
+//struct BTTree<K, T>
 //{
 //	BTNode<K, T>* root;
 //
-//	AVLTree(BTNode<K, T>* r) : root(r) {}
-//	void print() { print_1(root); }
+//	BTTree<K, T>(BTNode<K, T>* r) : root(r) {}
 //	void correct_h() { correct_h_1(root); }
 //	void correct_h(BTNode<K, T>*& p) { correct_h_1(p); }
 //	BTNode<K, T>* search(int k) { return search_1(k, root); }
@@ -137,15 +110,6 @@ void DELETE(BTNode<K, T>*& p)
 //	void del_uzel_noright(BTNode<K, T>*& p) { del_uzel_noright_1(p); }
 //	void del(int k) { del_1(k, root); }
 //};
-//
-//void print_1(BTNode<K, T>* r, int offset)
-//{
-//	if (r == nullptr) return;
-//	print_1(r->left, offset + 9);
-//	for (int i = 0; i < offset; i++) cout << " ";
-//	cout << r->key << " " << r->data << " " << r->size << endl;
-//	print_1(r->right, offset + 9);
-//}
 //
 //void correct_h_1(BTNode<K, T>*& p)
 //{
@@ -403,27 +367,15 @@ void DELETE(BTNode<K, T>*& p)
 
 int main()
 {
-	/*BTNode<int, int>* root = new BTNode<int, int>(5, 101, 0);
-	root->right = new BTNode<K, T>(3, 111, 0, root);
-	 root->right->left = new BTNode<K, T>(4, 411, 0, root->right);
-	 root->right->right = new BTNode<K, T>(2, 611, 0, root->right);
-	root->left = new BTNode<K, T>(6, 211, 0, root);
-	 root->left->left = new BTNode<K, T>(11, 1111, 0, root->left);
-	  root->left->left->left = new BTNode<K, T>(21, 3211, 0, root->left->left);
-	  root->left->left->right = new BTNode<K, T>(9, 4681, 0, root->left->left);
-	AVLTree* tree = new AVLTree(root);
+	BTNode<int, int>* root = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(20, 20), new Item<int, int>(40, 40));
 
-	tree->correct_h();
-	tree->print();
-	cout << endl;
+	root->ar[0]->down = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(7, 7));
+	root->ar[1]->down = new BTNode<int, int>(new Item<int, int>(20, 20), new Item<int, int>(25, 25), new Item<int, int>(30, 30));
+	root->ar[2]->down = new BTNode<int, int>(new Item<int, int>(40, 40), new Item<int, int>(51, 51));
 
-	tree->rebalance(tree->root);
-	tree->print();
-	cout << endl;
+	BTTree<int, int>* tree = new BTTree<int, int>(root);
 
-	tree->del(6);
 	tree->print();
-	cout << endl;*/
 
 	//system("pause");
 	return 0;
