@@ -135,7 +135,6 @@ struct AVLTree
 	void insert(int k, int d)
 	{
 		insert_1(k, d, root);
-		correct_h();
 		rebalance(root);
 	}
 	void del_root_noleft()
@@ -186,7 +185,7 @@ struct AVLTree
 		}
 		if (p->right == nullptr)
 		{
-			AVLNode* tmp = root;
+			AVLNode* tmp = p;
 			p->father = nullptr;
 			delete tmp;
 			return;
@@ -211,7 +210,7 @@ struct AVLTree
 		}
 		if (p->left == nullptr)
 		{
-			AVLNode* tmp = root;
+			AVLNode* tmp = p;
 			p->father = nullptr;
 			delete tmp;
 			return;
