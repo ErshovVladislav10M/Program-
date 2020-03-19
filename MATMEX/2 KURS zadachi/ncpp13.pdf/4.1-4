@@ -32,12 +32,19 @@ struct BTNode
 		ar[1] = p1;
 		ar[2] = p2;
 	}
+	void print(BTNode<K, T>* p)
+	{
+		for (int i = 0; i < p->n; i++)
+			cout << p->ar[i]->key << " " << p->ar[i]->data << endl;
+	}
 };
 
 template<class K, class T>
 void DELETE(BTNode<K, T>*& p);
 template<class K, class T>
 void print_1(BTNode<K, T>* r, int offset = 0);
+template<class K, class T>
+BTNode<K, T>* search_1(int key, BTNode<K, T>* p);
 
 template<class K, class T>
 struct BTTree 
@@ -47,6 +54,7 @@ struct BTTree
 
 	BTTree(BTNode<K, T>* p) : root(p), height(0) {}
 	void print() { print_1(root); }
+	BTNode<K, T>* search(K k) { return search_1(k, root); }
 
 	~BTTree() { DELETE(root); }
 };
@@ -57,10 +65,21 @@ void print_1(BTNode<K, T>* r, int offset)
 	if (r == nullptr) return;
 	for (int i = 0; i < r->n; i++) 
 	{
-		for (int j = 0; j < offset; j++) cout << " ";
+		for (int j = 0; j < offset * 6; j++) cout << " ";
 		cout << r->ar[i]->key << " " << r->ar[i]->data << " " << endl;
-		print_1(r->ar[i]->down, offset + 3 * r->n);
+		print_1(r->ar[i]->down, offset + 1);
 	}
+}
+
+template<class K, class T>
+BTNode<K, T>* search_1(int key, BTNode<K, T>* p)
+{
+	if (p == nullptr) EXIT_FAILURE;
+	if (p->ar[0]->key > key) EXIT_FAILURE;
+	for (int i = 0; i < p->n; i++)
+		if (p->ar[i]->key == key)
+			if (p->ar[i]->down != nullptr) return search_1(key, p->ar[i]->down);
+			else return p;
 }
 
 template<class K, class T>
@@ -76,7 +95,6 @@ void DELETE(BTNode<K, T>*& p)
 }
 
 //void correct_h_1(BTNode<K, T>*& p);
-//BTNode<K, T>* search_1(int key, BTNode<K, T>* p);
 //void rotate_right_1(BTNode<K, T>*& p);
 //void rotate_left_1(BTNode<K, T>*& p);
 //void rebalance_1(BTNode<K, T>*& p);
@@ -88,7 +106,6 @@ void DELETE(BTNode<K, T>*& p)
 //void del_uzel_noleft_1(BTNode<K, T>*& p);
 //void del_uzel_noright_1(BTNode<K, T>*& p);
 //void del_1(int key, BTNode<K, T>*& p);
-//void DELETE(BTNode<K, T>*& p);
 //
 //struct BTTree<K, T>
 //{
@@ -97,7 +114,6 @@ void DELETE(BTNode<K, T>*& p)
 //	BTTree<K, T>(BTNode<K, T>* r) : root(r) {}
 //	void correct_h() { correct_h_1(root); }
 //	void correct_h(BTNode<K, T>*& p) { correct_h_1(p); }
-//	BTNode<K, T>* search(int k) { return search_1(k, root); }
 //	void rotate_right(BTNode<K, T>*& p) { rotate_right_1(p); }
 //	void rotate_left(BTNode<K, T>*& p) { rotate_left_1(p); }
 //	void correctm2(BTNode<K, T>*& p) { correctm2_1(p); } //левый большой поворот
@@ -120,14 +136,6 @@ void DELETE(BTNode<K, T>*& p)
 //	if (p->right != nullptr) m = p->right->size;
 //	if (p->left != nullptr) n = p->left->size;
 //	p->size = max(m, n) + 1;
-//}
-//
-//BTNode<K, T>* search_1(int key, BTNode<K, T>* p)
-//{
-//	if (p == nullptr) EXIT_FAILURE;
-//	if (p->key == key) return p;
-//	if (p->key > key) return search_1(key, p->right);
-//	return search_1(key, p->left);
 //}
 //
 //void rotate_right_1(BTNode<K, T>*& p)
@@ -376,6 +384,9 @@ int main()
 	BTTree<int, int>* tree = new BTTree<int, int>(root);
 
 	tree->print();
+	cout << endl;
+
+	root->print(tree->search(20));
 
 	//system("pause");
 	return 0;
