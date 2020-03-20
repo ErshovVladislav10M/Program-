@@ -22,15 +22,18 @@ struct BTNode
 {
 	int n;
 	Item<K, T>* ar[N];
-	BTNode(Item<K, T>* p0, Item<K, T>* p1 = nullptr, Item<K, T>* p2 = nullptr)
+	BTNode(Item<K, T>* p0, Item<K, T>* p1 = nullptr, Item<K, T>* p2 = nullptr, Item<K, T>* p3 = nullptr)
 	{
 		if (p1 == nullptr) n = 1;
 		else
 			if (p2 == nullptr) n = 2;
-			else n = 3;
+			else
+				if (p3 == nullptr) n = 3;
+				else n = 4;
 		ar[0] = p0;
 		ar[1] = p1;
 		ar[2] = p2;
+		ar[3] = p3;
 	}
 	void print(BTNode<K, T>* p)
 	{
@@ -45,6 +48,10 @@ template<class K, class T>
 void print_1(BTNode<K, T>* r, int offset = 0);
 template<class K, class T>
 BTNode<K, T>* search_1(int key, BTNode<K, T>* p);
+template<class K, class T>
+void insertB_1(BTNode<K, T>*& p, int i, Item<K, T>* x);
+template<class K, class T>
+BTNode<K, T>* split_1(BTNode<K, T>*& p);
 
 template<class K, class T>
 struct BTTree 
@@ -55,7 +62,8 @@ struct BTTree
 	BTTree(BTNode<K, T>* p) : root(p), height(0) {}
 	void print() { print_1(root); }
 	BTNode<K, T>* search(K k) { return search_1(k, root); }
-
+	void insertB(BTNode<K, T>*& p, int i, Item<K, T>* x) { insertB_1(p, i, x); } //нумерация записей в узле с 0
+	BTNode<K, T>* split(BTNode<K, T>*& p) { return split_1(p); }
 	~BTTree() { DELETE(root); }
 };
 
@@ -83,6 +91,31 @@ BTNode<K, T>* search_1(int key, BTNode<K, T>* p)
 }
 
 template<class K, class T>
+void insertB_1(BTNode<K, T>*& p, int i, Item<K, T>* x)
+{
+	for (int j = p->n - 1; j >= i; j--)
+	{
+		p->ar[j + 1] = p->ar[j];
+		Item<K, T>* tmp = p->ar[j + 1];
+		p->ar[j + 1] = nullptr;
+		delete tmp;
+	}
+	p->ar[i] = x;
+	p->n++;
+}
+
+template<class K, class T>
+BTNode<K, T>* split_1(BTNode<K, T>*& p)
+{
+	BTNode<K, T>* tmp = new BTNode<K, T>(p->ar[2], p->ar[3]);
+	p->ar[2] = nullptr;
+	p->ar[3] = nullptr;
+	p->n = 2;
+	tmp->n = 2;
+	return tmp;
+}
+
+template<class K, class T>
 void DELETE(BTNode<K, T>*& p)
 {
 	if (p == nullptr) return;
@@ -100,7 +133,6 @@ void DELETE(BTNode<K, T>*& p)
 //void rebalance_1(BTNode<K, T>*& p);
 //void correctm2_1(BTNode<K, T>*& p);
 //void correct2_1(BTNode<K, T>*& p);
-//void insert_1(int key, int data, BTNode<K, T>*& p);
 //void del_root_noleft_1(BTNode<K, T>*& p);
 //void del_root_noright_1(BTNode<K, T>*& p);
 //void del_uzel_noleft_1(BTNode<K, T>*& p);
@@ -119,7 +151,6 @@ void DELETE(BTNode<K, T>*& p)
 //	void correctm2(BTNode<K, T>*& p) { correctm2_1(p); } //левый большой поворот
 //	void correct2(BTNode<K, T>*& p) { correct2_1(p); } //правый большой поворот
 //	void rebalance(BTNode<K, T>*& p) { rebalance_1(p); }
-//	void insert(int k, int d) { insert_1(k, d, root); }
 //	void del_root_noleft() { del_root_noleft_1(root); }
 //	void del_root_noright() { del_root_noright_1(root); }
 //	void del_uzel_noleft(BTNode<K, T>*& p) { del_uzel_noleft_1(p); }
@@ -236,23 +267,6 @@ void DELETE(BTNode<K, T>*& p)
 //	if (p->defect_h() <= -2) correctm2_1(p);
 //	correct_h_1(p);
 //	if (p->father != nullptr) p->father->correct_h();
-//}
-//
-//void insert_2(int key, int data, BTNode<K, T>*& p)
-//{
-//	if (p->key == key) return;
-//	if (p->key > key)
-//		if (p->right == nullptr) p->right = new BTNode<K, T>(key, data, 0, p->right);
-//		else insert_1(key, data, p->right);
-//	else
-//		if (p->left == nullptr) p->left = new BTNode<K, T>(key, data, 0, p->left);
-//		else insert_1(key, data, p->left);
-//}
-//
-//void insert_1(int k, int d, BTNode<K, T>*& p)
-//{
-//	insert_2(k, d, p);
-//	rebalance_1(p);
 //}
 //
 //void del_root_noleft_1(BTNode<K, T>*& p)
@@ -377,7 +391,7 @@ int main()
 {
 	BTNode<int, int>* root = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(20, 20), new Item<int, int>(40, 40));
 
-	root->ar[0]->down = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(7, 7));
+	root->ar[0]->down = new BTNode<int, int>(new Item<int, int>(1, 1));
 	root->ar[1]->down = new BTNode<int, int>(new Item<int, int>(20, 20), new Item<int, int>(25, 25), new Item<int, int>(30, 30));
 	root->ar[2]->down = new BTNode<int, int>(new Item<int, int>(40, 40), new Item<int, int>(51, 51));
 
@@ -386,8 +400,15 @@ int main()
 	tree->print();
 	cout << endl;
 
-	root->print(tree->search(20));
+	tree->insertB(root->ar[0]->down, 1, new Item<int, int>(7, 7));
+	tree->insertB(root->ar[0]->down, 2, new Item<int, int>(8, 8));
+	tree->insertB(root->ar[0]->down, 3, new Item<int, int>(9, 9));
+	tree->print();
+	cout << endl;
 
+	tree->split(root->ar[0]->down);
+	tree->print();
+	cout << endl;
 	//system("pause");
 	return 0;
 }
