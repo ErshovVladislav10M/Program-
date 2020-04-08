@@ -1,4 +1,4 @@
-#include <iostream>
+ #include <iostream>
 #include <algorithm>
 
 using namespace std;
@@ -121,12 +121,7 @@ template<class K, class T>
 void insertB_1(BTNode<K, T>*& p, int i, Item<K, T>* x)
 {
 	for (int j = p->n - 1; j >= i; j--)
-	{
 		p->ar[j + 1] = p->ar[j];
-		Item<K, T>* tmp = p->ar[j + 1];
-		p->ar[j + 1] = nullptr;
-		delete tmp;
-	}
 	p->ar[i] = x;
 	p->n++;
 	if (p->ar[i]->down != nullptr) p->ar[i]->down->father = p;
@@ -148,6 +143,7 @@ BTNode<K, T>* split_1(BTNode<K, T>*& p)
 template<class K, class T>
 void insertR_2(BTNode<K, T>*& p, BTNode<K, T>* r)
 {
+	if (r == nullptr) return;
 	int i = 0;
 	for (i = 0; i < p->n; i++)
 		if (p->ar[i]->key > r->ar[0]->key) break;
@@ -171,14 +167,16 @@ BTNode<K, T>* insertR_1(BTNode<K, T>*& p, K key, T data)
 	}
 	if (p->ar[0]->key > key)
 	{
-		for(int i = 0; i < p->father->n - 1; i++)
-			if (p->father->ar[i]->down == p)
-			{
-				p->father->ar[i]->key = key;
-				p->father->ar[i]->data = data;
-				break;
-			}
-		if (insertR_1(p->ar[0]->down, key, data) == nullptr) return nullptr;
+		if (p->father != nullptr)
+			for (int i = 0; i < p->father->n - 1; i++)
+				if (p->father->ar[i]->down == p)
+				{
+					p->father->ar[i]->key = key;
+					p->father->ar[i]->data = data;
+					break;
+				}
+		p->ar[0]->key = key;
+		p->ar[0]->data = data;
 		insertR_2(p, insertR_1(p->ar[0]->down, key, data));
 		if (p->n < 4) return nullptr;
 		return split_1(p);
@@ -186,12 +184,10 @@ BTNode<K, T>* insertR_1(BTNode<K, T>*& p, K key, T data)
 	for (int i = 0; i < p->n - 1; i++)
 		if (p->ar[i]->key < key && p->ar[i + 1]->key > key)
 		{
-			if (insertR_1(p->ar[i]->down, key, data) == nullptr) return nullptr;
 			insertR_2(p, insertR_1(p->ar[i]->down, key, data));
 			if (p->n < 4) return nullptr;
 			return split_1(p);
 		}
-	if (insertR_1(p->ar[p->n - 1]->down, key, data) == nullptr) return nullptr;
 	insertR_2(p, insertR_1(p->ar[p->n - 1]->down, key, data));
 	if (p->n < 4) return nullptr;
 	return split_1(p);
@@ -222,9 +218,9 @@ int main()
 	tree->print();
 	cout << endl << endl;
 
-	tree->insertR(root, 7, 7);
+	tree->insertR(root, 0, 0);
 	tree->insertR(root, 8, 8);
-	tree->insertR(root, 9, 9);
+	//tree->insertR(root, 9, 9);
 	tree->print();
 	cout << endl << endl;
 	
