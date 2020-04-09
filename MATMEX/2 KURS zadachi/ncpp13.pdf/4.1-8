@@ -54,6 +54,8 @@ template<class K, class T>
 BTNode<K, T>* split_1(BTNode<K, T>*& p);
 template<class K, class T>
 BTNode<K, T>* insertR_1(BTNode<K, T>*& p, K key, T data);
+template<class K, class T>
+void insert_1(BTNode<K, T>*& p, K key, T data);
 
 template<class K, class T>
 struct BTTree 
@@ -69,6 +71,7 @@ struct BTTree
 	void insertB(BTNode<K, T>*& p, int i, Item<K, T>* x) { insertB_1(p, i, x); } //нумерация записей в узле с 0
 	BTNode<K, T>* split(BTNode<K, T>*& p) { return split_1(p); }
 	BTNode<K, T>* insertR(BTNode<K, T>*& p, K key, T data) { return insertR_1(p, key, data); }
+	void insert(K key, T data) { insert_1(root, key, data); }
 
 	~BTTree() { DELETE(root); }
 };
@@ -122,7 +125,7 @@ void insertB_1(BTNode<K, T>*& p, int i, Item<K, T>* x)
 {
 	for (int j = p->n - 1; j >= i; j--)
 		p->ar[j + 1] = p->ar[j];
-	p->ar[i] = new Item<K, T>(x->key, x->data, nullptr);
+	p->ar[i] = new Item<K, T>(x->key, x->data);
 	p->n++;
 	if (p->ar[i]->down != nullptr) p->ar[i]->down->father = p;
 }
@@ -149,6 +152,7 @@ void insertR_2(BTNode<K, T>*& p, BTNode<K, T>* r)
 		if (p->ar[i]->key > r->ar[0]->key) break;
 	insertB_1(p, i, r->ar[0]);
 	p->ar[i]->down = r;
+	p->ar[i]->down->father = p;
 }
 
 template<class K, class T>
@@ -194,6 +198,26 @@ BTNode<K, T>* insertR_1(BTNode<K, T>*& p, K key, T data)
 }
 
 template<class K, class T>
+void insert_2(BTNode<K, T>*& p, BTNode<K, T>* r)
+{
+	if (r == nullptr) return;
+	Item<K, T>* tmp1 = new Item<K, T>(p->ar[0]->key, p->ar[0]->data);
+	Item<K, T>* tmp2 = new Item<K, T>(r->ar[0]->key, r->ar[0]->data);
+	BTNode<K, T>* tmp = new BTNode<K, T>(tmp1, tmp2);
+	tmp->ar[0]->down = p;
+	tmp->ar[1]->down = r;
+	tmp->ar[0]->down->father = tmp;
+	tmp->ar[1]->down->father = tmp;
+	p = tmp;
+}
+
+template<class K, class T>
+void insert_1(BTNode<K, T>*& p, K key, T data)
+{
+	insert_2(p, insertR_1(p, key, data));
+}
+
+template<class K, class T>
 void DELETE(BTNode<K, T>*& p)
 {
 	if (p == nullptr) return;
@@ -207,20 +231,23 @@ void DELETE(BTNode<K, T>*& p)
 
 int main()
 {
-	BTNode<int, int>* root = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(20, 20)/*, new Item<int, int>(40, 40)*/);
+	BTNode<int, int>* root = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(20, 20), new Item<int, int>(40, 40));
 
 	root->ar[0]->down = new BTNode<int, int>(new Item<int, int>(1, 1), nullptr, nullptr, root);
 	root->ar[1]->down = new BTNode<int, int>(new Item<int, int>(20, 20), new Item<int, int>(25, 25), new Item<int, int>(30, 30), root);
-	/*root->ar[2]->down = new BTNode<int, int>(new Item<int, int>(40, 40), new Item<int, int>(51, 51), nullptr, root);*/
+	root->ar[2]->down = new BTNode<int, int>(new Item<int, int>(40, 40), new Item<int, int>(51, 51), nullptr, root);
 
 	BTTree<int, int>* tree = new BTTree<int, int>(root);
 
 	tree->print();
 	cout << endl << endl;
 
-	tree->insertR(root, 0, 0);
-	tree->insertR(root, 8, 8);
-	tree->insertR(root, 9, 9);
+	tree->insert(0, 0);
+	tree->insert(8, 8);
+	tree->print();
+	cout << endl << endl;
+
+	tree->insert(9, 9);
 	tree->print();
 	cout << endl << endl;
 	
