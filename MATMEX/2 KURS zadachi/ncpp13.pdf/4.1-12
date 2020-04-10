@@ -62,6 +62,8 @@ template<class K, class T>
 void join_1(BTNode<K, T>*& p, int n);
 template<class K, class T>
 void pass_forward_1(BTNode<K, T>*& p, int n);
+template<class K, class T>
+void pass_backward_1(BTNode<K, T>*& p, int n);
 
 template<class K, class T>
 struct BTTree 
@@ -81,6 +83,7 @@ struct BTTree
 	void removeB(BTNode<K, T>*& p, K key) { removeB_1(p, key); }
 	void join(BTNode<K, T>*& p, int n) { join_1(p, n); } //нумерация с 0
 	void pass_forward(BTNode<K, T>*& p, int n) { pass_forward_1(p, n); } //нумерация с 0
+	void pass_backward(BTNode<K, T>*& p, int n){ pass_backward_1(p, n); } //нумерация с 0
 
 	~BTTree() { DELETE(root); }
 };
@@ -268,6 +271,17 @@ void pass_forward_1(BTNode<K, T>*& p, int n)
 }
 
 template<class K, class T>
+void pass_backward_1(BTNode<K, T>*& p, int n)
+{
+	if (p == nullptr || n >= p->n) EXIT_FAILURE; //пустой узел, n больше p->n
+	if (p->ar[n]->down == nullptr || p->ar[n + 1]->down == nullptr) EXIT_FAILURE; //нет нужного сына
+	insertB_1(p->ar[n]->down, p->ar[n]->down->n, p->ar[n + 1]->down->ar[0]);
+	removeB_1(p->ar[n + 1]->down, 0);
+	p->ar[n + 1]->key = p->ar[n + 1]->down->ar[0]->key;
+	p->ar[n + 1]->data = p->ar[n + 1]->down->ar[0]->data;
+}
+
+template<class K, class T>
 void DELETE(BTNode<K, T>*& p)
 {
 	if (p == nullptr) return;
@@ -306,6 +320,10 @@ int main()
 	cout << endl << endl;
 
 	tree->pass_forward(tree->root->ar[0]->down, 0);
+	tree->print();
+	cout << endl << endl;
+
+	tree->pass_backward(tree->root->ar[0]->down, 0);
 	tree->print();
 	cout << endl << endl;
 
