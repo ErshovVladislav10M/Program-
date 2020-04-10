@@ -11,7 +11,7 @@ struct BTNode;
 template<class K, class T>
 struct Item
 {
-	K key;
+	K key; 
 	T data;
 	BTNode<K, T>* down;
 	Item(K k, T d, BTNode<K, T>* dd = nullptr) : key(k), data(d), down(dd) {}
@@ -60,6 +60,8 @@ template<class K, class T>
 void removeB_1(BTNode<K, T>*& p, int i);
 template<class K, class T>
 void join_1(BTNode<K, T>*& p, int n);
+template<class K, class T>
+void pass_forward_1(BTNode<K, T>*& p, int n);
 
 template<class K, class T>
 struct BTTree 
@@ -77,7 +79,8 @@ struct BTTree
 	BTNode<K, T>* insertR(BTNode<K, T>*& p, K key, T data) { return insertR_1(p, key, data); }
 	void insert(K key, T data) { insert_1(root, key, data); }
 	void removeB(BTNode<K, T>*& p, K key) { removeB_1(p, key); }
-	void join(BTNode<K, T>*& p, int n) { join_1(p, n); }
+	void join(BTNode<K, T>*& p, int n) { join_1(p, n); } //нумерация с 0
+	void pass_forward(BTNode<K, T>*& p, int n) { pass_forward_1(p, n); } //нумерация с 0
 
 	~BTTree() { DELETE(root); }
 };
@@ -254,6 +257,17 @@ void join_1(BTNode<K, T>*& p, int n)
 }
 
 template<class K, class T>
+void pass_forward_1(BTNode<K, T>*& p, int n)
+{
+	if (p == nullptr || n >= p->n) EXIT_FAILURE; //пустой узел, n больше p->n
+	if (p->ar[n]->down == nullptr || p->ar[n + 1]->down == nullptr) EXIT_FAILURE; //нет нужного сына
+	insertB_1(p->ar[n + 1]->down, 0, p->ar[n]->down->ar[p->ar[n]->down->n - 1]);
+	p->ar[n + 1]->key = p->ar[n + 1]->down->ar[0]->key;
+	p->ar[n + 1]->data = p->ar[n + 1]->down->ar[0]->data;
+	removeB_1(p->ar[n]->down, p->ar[n]->down->n - 1);
+}
+
+template<class K, class T>
 void DELETE(BTNode<K, T>*& p)
 {
 	if (p == nullptr) return;
@@ -288,6 +302,10 @@ int main()
 	cout << endl << endl;
 	
 	tree->join(tree->root->ar[1]->down, 0);
+	tree->print();
+	cout << endl << endl;
+
+	tree->pass_forward(tree->root->ar[0]->down, 0);
 	tree->print();
 	cout << endl << endl;
 
