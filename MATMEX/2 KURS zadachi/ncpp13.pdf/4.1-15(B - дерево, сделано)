@@ -68,6 +68,8 @@ template<class K, class T>
 void correct_filling_1(BTNode<K, T>*& p, int n);
 template<class K, class T>
 void removeR_1(BTNode<K, T>*& p, K key);
+template<class K, class T>
+void remove_1(BTNode<K, T>*& p, K key);
 
 template<class K, class T>
 struct BTTree 
@@ -90,6 +92,7 @@ struct BTTree
 	void pass_backward(BTNode<K, T>*& p, int n){ pass_backward_1(p, n); } //нумерация с 0
 	void correct_filling(BTNode<K, T>*& p, int n) { correct_filling_1(p, n); }
 	void removeR(BTNode<K, T>*& p, K key) { removeR_1(p, key); }
+	void remove(K key) { remove_1(root, key); }
 
 	~BTTree() { DELETE(root); }
 };
@@ -302,13 +305,13 @@ void correct_filling_1(BTNode<K, T>*& p, int n)
 			}
 			else
 			{
-				pass_backward_1(p, n + 1);
+				pass_backward_1(p, n);
 				return;
 			}
 	if (n != 0)
 		if (p->ar[n - 1]->down->n > 2)
 		{
-			pass_forward_1(p, n);
+			pass_forward_1(p, n-1);
 			return;
 		}
 		else
@@ -355,6 +358,20 @@ void removeR_1(BTNode<K, T>*& p, K key)
 }
 
 template<class K, class T>
+void remove_1(BTNode<K, T>*& p, K key)
+{
+	removeR_1(p, key);
+	if(p->father == nullptr)
+		if (p->n == 1 && p->ar[0]->down != nullptr)
+		{
+			BTNode<K, T>* tmp = p;
+			p = p->ar[0]->down;
+			p->father = nullptr;
+			delete tmp;
+		}
+}
+
+template<class K, class T>
 void DELETE(BTNode<K, T>*& p)
 {
 	if (p == nullptr) return;
@@ -388,7 +405,23 @@ int main()
 	tree->print();
 	cout << endl << endl;
 
-	tree->removeR(tree->root, 40);
+	tree->remove(40);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(9);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(0);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(25);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(20);
 	tree->print();
 	cout << endl << endl;
 
