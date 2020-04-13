@@ -66,6 +66,8 @@ template<class K, class T>
 void pass_backward_1(BTNode<K, T>*& p, int n);
 template<class K, class T>
 void correct_filling_1(BTNode<K, T>*& p, int n);
+template<class K, class T>
+void removeR_1(BTNode<K, T>*& p, K key);
 
 template<class K, class T>
 struct BTTree 
@@ -87,6 +89,8 @@ struct BTTree
 	void pass_forward(BTNode<K, T>*& p, int n) { pass_forward_1(p, n); } //нумерация с 0
 	void pass_backward(BTNode<K, T>*& p, int n){ pass_backward_1(p, n); } //нумерация с 0
 	void correct_filling(BTNode<K, T>*& p, int n) { correct_filling_1(p, n); }
+	void removeR(BTNode<K, T>*& p, K key) { removeR_1(p, key); }
+
 	~BTTree() { DELETE(root); }
 };
 
@@ -289,17 +293,18 @@ void correct_filling_1(BTNode<K, T>*& p, int n)
 	if (p == nullptr || n > p->n - 2) EXIT_FAILURE; //пустой узел, n больше возможного
 	if (p->ar[n]->down == nullptr) EXIT_FAILURE; //нет нужного сына
 	if (p->ar[n]->down->n > 1) return; //больше 1 записи
-	if (p->ar[n + 1]->down != nullptr)
-		if (p->ar[n + 1]->down->n <= 2)
-		{
-			join_1(p, n);
-			return;
-		}
-		else
-		{
-			pass_backward_1(p, n + 1);
-			return;
-		}
+	if (n + 1 < p->n)
+		if (p->ar[n + 1]->down != nullptr)
+			if (p->ar[n + 1]->down->n <= 2)
+			{
+				join_1(p, n);
+				return;
+			}
+			else
+			{
+				pass_backward_1(p, n + 1);
+				return;
+			}
 	if (n != 0)
 		if (p->ar[n - 1]->down->n > 2)
 		{
@@ -311,6 +316,42 @@ void correct_filling_1(BTNode<K, T>*& p, int n)
 			join_1(p, n - 1);
 			return;
 		}
+}
+
+template<class K, class T>
+void removeR_1(BTNode<K, T>*& p, K key)
+{
+	if (!check_son_1(p))
+	{
+		int i = 0;
+		for (i = 0; i < p->n; i++)
+			if (p->ar[i]->key == key)
+			{
+				removeB_1(p, i);
+				break;
+			}
+		return;
+	}
+	if (p->ar[0]->key > key) return;
+	for (int i = 0; i < p->n - 1; i++)
+		if (p->ar[i]->key <= key && p->ar[i + 1]->key > key)
+		{
+			removeR_1(p->ar[i]->down, key);
+			if (p->ar[i]->down->ar[0]->key != p->ar[i]->key)
+			{
+				p->ar[i]->key = p->ar[i]->down->ar[0]->key;
+				p->ar[i]->data = p->ar[i]->down->ar[0]->data;
+			}
+			if (p->ar[i]->down->n < 2) correct_filling_1(p, i);
+			return;
+		}
+	removeR_1(p->ar[p->n - 1]->down, key);
+	if (p->ar[p->n - 1]->down->ar[0]->key != p->ar[p->n - 1]->key)
+	{
+		p->ar[p->n - 1]->key = p->ar[p->n - 1]->down->ar[0]->key;
+		p->ar[p->n - 1]->data = p->ar[p->n - 1]->down->ar[0]->data;
+	}
+	if (p->ar[p->n - 1]->down->n < 2) correct_filling_1(p, p->n - 1);
 }
 
 template<class K, class T>
@@ -330,7 +371,7 @@ int main()
 	BTNode<int, int>* root = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(20, 20), new Item<int, int>(40, 40));
 
 	root->ar[0]->down = new BTNode<int, int>(new Item<int, int>(1, 1), nullptr, nullptr, root);
-	root->ar[1]->down = new BTNode<int, int>(new Item<int, int>(20, 20), nullptr, nullptr, root);
+	root->ar[1]->down = new BTNode<int, int>(new Item<int, int>(20, 20), new Item<int, int>(25, 25), nullptr, root);
 	root->ar[2]->down = new BTNode<int, int>(new Item<int, int>(40, 40), new Item<int, int>(51, 51), nullptr, root);
 
 	BTTree<int, int>* tree = new BTTree<int, int>(root);
@@ -347,7 +388,7 @@ int main()
 	tree->print();
 	cout << endl << endl;
 
-	tree->correct_filling(tree->root->ar[1]->down, 0);
+	tree->removeR(tree->root, 40);
 	tree->print();
 	cout << endl << endl;
 
