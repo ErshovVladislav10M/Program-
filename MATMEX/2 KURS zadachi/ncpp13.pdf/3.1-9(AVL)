@@ -41,6 +41,7 @@ void del_root_noleft_1(AVLNode*& p);
 void del_root_noright_1(AVLNode*& p);
 void del_uzel_noleft_1(AVLNode*& p);
 void del_uzel_noright_1(AVLNode*& p);
+void del_1(int key, AVLNode*& p);
 
 void DELETE(AVLNode*& p);
 
@@ -62,6 +63,7 @@ struct AVLTree
 	void del_root_noright() { del_root_noright_1(root); }
 	void del_uzel_noleft(AVLNode*& p) { del_uzel_noleft_1(p); }
 	void del_uzel_noright(AVLNode*& p) { del_root_noright_1(p); }
+	void del(int k) { del_1(k, root); }
 
 	~AVLTree() { DELETE(root); }
 };
@@ -271,7 +273,8 @@ void del_uzel_noright_1(AVLNode*& p)
 	if (p->left == nullptr)
 	{
 		AVLNode* tmp = p;
-		p->father = nullptr;
+		if(p->father->left == p) p->father->left = nullptr;
+		else p->father->right = nullptr;
 		delete tmp;
 		return;
 	}
@@ -285,6 +288,36 @@ void del_uzel_noright_1(AVLNode*& p)
 	AVLNode* tmp11 = p;
 	while (tmp11->father != nullptr) tmp11 = tmp11->father;
 	rebalance_1(tmp11);
+}
+
+void del_2(int key, AVLNode*& p)
+{
+	if (p == nullptr) return;
+	if (p->key == key)
+	{
+		if (p->right == nullptr)
+		{
+			del_uzel_noright_1(p);
+			return;
+		}
+		if (p->left == nullptr)
+		{
+			del_uzel_noleft_1(p);
+			return;
+		}
+		p->key = p->left->key;
+		p->data = p->left->data;
+		del_2(p->key, p->left);
+		return;
+	}
+	if (p->key > key) del_2(key, p->right);
+	else del_2(key, p->left);
+}
+
+void del_1(int k, AVLNode*& p)
+{
+	del_2(k, p);
+	rebalance_1(p);
 }
 
 void DELETE(AVLNode*& p)
@@ -322,7 +355,7 @@ int main()
 	tree->print();
 	cout << endl << endl;
 
-	tree->del_uzel_noleft(tree->root->right);
+	tree->del(5);
 	tree->print();
 	cout << endl << endl;
 
