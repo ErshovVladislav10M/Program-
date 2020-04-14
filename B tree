@@ -1,0 +1,430 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 4;
+
+template<class K, class T>
+struct BTNode;
+
+template<class K, class T>
+struct Item
+{
+	K key; 
+	T data;
+	BTNode<K, T>* down;
+	Item(K k, T d, BTNode<K, T>* dd = nullptr) : key(k), data(d), down(dd) {}
+};
+
+template<class K, class T>
+struct BTNode
+{
+	int n;
+	Item<K, T>* ar[N];
+	BTNode<K, T>* father;
+	BTNode(Item<K, T>* p0, Item<K, T>* p1 = nullptr, Item<K, T>* p2 = nullptr, BTNode<K, T>* f = nullptr)
+	{
+		if (p1 == nullptr) n = 1;
+		else
+			if (p2 == nullptr) n = 2;
+			else n = 3;
+		ar[0] = p0;
+		ar[1] = p1;
+		ar[2] = p2;
+		ar[3] = nullptr;
+		father = f;
+	}
+	void print() { for (int i = 0; i < n; i++) cout << ar[i]->key << " " << ar[i]->data << endl; }
+};
+
+template<class K, class T>
+void DELETE(BTNode<K, T>*& p);
+template<class K, class T>
+void print_1(BTNode<K, T>* r, int offset = 0);
+template<class K, class T>
+bool check_son_1(BTNode<K, T>* p);
+template<class K, class T>
+int correct_h_1(BTNode<K, T>*& p);
+template<class K, class T>
+BTNode<K, T>* search_1(int key, BTNode<K, T>* p);
+template<class K, class T>
+void insertB_1(BTNode<K, T>*& p, int i, Item<K, T>* x);
+template<class K, class T>
+BTNode<K, T>* split_1(BTNode<K, T>*& p);
+template<class K, class T>
+BTNode<K, T>* insertR_1(BTNode<K, T>*& p, K key, T data);
+template<class K, class T>
+void insert_1(BTNode<K, T>*& p, K key, T data);
+template<class K, class T>
+void removeB_1(BTNode<K, T>*& p, int i);
+template<class K, class T>
+void join_1(BTNode<K, T>*& p, int n);
+template<class K, class T>
+void pass_forward_1(BTNode<K, T>*& p, int n);
+template<class K, class T>
+void pass_backward_1(BTNode<K, T>*& p, int n);
+template<class K, class T>
+void correct_filling_1(BTNode<K, T>*& p, int n);
+template<class K, class T>
+void removeR_1(BTNode<K, T>*& p, K key);
+template<class K, class T>
+void remove_1(BTNode<K, T>*& p, K key);
+
+template<class K, class T>
+struct BTTree 
+{
+	BTNode<K, T>* root; 
+	int height;
+
+	BTTree(BTNode<K, T>* p) : root(p), height(0) {}
+	void print() { print_1(root); }
+	bool check_son(BTNode<K, T>* p) { return check_son_1(p); } //1 - значит есть сыновья
+	void correct_h() { height = correct_h_1(root); }
+	BTNode<K, T>* search(K key) { return search_1(key, root); }
+	void insertB(BTNode<K, T>*& p, int i, Item<K, T>* x) { insertB_1(p, i, x); } //нумерация записей в узле с 0
+	BTNode<K, T>* split(BTNode<K, T>*& p) { return split_1(p); }
+	BTNode<K, T>* insertR(BTNode<K, T>*& p, K key, T data) { return insertR_1(p, key, data); }
+	void insert(K key, T data) { insert_1(root, key, data); }
+	void removeB(BTNode<K, T>*& p, K key) { removeB_1(p, key); }
+	void join(BTNode<K, T>*& p, int n) { join_1(p, n); } //нумерация с 0
+	void pass_forward(BTNode<K, T>*& p, int n) { pass_forward_1(p, n); } //нумерация с 0
+	void pass_backward(BTNode<K, T>*& p, int n){ pass_backward_1(p, n); } //нумерация с 0
+	void correct_filling(BTNode<K, T>*& p, int n) { correct_filling_1(p, n); }
+	void removeR(BTNode<K, T>*& p, K key) { removeR_1(p, key); }
+	void remove(K key) { remove_1(root, key); }
+
+	~BTTree() { DELETE(root); }
+};
+
+template<class K, class T>
+void print_1(BTNode<K, T>* r, int offset)
+{
+	if (r == nullptr) return;
+	for (int i = 0; i < r->n; i++) 
+	{
+		for (int j = 0; j < offset * 6; j++) cout << " ";
+		cout << r->ar[i]->key << " " << r->ar[i]->data << " " << endl;
+		print_1(r->ar[i]->down, offset + 1);
+	}
+}
+
+template<class K, class T>
+bool check_son_1(BTNode<K, T>* p)
+{
+	int k = 0;
+	for (int i = 0; i < p->n; i++)
+		if (p->ar[i]->down != nullptr) k = 1;
+	return k;
+}
+
+template<class K, class T>
+int correct_h_1(BTNode<K, T>*& p)
+{
+	int k = 0;
+	if (!check_son_1(p)) return k;
+	for (int i = 0; i < p->n; i++)
+		if (p->ar[i]->down != nullptr) k = max(k, 1 + correct_h_1(p->ar[i]->down));
+	return k;
+}
+
+template<class K, class T>
+BTNode<K, T>* search_1(int key, BTNode<K, T>* p)
+{
+	if (p == nullptr) EXIT_FAILURE; //пустой узел
+	if (p->ar[0]->key > key) EXIT_FAILURE; //нет ключа key в дереве
+	for (int i = 0; i < p->n; i++)
+		if (p->ar[i]->key == key)
+			if (p->ar[i]->down != nullptr) return search_1(key, p->ar[i]->down);
+			else return p;
+	if (p->ar[p->n - 1]->down != nullptr) return search_1(key, p->ar[p->n - 1]->down);
+	else EXIT_FAILURE; //нет ключа key в дереве
+}
+
+template<class K, class T>
+void insertB_1(BTNode<K, T>*& p, int i, Item<K, T>* x)
+{
+	for (int j = p->n - 1; j >= i; j--)
+		p->ar[j + 1] = p->ar[j];
+	p->ar[i] = new Item<K, T>(x->key, x->data);
+	p->n++;
+	if (p->ar[i]->down != nullptr) p->ar[i]->down->father = p;
+}
+
+template<class K, class T>
+BTNode<K, T>* split_1(BTNode<K, T>*& p)
+{
+	BTNode<K, T>* tmp = new BTNode<K, T>(p->ar[2], p->ar[3]);
+	p->ar[2] = nullptr;
+	p->ar[3] = nullptr;
+	p->n = 2;
+	tmp->n = 2;
+	if (tmp->ar[0]->down != nullptr) tmp->ar[0]->down->father = nullptr;
+	if (tmp->ar[1]->down != nullptr) tmp->ar[1]->down->father = nullptr;
+	return tmp;
+}
+
+template<class K, class T>
+void insertR_2(BTNode<K, T>*& p, BTNode<K, T>* r)
+{
+	if (r == nullptr) return;
+	int i = 0;
+	for (i = 0; i < p->n; i++)
+		if (p->ar[i]->key > r->ar[0]->key) break;
+	insertB_1(p, i, r->ar[0]);
+	p->ar[i]->down = r;
+	p->ar[i]->down->father = p;
+}
+
+template<class K, class T>
+BTNode<K, T>* insertR_1(BTNode<K, T>*& p, K key, T data)
+{
+	if (p == nullptr) EXIT_FAILURE; //пустой узел
+	if (p->n >= 4) EXIT_FAILURE; //4 или больше записей
+	if (!check_son_1(p))
+	{
+		int i = 0;
+		for(i = 0; i < p->n; i++)
+			if (p->ar[i]->key > key) break;
+		insertB_1(p, i, new Item<K, T>(key, data));
+		if (p->n < 4) return nullptr;
+		return split_1(p);
+	}
+	if (p->ar[0]->key > key)
+	{
+		if (p->father != nullptr)
+			for (int i = 0; i < p->father->n - 1; i++)
+				if (p->father->ar[i]->down == p)
+				{
+					p->father->ar[i]->key = key;
+					p->father->ar[i]->data = data;
+					break;
+				}
+		p->ar[0]->key = key;
+		p->ar[0]->data = data;
+		insertR_2(p, insertR_1(p->ar[0]->down, key, data));
+		if (p->n < 4) return nullptr;
+		return split_1(p);
+	}
+	for (int i = 0; i < p->n - 1; i++)
+		if (p->ar[i]->key < key && p->ar[i + 1]->key > key)
+		{
+			insertR_2(p, insertR_1(p->ar[i]->down, key, data));
+			if (p->n < 4) return nullptr;
+			return split_1(p);
+		}
+	insertR_2(p, insertR_1(p->ar[p->n - 1]->down, key, data));
+	if (p->n < 4) return nullptr;
+	return split_1(p);
+}
+
+template<class K, class T>
+void insert_2(BTNode<K, T>*& p, BTNode<K, T>* r)
+{
+	if (r == nullptr) return;
+	Item<K, T>* tmp1 = new Item<K, T>(p->ar[0]->key, p->ar[0]->data);
+	Item<K, T>* tmp2 = new Item<K, T>(r->ar[0]->key, r->ar[0]->data);
+	BTNode<K, T>* tmp = new BTNode<K, T>(tmp1, tmp2);
+	tmp->ar[0]->down = p;
+	tmp->ar[1]->down = r;
+	tmp->ar[0]->down->father = tmp;
+	tmp->ar[1]->down->father = tmp;
+	p = tmp;
+}
+
+template<class K, class T>
+void insert_1(BTNode<K, T>*& p, K key, T data)
+{
+	insert_2(p, insertR_1(p, key, data));
+}
+
+template<class K, class T>
+void removeB_1(BTNode<K, T>*& p, int i)
+{
+	if (p == nullptr) EXIT_FAILURE; //пустой узел
+	for (int j = i; j < p->n - 1; j++)
+		p->ar[j] = p->ar[j + 1];
+	p->ar[p->n - 1] = nullptr;
+	p->n--;
+}
+
+template<class K, class T>
+void join_2(BTNode<K, T>*& p, BTNode<K, T>* r)
+{
+	for (int i = 0; i < r->n; i++)
+		p->ar[p->n + i] = r->ar[i];
+	p->n += r->n;
+}
+
+template<class K, class T>
+void join_1(BTNode<K, T>*& p, int n)
+{
+	if (p == nullptr || n > p->n - 2) EXIT_FAILURE; //пустой узел, n больше p->n
+	if (p->ar[n]->down == nullptr || p->ar[n + 1]->down == nullptr) EXIT_FAILURE; //нет нужного сына
+	join_2(p->ar[n]->down, p->ar[n + 1]->down);
+	BTNode<K, T>* tmp = p->ar[n + 1]->down;
+	p->ar[n + 1]->down = nullptr;
+	delete tmp;
+	removeB_1(p, n + 1);
+}
+
+template<class K, class T>
+void pass_forward_1(BTNode<K, T>*& p, int n)
+{
+	if (p == nullptr || n > p->n - 2) EXIT_FAILURE; //пустой узел, n больше p->n
+	if (p->ar[n]->down == nullptr || p->ar[n + 1]->down == nullptr) EXIT_FAILURE; //нет нужного сына
+	insertB_1(p->ar[n + 1]->down, 0, p->ar[n]->down->ar[p->ar[n]->down->n - 1]);
+	p->ar[n + 1]->key = p->ar[n + 1]->down->ar[0]->key;
+	p->ar[n + 1]->data = p->ar[n + 1]->down->ar[0]->data;
+	removeB_1(p->ar[n]->down, p->ar[n]->down->n - 1);
+}
+
+template<class K, class T>
+void pass_backward_1(BTNode<K, T>*& p, int n)
+{
+	if (p == nullptr || n > p->n - 2) EXIT_FAILURE; //пустой узел, n больше p->n
+	if (p->ar[n]->down == nullptr || p->ar[n + 1]->down == nullptr) EXIT_FAILURE; //нет нужного сына
+	insertB_1(p->ar[n]->down, p->ar[n]->down->n, p->ar[n + 1]->down->ar[0]);
+	removeB_1(p->ar[n + 1]->down, 0);
+	p->ar[n + 1]->key = p->ar[n + 1]->down->ar[0]->key;
+	p->ar[n + 1]->data = p->ar[n + 1]->down->ar[0]->data;
+}
+
+template<class K, class T>
+void correct_filling_1(BTNode<K, T>*& p, int n)
+{
+	if (p == nullptr || n > p->n - 2) EXIT_FAILURE; //пустой узел, n больше возможного
+	if (p->ar[n]->down == nullptr) EXIT_FAILURE; //нет нужного сына
+	if (p->ar[n]->down->n > 1) return; //больше 1 записи
+	if (n + 1 < p->n)
+		if (p->ar[n + 1]->down != nullptr)
+			if (p->ar[n + 1]->down->n <= 2)
+			{
+				join_1(p, n);
+				return;
+			}
+			else
+			{
+				pass_backward_1(p, n);
+				return;
+			}
+	if (n != 0)
+		if (p->ar[n - 1]->down->n > 2)
+		{
+			pass_forward_1(p, n-1);
+			return;
+		}
+		else
+		{
+			join_1(p, n - 1);
+			return;
+		}
+}
+
+template<class K, class T>
+void removeR_1(BTNode<K, T>*& p, K key)
+{
+	if (!check_son_1(p))
+	{
+		int i = 0;
+		for (i = 0; i < p->n; i++)
+			if (p->ar[i]->key == key)
+			{
+				removeB_1(p, i);
+				break;
+			}
+		return;
+	}
+	if (p->ar[0]->key > key) return;
+	for (int i = 0; i < p->n - 1; i++)
+		if (p->ar[i]->key <= key && p->ar[i + 1]->key > key)
+		{
+			removeR_1(p->ar[i]->down, key);
+			if (p->ar[i]->down->ar[0]->key != p->ar[i]->key)
+			{
+				p->ar[i]->key = p->ar[i]->down->ar[0]->key;
+				p->ar[i]->data = p->ar[i]->down->ar[0]->data;
+			}
+			if (p->ar[i]->down->n < 2) correct_filling_1(p, i);
+			return;
+		}
+	removeR_1(p->ar[p->n - 1]->down, key);
+	if (p->ar[p->n - 1]->down->ar[0]->key != p->ar[p->n - 1]->key)
+	{
+		p->ar[p->n - 1]->key = p->ar[p->n - 1]->down->ar[0]->key;
+		p->ar[p->n - 1]->data = p->ar[p->n - 1]->down->ar[0]->data;
+	}
+	if (p->ar[p->n - 1]->down->n < 2) correct_filling_1(p, p->n - 1);
+}
+
+template<class K, class T>
+void remove_1(BTNode<K, T>*& p, K key)
+{
+	removeR_1(p, key);
+	if(p->father == nullptr)
+		if (p->n == 1 && p->ar[0]->down != nullptr)
+		{
+			BTNode<K, T>* tmp = p;
+			p = p->ar[0]->down;
+			p->father = nullptr;
+			delete tmp;
+		}
+}
+
+template<class K, class T>
+void DELETE(BTNode<K, T>*& p)
+{
+	if (p == nullptr) return;
+	for(int i = p->n - 1; i >= 0; i--)
+	{
+		DELETE(p->ar[i]->down);
+		p->ar[i] = nullptr;
+	}
+	delete p;
+}
+
+int main()
+{
+	BTNode<int, int>* root = new BTNode<int, int>(new Item<int, int>(1, 1), new Item<int, int>(20, 20), new Item<int, int>(40, 40));
+
+	root->ar[0]->down = new BTNode<int, int>(new Item<int, int>(1, 1), nullptr, nullptr, root);
+	root->ar[1]->down = new BTNode<int, int>(new Item<int, int>(20, 20), new Item<int, int>(25, 25), nullptr, root);
+	root->ar[2]->down = new BTNode<int, int>(new Item<int, int>(40, 40), new Item<int, int>(51, 51), nullptr, root);
+
+	BTTree<int, int>* tree = new BTTree<int, int>(root);
+
+	tree->print();
+	cout << endl << endl;
+
+	tree->insert(0, 0);
+	tree->insert(8, 8);
+	tree->print();
+	cout << endl << endl;
+
+	tree->insert(9, 9);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(40);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(9);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(0);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(25);
+	tree->print();
+	cout << endl << endl;
+
+	tree->remove(20);
+	tree->print();
+	cout << endl << endl;
+
+	//system("pause");
+	return 0;
+}
