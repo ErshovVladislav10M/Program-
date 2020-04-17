@@ -1,0 +1,218 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+template<class K, class T>
+struct RBNode
+{
+	K key;
+	T data;
+	int color; //0 - черный
+	RBNode* right;
+	RBNode* left;
+	RBNode* father;
+	RBNode(K k, T d, int c, RBNode* f = nullptr, RBNode* r = nullptr, RBNode* l = nullptr) : key(k), data(d), color(c), father(f), right(r), left(l) {}
+};
+
+template<class K, class T>
+void print_1(RBNode<K, T>* r, int offset = 0);
+template<class K, class T>
+RBNode<K, T>* search_1(K key, RBNode<K, T>* p);
+template<class K, class T>
+void rotate_right_1(RBNode<K, T>*& p);
+template<class K, class T>
+void rotate_left_1(RBNode<K, T>*& p);
+template<class K, class T>
+void correct_1(RBNode<K, T>*& p);
+template<class K, class T>
+void insertR_1(K key, T data, RBNode<K, T>*& p);
+template<class K, class T>
+void insert_1(K key, T data, RBNode<K, T>*& p);
+
+template<class K, class T>
+void DELETE(RBNode<K, T>*& p);
+
+template<class K, class T>
+struct RBTree
+{
+	RBNode<K, T>* root;
+
+	RBTree(RBNode<K, T>* p) : root(p) {}
+	RBTree(RBTree<K, T>* r) : root(r->root) {}
+	void print() { print_1(root); }
+	RBNode<K, T>* search(K key, RBNode<K, T>* p) { search_1(key, p); }
+	void rotate_right(RBNode<K, T>*& p) { rotate_right_1(p); }
+	void rotate_left(RBNode<K, T>*& p) { rotate_left_1(p); }
+	void correct(RBNode<K, T>*& p) { correct_1(p); }
+	void insertR(K key, T data, RBNode<K, T>*& p) { insertB_1(key, data, p); }
+	void insert(K key, T data) { insert_1(key, data, root); }
+
+	~RBTree() { DELETE(root); }
+};
+
+template<class K, class T>
+void print_1(RBNode<K, T>* r, int offset)
+{
+	if (r == nullptr) return;
+	print_1(r->left, offset + 7);
+	for (int i = 0; i < offset; i++) cout << " ";
+	cout << r->key << " " << r->data << " " << r->color << endl;
+	print_1(r->right, offset + 7);
+}
+
+template<class K, class T>
+RBNode<K, T>* search_1(K key, RBNode<K, T>* p)
+{
+	if (p == nullptr) return nullptr;
+	if (key == p->key) return p;
+	if (key > p->key) return search_1(key, p->left);
+	return search_1(key, p->right);
+}
+
+template<class K, class T>
+void rotate_right_1(RBNode<K, T>*& p)
+{
+	if (p->right == nullptr || p == nullptr) return;
+	p->right->color = 0;
+	p->color = 1;
+	RBNode<K, T>* tmp = p->father;
+	RBNode<K, T>* tmp1 = p;
+	RBNode<K, T>* tmp2 = p->right;
+	RBNode<K, T>* tmp3 = p->right->left;
+	p->right = tmp3;
+	if (p->right != nullptr) p->right->father = p;
+	if (p->father != nullptr)
+	{
+		if (p->father->left == p) p->father->left = tmp2;
+		else p->father->right = tmp2;
+		tmp2->father = p->father;
+	}
+	else tmp2->father = nullptr;
+	tmp2->left = tmp1;
+	tmp2->left->father = tmp2;
+	tmp2->father = tmp;
+}
+
+template<class K, class T>
+void rotate_left_1(RBNode<K, T>*& p)
+{
+	if (p->left == nullptr || p == nullptr) return;
+	p->left->color = 0;
+	p->color = 1;
+	RBNode<K, T>* tmp = p->father;
+	RBNode<K, T>* tmp1 = p;
+	RBNode<K, T>* tmp2 = p->left;
+	RBNode<K, T>* tmp3 = p->left->right;
+	p->left = tmp3;
+	if (p->left != nullptr) p->left->father = p;
+	if (p->father != nullptr)
+	{
+		if (p->father->left == p) p->father->left = tmp2;
+		else p->father->right = tmp2;
+		tmp2->father = p->father;
+	}
+	else tmp2->father = nullptr;
+	tmp2->right = tmp1;
+	tmp2->right->father = tmp2;
+	tmp2->father = tmp;
+}
+
+template<class K, class T>
+void correct_1(RBNode<K, T>*& p)
+{
+	if (p->father->left == p)
+		if (p->father->right == nullptr || p->father->right->color == 0)
+			rotate_left_1(p->father);
+		else
+		{
+			p->color = 0;
+			p->father->color = 1;
+			p->father->right->color = 0;
+		}
+	else
+		if (p->father->left == nullptr || p->father->left->color == 0)
+			rotate_right_1(p->father);
+		else
+		{
+			p->color = 0;
+			p->father->color = 1;
+			p->father->left->color = 0;
+		}
+}
+
+template<class K, class T>
+void insertR_1(K key, T data, RBNode<K, T>*& p)
+{
+	if (p == nullptr) return;
+	if (p->key < key)
+	{
+		p->left = new RBNode<K, T>(key, data, 1, p);
+		if (p->color == 1) correct_1(p);
+	}
+	else
+	{
+		p->right = new RBNode<K, T>(key, data, 1, p);
+		if (p->color == 1) correct_1(p);
+	}
+}
+
+template<class K, class T>
+void insert_1(K key, T data, RBNode<K, T>*& p)
+{
+	if (p == nullptr) return;
+	if (p->key == key) return;
+	if (key > p->key)
+		if (p->left != nullptr) insert_1(key, data, p->left);
+		else insertR_1(key, data, p);
+	else
+		if (p->right != nullptr) insert_1(key, data, p->right);
+		else insertR_1(key, data, p);
+}
+
+template<class K, class T>
+void DELETE(RBNode<K, T>*& p)
+{
+	if (p->left != nullptr)
+	{
+		DELETE(p->left);
+		p->left = nullptr;
+	}
+	if (p->right != nullptr)
+	{
+		DELETE(p->right);
+		p->right = nullptr;
+	}
+	delete p;
+}
+
+int main()
+{
+	RBNode<int, int>* root = new RBNode<int, int>(5, 5, 0);
+	root->right = new RBNode<int, int>(3, 3, 0, root);
+	    root->right->left = new RBNode<int, int>(4, 4, 0, root->right);
+	    root->right->right = new RBNode<int, int>(2, 2, 0, root->right);
+	root->left = new RBNode<int, int>(6, 6, 0, root);
+	    root->left->left = new RBNode<int, int>(11, 11, 1, root->left);
+	    root->left->left->left = new RBNode<int, int>(21, 21, 0, root->left->left);
+        	root->left->left->right = new RBNode<int, int>(9, 9, 0, root->left->left);
+	RBTree<int, int>* tree = new RBTree<int, int>(root);
+
+	tree->print();
+	cout << endl << endl;
+
+	tree->insert(1, 1);
+	tree->print();
+	cout << endl << endl;
+
+	tree->insert(-1, -1);
+	tree->print();
+	cout << endl << endl;
+
+	tree->insert(-3, -3);
+	tree->print();
+	cout << endl << endl;
+
+	//system("pause");
+	return 0;
+}
