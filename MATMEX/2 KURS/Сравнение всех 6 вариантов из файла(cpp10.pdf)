@@ -1,0 +1,135 @@
+#include <iostream>
+#include <cstdlib>
+#include <omp.h>
+using namespace std;
+int main()
+{
+	double k = 0;
+	for (int l = 0; l < 1000; l++)
+	{
+		double t = omp_get_wtime();
+		int sum = 0;
+		for (int i = 0; i < 1000000; i++)
+		{
+			sum++;
+			sum++;
+		}
+		k += omp_get_wtime() - t;
+	}
+	cout << "Time: " << k / 1000 << endl;
+	
+	double k1 = 0;
+	for (int l = 0; l < 1000; l++)
+	{
+		double t = omp_get_wtime();
+		int sum = 0;
+		for (int i = 0; i < 1000000; i++)
+		{
+#pragma omp parallel sections
+			{
+#pragma omp section
+				{ sum++; }
+#pragma omp section
+				{ sum++; }
+			}
+		}
+		k1 += omp_get_wtime() - t;
+	}
+	cout << "Time: " << k1 / 1000 << endl;
+
+	double k2 = 0;
+	for (int l = 0; l < 1000; l++)
+	{
+		double t = omp_get_wtime();
+		int sum = 0;
+		for (int i = 0; i < 1000000; i++)
+		{
+#pragma omp parallel sections
+			{
+#pragma omp section
+				{
+#pragma omp atomic
+					sum++;
+				}
+			}
+		}
+		k2 += omp_get_wtime() - t;
+	}
+	cout << "Time: " << k2 / 1000 << endl;
+
+	double k3 = 0;
+	for (int l = 0; l < 1000; l++)
+	{
+		double t = omp_get_wtime();
+		int sum = 0;
+#pragma omp parallel sections
+		{
+#pragma omp section
+			{
+				for (int i = 0; i < 1000000; i++)
+#pragma omp atomic
+					sum++;
+			}
+#pragma omp section
+			{
+				for (int i = 0; i < 1000000; i++)
+#pragma omp atomic
+					sum++;
+			}
+		}
+		k3 += omp_get_wtime() - t;
+	}
+	cout << "Time: " << k3 / 1000 << endl;
+
+	double k4 = 0;
+	for (int l = 0; l < 1000; l++)
+	{
+		double t = omp_get_wtime();
+		int sum = 0;
+#pragma omp parallel sections
+		{
+#pragma omp section
+			{
+				int sum1 = 0;
+				for (int i = 0; i < 1000000; i++)
+					sum1++;
+#pragma omp atomic
+				sum += sum1;
+			}
+#pragma omp section
+			{
+				int sum2 = 0;
+				for (int i = 0; i < 1000000; i++)
+					sum2++;
+#pragma omp atomic
+				sum += sum2;
+			}
+		}
+		k4 += omp_get_wtime() - t;
+	}
+	cout << "Time: " << k4 / 1000 << endl;
+
+	double k5 = 0;
+	for (int l = 0; l < 1000; l++)
+	{
+		double t = omp_get_wtime();
+		int sum = 0;
+#pragma omp parallel sections reduction(+:sum)
+		{
+#pragma omp section
+			{
+				for (int i = 0; i < 1000000; i++)
+					sum++;
+			}
+#pragma omp section
+			{
+				for (int i = 0; i < 1000000; i++)
+					sum++;
+			}
+		}
+		k5 += omp_get_wtime() - t;
+	}
+	cout << "Time: " << k5 / 1000 << endl;
+
+	return EXIT_SUCCESS;
+}
