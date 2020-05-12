@@ -1,0 +1,96 @@
+#include <iostream>
+#include <cstdlib>
+#include <omp.h> //подключение библиотеки для работы с распараллеливанием
+using namespace std;
+
+//простейшее распараллеливание
+int main()
+{
+#pragma omp parallel sections //указ на набор фрагментов работающих вместе
+	{
+#pragma omp section //первый фрагмент
+		{ cout << "First section." << endl; }
+#pragma omp section //второй фрагмент
+		{ cout << "Second section." << endl; }
+	}
+	return EXIT_SUCCESS;
+}
+
+//добавление директив синхронизации(чтобы избежать ошибык вычислений)
+int main()
+{
+	double t = omp_get_wtime();
+	int sum = 0;
+	for (int i = 0; i < 1000000; i++)
+	{
+#pragma omp parallel sections
+		{
+#pragma omp section
+			{
+#pragma omp atomic //директива синхронизации
+				sum++;
+			}
+#pragma omp section
+			{
+#pragma omp atomic //директива синхронизации
+				sum++;
+			}
+		}
+	}
+	cout << "Sum: " << sum << endl;
+	cout << "Time: " << omp_get_wtime() - t << endl;
+	return EXIT_SUCCESS;
+}
+
+//наиболее эффективный вариант
+int main()
+{
+	double t = omp_get_wtime();
+	int sum = 0;
+#pragma omp parallel sections
+	{
+#pragma omp section
+		{
+			int sum1 = 0;
+			for (int i = 0; i < 1000000; i++)
+				sum1++;
+#pragma omp atomic
+			sum += sum1;
+		}
+#pragma omp section
+		{
+			int sum2 = 0;
+			for (int i = 0; i < 1000000; i++)
+				sum2++;
+#pragma omp atomic
+			sum += sum2;
+		}
+	}
+	cout << "Sum: " << sum << endl;
+	cout << "Time: " << omp_get_wtime() - t << endl;
+	return EXIT_SUCCESS;
+}
+
+//тоже самое, но короче записано
+int main()
+{
+	double t = omp_get_wtime();
+	int sum = 0;
+#pragma omp parallel sections reduction(+:sum) //этот параметр означает, что sum частная для каждой ветви 
+	                                           //и окончательное значение sum - сумма значений всех копий
+	{
+#pragma omp section
+		{
+			for (int i = 0; i < 1000000; i++)
+				sum++;
+		}
+#pragma omp section
+		{
+			for (int i = 0; i < 1000000; i++)
+				sum++;
+		}
+	}
+	cout << "Sum: " << sum << endl;
+	cout << "Time: " << omp_get_wtime() - t << endl;
+	return EXIT_SUCCESS;
+}
