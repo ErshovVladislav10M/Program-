@@ -33,7 +33,7 @@ int main()
 	cout << omp_get_wtime() - t << endl;
 
 	t = omp_get_wtime();
-#pragma omp parallel sections reduction
+#pragma omp parallel sections
 	{
 #pragma omp section
 		{
