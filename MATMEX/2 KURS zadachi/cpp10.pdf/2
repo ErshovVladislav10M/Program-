@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstdlib>
+#include <omp.h>
+
+using namespace std;
+
+const int N = 1000;
+
+int main()
+{
+	int count = 0, k = 0;
+
+	double t = omp_get_wtime();
+	count = 4; //2,3,5,7
+	for (int i = 9; i < N; i += 2)
+	{
+		k = 0;
+		for (int l = 3; l < sqrt(i); l += 2)
+			if (i % l == 0) k = 1;
+		if (k == 0) count++;
+	}
+	cout << count << endl;
+	cout << omp_get_wtime() - t << endl;
+
+	t = omp_get_wtime();
+	count = 4; //2,3,5,7
+#pragma omp parallel sections reduction(+:count)
+	{
+#pragma omp section
+		{
+			for (int i = 9; i < N / 2; i += 2)
+			{
+				k = 0;
+				for (int l = 3; l < sqrt(i); l += 2)
+					if (i % l == 0) k = 1;
+				if (k == 0) count++;
+			}
+		}
+#pragma omp section
+		{
+			for (int i = N / 2 + 1; i < N; i += 2)
+			{
+				k = 0;
+				for (int l = 3; l < sqrt(i); l += 2)
+					if (i % l == 0) k = 1;
+				if (k == 0) count++;
+			}
+		}
+	}
+	cout << count << endl;
+	cout << omp_get_wtime() - t << endl;
+
+	return EXIT_SUCCESS;
+}
