@@ -1,0 +1,65 @@
+#include <iostream>
+#include <cstdlib>
+#include <omp.h>
+
+using namespace std;
+
+const int N = 100;
+int A[N][N];
+int B[N];
+int C[N];
+
+int main()
+{
+	for (int i = 0; i < N; i++)
+	{
+		for (int l = 0; l < N; l++)
+			A[i][l] = i * l;
+		B[i] = i;
+	}
+	int sum = 0;
+
+	double t = omp_get_wtime();
+	for (int i = 0; i < N; i++)
+	{
+		sum = 0;
+		for (int l = 0; l < N; l++)
+			sum += A[i][l] * B[i];
+		C[i] = sum;
+	}
+	for (int i = 0; i < N; i++)
+		cout << C[i] << " ";
+	cout << endl;
+	cout << omp_get_wtime() - t << endl;
+
+	t = omp_get_wtime();
+#pragma omp parallel sections reduction
+	{
+#pragma omp section
+		{
+			for (int i = 0; i < N / 2; i++)
+			{
+				sum = 0;
+				for (int l = 0; l < N; l++)
+					sum += A[i][l] * B[i];
+				C[i] = sum;
+			}
+		}
+#pragma omp section
+		{
+			for (int i = N / 2; i < N; i++)
+			{
+				sum = 0;
+				for (int l = 0; l < N; l++)
+					sum += A[i][l] * B[i];
+				C[i] = sum;
+			}
+		}
+	}
+	for (int i = 0; i < N; i++)
+		cout << C[i] << " ";
+	cout << endl;
+	cout << omp_get_wtime() - t << endl;
+
+	return EXIT_SUCCESS;
+}
