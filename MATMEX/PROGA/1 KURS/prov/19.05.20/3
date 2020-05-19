@@ -1,0 +1,37 @@
+#include <iostream>
+#include <cstdlib>
+#include <omp.h> 
+
+using namespace std;
+
+const int N = 10000;
+int A[N];
+
+unsigned long long int f(int A[N])
+{
+	unsigned long long int sum = 0;
+#pragma omp parallel sections reduction(+:sum) 
+	{
+#pragma omp section
+		{
+			for (int i = 0; i < N / 2; i++)
+				sum += A[i];
+		}
+#pragma omp section
+		{
+			for (int i = N / 2; i < N; i++)
+				sum += A[i];
+		}
+	}
+	return sum;
+}
+
+int main()
+{
+	for (int i = 0; i < N; i++)
+		A[i] = i;
+
+	cout << f(A) << endl;
+
+	return EXIT_SUCCESS;
+}
