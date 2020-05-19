@@ -1,0 +1,85 @@
+#include <iostream>
+#include <cstdlib>
+#include <omp.h> 
+
+using namespace std;
+
+const int N = 50;
+double A[N][N];
+
+void f(double A[N][N])
+{
+	double B[N], C[N];
+	for (int i = 0; i < N; i++)
+	{
+		B[i] = 0;
+		C[i] = 0;
+	}
+
+#pragma omp parallel sections 
+	{
+#pragma omp section
+		{
+			for (int i = 0; i < N / 2; i++)
+				for (int l = 0; l < N; l++)
+				{
+					B[i] += A[i][l];
+					C[i] += A[l][i];
+				}
+		}
+#pragma omp section
+		{
+			for (int i = N / 2; i < N; i++)
+				for (int l = 0; l < N; l++)
+				{
+					B[i] += A[i][l];
+					C[i] += A[l][i];
+				}
+		}
+	}
+
+#pragma omp parallel sections 
+	{
+#pragma omp section
+		{
+			for (int i = 0; i < N / 2; i++)
+				for (int l = 0; l < N; l++)
+				{
+					A[i][l] += B[i] + C[l];
+					A[i][l] /= 100;
+				}
+		}
+#pragma omp section
+		{
+			for (int i = N / 2; i < N; i++)
+				for (int l = 0; l < N; l++)
+				{
+					A[i][l] += B[i] + C[l];
+					A[i][l] /= 100;
+				}
+		}
+	}
+}
+
+void f1(double A[N][N])
+{
+	for (int i = 0; i < 25; i++) f(A);
+}
+
+int main()
+{
+	for (int i = 0; i < N; i++)
+		for (int l = 0; l < N; l++)
+			A[i][l] = i * l;
+
+	f1(A);
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int l = 0; l < N; l++)
+			cout << A[i][l] << " ";
+		cout << endl;
+	}
+
+	return EXIT_SUCCESS;
+}
