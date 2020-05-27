@@ -9,7 +9,7 @@ double A[N][2];
 
 void f(double A[N][2])
 {
-	double a = 0, b = sqrt(3) / 2;
+	double a = 0, a1 = 0, b = sqrt(3) / 2;
 
 #pragma omp parallel sections 
 	{
@@ -26,9 +26,9 @@ void f(double A[N][2])
 		{
 			for (int i = N / 2; i < N; i++)
 			{
-				a = A[i][0] / 2 + A[i][1] * b;
+				a1 = A[i][0] / 2 + A[i][1] * b;
 				A[i][1] = -A[i][0] * b + A[i][1] / 2;
-				A[i][0] = a;
+				A[i][0] = a1;
 			}
 		}
 	}
