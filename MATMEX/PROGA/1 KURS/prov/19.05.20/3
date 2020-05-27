@@ -1,37 +1,39 @@
 #include <iostream>
 #include <cstdlib>
 #include <omp.h> 
+#include <string>
+#include <sstream>
 
 using namespace std;
 
-const int N = 10000;
-int A[N];
-
-unsigned long long int f(int A[N])
+unsigned long long int f(stringstream& str)
 {
+	stringstream str1;
+	char c;
+	for (int i = 0; i < 5000; i++)
+	{
+		str.get(c);
+		str1 << c;
+	}
+	while (c != ' ')
+	{
+		str.get(c);
+		str1 << c;
+	}
 	unsigned long long int sum = 0;
+	int a = 0, a1 = 0;
 #pragma omp parallel sections reduction(+:sum) 
 	{
 #pragma omp section
 		{
-			for (int i = 0; i < N / 2; i++)
-				sum += A[i];
+			while(str >> a)
+				sum += a;
 		}
 #pragma omp section
 		{
-			for (int i = N / 2; i < N; i++)
-				sum += A[i];
+			while (str1 >> a1)
+				sum += a1;
 		}
 	}
 	return sum;
-}
-
-int main()
-{
-	for (int i = 0; i < N; i++)
-		A[i] = i;
-
-	cout << f(A) << endl;
-
-	return EXIT_SUCCESS;
 }
