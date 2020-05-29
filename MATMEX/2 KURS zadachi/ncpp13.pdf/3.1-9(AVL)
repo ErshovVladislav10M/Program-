@@ -11,7 +11,7 @@ struct AVLNode
 	AVLNode* right;
 	AVLNode* left;
 	AVLNode* father;
-	AVLNode(int k, int d, int s, AVLNode* f = nullptr, AVLNode* r = nullptr, AVLNode* l = nullptr) : key(k), data(d), size(s), father(f), right(r), left(l) {}
+	AVLNode(int k, int d, int s = 0, AVLNode* f = nullptr, AVLNode* r = nullptr, AVLNode* l = nullptr) : key(k), data(d), size(s), father(f), right(r), left(l) {}
 	void correct_h_uzel()
 	{
 		int n = -1, m = -1;
@@ -30,6 +30,7 @@ struct AVLNode
 };
 
 void print_1(AVLNode* r, int offset = 0);
+AVLNode* find_1(int k, AVLNode* p);
 void correct_h_1(AVLNode*& p);
 void rotate_right_1(AVLNode*& p);
 void rotate_left_1(AVLNode*& p);
@@ -51,6 +52,7 @@ struct AVLTree
 
 	AVLTree(AVLNode* r) : root(r) {}
 	void print() { print_1(root); }
+	AVLNode* find(int k) { return find_1(k, root); }
 	void correct_h() { correct_h_1(root); }
 	void correct_h(AVLNode* p) { correct_h_1(p); }
 	void rotate_right(AVLNode*& p) { rotate_right_1(p); }
@@ -58,7 +60,15 @@ struct AVLTree
 	void correctm2(AVLNode*& p) { correctm2_1(p); } //левый большой поворот
 	void correct2(AVLNode*& p) { correct2_1(p); } //правый большой поворот
 	void rebalance(AVLNode*& p) { rebalance_1(p); }
-	void insert(int k, int d) { insert_1(k, d, root); }
+	void insert(int k, int d) 
+	{
+		if (root == nullptr)
+		{
+			root = new AVLNode(k, d);
+			return;
+		}
+		insert_1(k, d, root); 
+	}
 	void del_root_noleft() { del_root_noleft_1(root); }
 	void del_root_noright() { del_root_noright_1(root); }
 	void del_uzel_noleft(AVLNode*& p) { del_uzel_noleft_1(p); }
@@ -75,6 +85,14 @@ void print_1(AVLNode* r, int offset)
 	for (int i = 0; i < offset; i++) cout << " ";
 	cout << r->key << " " << r->data << " " << r->size << endl;
 	print_1(r->right, offset + 9);
+}
+
+AVLNode* find_1(int k, AVLNode* p)
+{
+	if (p == nullptr) return nullptr;
+	if (k == p->key) return p;
+	if (k > p->key) return find_1(k, p->left);
+	return find_1(k, p->right);
 }
 
 void correct_h_1(AVLNode*& p)
@@ -151,7 +169,7 @@ void correctm2_1(AVLNode*& p)
 	else rotate_left_1(p);
 }
 
-void correct2_1(AVLNode*& p) 
+void correct2_1(AVLNode*& p)
 {
 	if (p->right->left == nullptr)
 	{
@@ -273,7 +291,7 @@ void del_uzel_noright_1(AVLNode*& p)
 	if (p->left == nullptr)
 	{
 		AVLNode* tmp = p;
-		if(p->father->left == p) p->father->left = nullptr;
+		if (p->father->left == p) p->father->left = nullptr;
 		else p->father->right = nullptr;
 		delete tmp;
 		return;
@@ -337,14 +355,14 @@ void DELETE(AVLNode*& p)
 
 int main()
 {
-	AVLNode* root = new AVLNode(5, 101, 0);
+	AVLNode* root = new AVLNode(5, 101);
 	root->right = new AVLNode(3, 111, 0, root);
-	    root->right->left = new AVLNode(4, 411, 0, root->right);
-	    root->right->right = new AVLNode(2, 611, 0, root->right);
+	root->right->left = new AVLNode(4, 411, 0, root->right);
+	root->right->right = new AVLNode(2, 611, 0, root->right);
 	root->left = new AVLNode(6, 211, 0, root);
-	    root->left->left = new AVLNode(11, 1111, 0, root->left);
-	    root->left->left->left = new AVLNode(21, 3211, 0, root->left->left);
-        	root->left->left->right = new AVLNode(9, 4681, 0, root->left->left);
+	root->left->left = new AVLNode(11, 1111, 0, root->left);
+	root->left->left->left = new AVLNode(21, 3211, 0, root->left->left);
+	root->left->left->right = new AVLNode(9, 4681, 0, root->left->left);
 	AVLTree* tree = new AVLTree(root);
 
 	tree->correct_h();
