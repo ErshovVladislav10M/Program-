@@ -125,6 +125,7 @@ void rotate_right_1(AVLNode*& p)
 	tmp2->left = tmp1;
 	tmp2->left->father = tmp2;
 	tmp2->father = tmp;
+	p = tmp2;
 }
 
 void rotate_left_1(AVLNode*& p)
@@ -146,6 +147,7 @@ void rotate_left_1(AVLNode*& p)
 	tmp2->right = tmp1;
 	tmp2->right->father = tmp2;
 	tmp2->father = tmp;
+	p = tmp2;
 }
 
 void correctm2_1(AVLNode*& p)
