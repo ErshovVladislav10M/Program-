@@ -11,7 +11,8 @@ struct AVLNode
 	AVLNode* right;
 	AVLNode* left;
 	AVLNode* father;
-	AVLNode(int k, int d, int s = 0, AVLNode * f = nullptr, AVLNode * r = nullptr, AVLNode * l = nullptr) : key(k), data(d), size(s), father(f), right(r), left(l) {}
+	AVLNode(int k, int d, int s = 0, AVLNode * f = nullptr, AVLNode * r = nullptr, AVLNode * l = nullptr) :
+		key(k), data(d), size(s), father(f), right(r), left(l) {}
 	void correct_h_uzel()
 	{
 		int n = -1, m = -1;
@@ -275,8 +276,6 @@ void del_uzel_noleft_1(AVLNode*& p)
 	if (p->father->left == p) p->father->left = tmp1;
 	else p->father->right = tmp1;
 	delete tmp;
-	AVLNode* tmp11 = p;
-	while (tmp11->father != nullptr) tmp11 = tmp11->father;
 }
 
 void del_uzel_noright_1(AVLNode*& p)
@@ -302,8 +301,6 @@ void del_uzel_noright_1(AVLNode*& p)
 	if (p->father->left == p) p->father->left = tmp1;
 	else p->father->right = tmp1;
 	delete tmp;
-	AVLNode* tmp11 = p;
-	while (tmp11->father != nullptr) tmp11 = tmp11->father;
 }
 
 void del_1(int key, AVLNode*& p)
