@@ -7,27 +7,27 @@ struct AVLNode
 {
 	int key;
 	int data;
-	int size;
+	int height;
 	AVLNode* right;
 	AVLNode* left;
 	AVLNode* father;
-	AVLNode(int k, int d, int s = 0, AVLNode * f = nullptr, AVLNode * r = nullptr, AVLNode * l = nullptr) :
-		key(k), data(d), size(s), father(f), right(r), left(l) {}
+	AVLNode(int k, int d, int h = 0, AVLNode * f = nullptr, AVLNode * r = nullptr, AVLNode * l = nullptr) :
+		key(k), data(d), height(h), father(f), right(r), left(l) {}
 	void correct_h_uzel()
 	{
 		int n = -1, m = -1;
-		if (right != nullptr) m = right->size;
-		if (left != nullptr) n = left->size;
-		size = max(m, n) + 1;
+		if (right != nullptr) m = right->height;
+		if (left != nullptr) n = left->height;
+		height = max(m, n) + 1;
 	}
 	int defect_h()
 	{
 		int n = -1, m = -1;
-		if (right != nullptr) m = right->size;
-		if (left != nullptr) n = left->size;
+		if (right != nullptr) m = right->height;
+		if (left != nullptr) n = left->height;
 		return m - n;
 	}
-	void print_uzel() { cout << key << " " << data << " " << size << " " << this << endl; }
+	void print_uzel() { cout << key << " " << data << " " << height << " " << this << endl; }
 };
 
 void print_1(AVLNode* r, int offset = 0);
@@ -88,7 +88,7 @@ void print_1(AVLNode* r, int offset)
 	if (r == nullptr) return;
 	print_1(r->left, offset + 9);
 	for (int i = 0; i < offset; i++) cout << " ";
-	cout << r->key << " " << r->data << " " << r->size << endl;
+	cout << r->key << " " << r->data << " " << r->height << endl;
 	print_1(r->right, offset + 9);
 }
 
@@ -106,9 +106,9 @@ void correct_h_1(AVLNode*& p)
 	correct_h_1(p->right);
 	correct_h_1(p->left);
 	int n = -1, m = -1;
-	if (p->right != nullptr) m = p->right->size;
-	if (p->left != nullptr) n = p->left->size;
-	p->size = max(m, n) + 1;
+	if (p->right != nullptr) m = p->right->height;
+	if (p->left != nullptr) n = p->left->height;
+	p->height = max(m, n) + 1;
 }
 
 void rotate_right_1(AVLNode*& p)
@@ -168,7 +168,7 @@ void correctm2_1(AVLNode*& p)
 		rotate_left_1(p);
 		return;
 	}
-	if (p->left->left->size < p->left->right->size)
+	if (p->left->left->height < p->left->right->height)
 	{
 		rotate_right_1(p->left);
 		rotate_left_1(p);
@@ -189,7 +189,7 @@ void correct2_1(AVLNode*& p)
 		rotate_right_1(p);
 		return;
 	}
-	if (p->right->right->size < p->right->left->size)
+	if (p->right->right->height < p->right->left->height)
 	{
 		rotate_left_1(p->right);
 		rotate_right_1(p);
