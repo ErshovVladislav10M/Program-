@@ -7,12 +7,14 @@ using namespace std;
 
 struct Item
 {
-	virtual bool operator<(const Item&) const = 0;
-	//virtual bool operator<(const Integer&) const = 0;
-	//virtual bool operator<(const Real&) const = 0;
+	/*virtual bool operator<(const Item&) const = 0;
+	virtual bool operator<(const Integer&) const = 0;
+	virtual bool operator<(const Real&) const = 0;
+	virtual bool operator<(const String&) const = 0;
+	virtual bool operator<(const List&) const = 0;*/
 	virtual Item* read(istringstream& st) {}
 	virtual string type() {}
-	virtual ostringstream write() {}
+	virtual void write(ostringstream& st) {}
 	virtual ~Item() {}
 };
 
@@ -20,7 +22,11 @@ struct Integer : Item
 {
 	int data;
 	Integer(int n) : data(n) {}
-	virtual bool operator<(const Item& x) const { return * this < x; }
+	/*bool operator<(const Item& x) const { return * this < x; }
+	bool operator<(const Integer& x) const { return data < x.data; }
+	bool operator<(const Real& x) const { return 1; }
+	bool operator<(const String& x) const { return 1; }
+	bool operator<(const List& x) const { return 1; }*/
 	Item* read(istringstream& st)
 	{
 		int n;
@@ -28,18 +34,18 @@ struct Integer : Item
 		return new Integer(n);
 	}
 	string type() { return "INTEGER"; }
-	ostringstream write()
-	{
-		ostringstream st;
-		st << data;
-	}
+	void write(ostringstream& st) { st << data; }
 };
 
 struct Real : Item
 {
 	double data;
 	Real(double a) : data(a) {}
-	virtual bool operator<(const Item& x) const { return *this < x; }
+	/*bool operator<(const Item& x) const { return *this < x; }
+	bool operator<(const Integer& x) const { return 0; }
+	bool operator<(const Real& x) const { return data < x.data; }
+	bool operator<(const String& x) const { return 1; }
+	bool operator<(const List& x) const { return 1; }*/
 	Item* read(istringstream& st)
 	{
 		double a;
@@ -47,41 +53,42 @@ struct Real : Item
 		return new Real(a);
 	}
 	string type() { return "REAL"; }
-	ostringstream write()
-	{
-		ostringstream st;
-		st << data;
-	}
+	void write(ostringstream& st) { st << data; }
 };
 
 struct String : Item
 {
 	string data;
 	String(string a) : data(a) {}
-	virtual bool operator<(const Item& x) const { return *this < x; }
+	/*bool operator<(const Item& x) const { return *this < x; }
+	bool operator<(const Integer& x) const { return 0; }
+	bool operator<(const Real& x) const { return 0; }
+	bool operator<(const String& x) const { return data < x.data; }
+	bool operator<(const List& x) const { return 1; }*/
 	Item* read(istringstream& st)
 	{
 		char c = st.get();
 		string b;
-		while (c != '"') {
+		while (c != '"')
+		{
 			b += c;
 			c = st.get();
 		}
 		return new String(b);
 	}
 	string type() { return "STRING"; }
-	ostringstream write()
-	{
-		ostringstream st;
-		st << data;
-	}
+	void write(ostringstream& st) { st << data; }
 };
 
 struct List : Item
 {
 	list<Item*> data;
 	List(list<Item*> a) : data(a) {}
-	virtual bool operator<(const Item& x) const { return *this < x; }
+	/*bool operator<(const Item& x) const { return *this < x; }
+	bool operator<(const Integer& x) const { return 0; }
+	bool operator<(const Real& x) const { return 0; }
+	bool operator<(const String& x) const { return 0; }
+	bool operator<(const List& x) const { return 1; }*/
 	Item* read(istringstream& st)
 	{
 		list<Item*> B;
@@ -126,12 +133,16 @@ struct List : Item
 		return new List(B);
 	}
 	string type() { return "LIST"; }
-	/*ostringstream write()
+	void write(ostringstream& st)
 	{
-		ostringstream st;
-		if(type() == )
-		st << data;
-	}*/
+		for (Item* n : data)
+		{
+			if (n->type() == "LIST") st << '[';
+			n->write(st);
+			if (n->type() == "LIST") st << ']';
+			st << ',';
+		}
+	}
 
 	~List() { while (!empty(data)) data.pop_back(); }
 };
