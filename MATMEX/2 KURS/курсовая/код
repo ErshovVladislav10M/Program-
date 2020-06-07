@@ -7,26 +7,27 @@ using namespace std;
 
 struct Item
 {
-	virtual ~Item() {}
+	virtual bool operator<(const Item&) const = 0;
+	//virtual bool operator<(const Integer&) const = 0;
+	//virtual bool operator<(const Real&) const = 0;
 	virtual Item* read(istringstream& st) {}
 	virtual string type() {}
 	virtual ostringstream write() {}
+	virtual ~Item() {}
 };
 
 struct Integer : Item
 {
 	int data;
-	Integer(int n) :data(n) {}
-	Item* read(istringstream& st) 
+	Integer(int n) : data(n) {}
+	virtual bool operator<(const Item& x) const { return * this < x; }
+	Item* read(istringstream& st)
 	{
 		int n;
 		st >> n;
 		return new Integer(n);
 	}
-	string type()
-	{
-		return "INTEGER";
-	}
+	string type() { return "INTEGER"; }
 	ostringstream write()
 	{
 		ostringstream st;
@@ -37,17 +38,15 @@ struct Integer : Item
 struct Real : Item
 {
 	double data;
-	Real(double a) :data(a) {}
+	Real(double a) : data(a) {}
+	virtual bool operator<(const Item& x) const { return *this < x; }
 	Item* read(istringstream& st)
 	{
 		double a;
 		st >> a;
 		return new Real(a);
 	}
-	string type()
-	{
-		return "REAL";
-	}
+	string type() { return "REAL"; }
 	ostringstream write()
 	{
 		ostringstream st;
@@ -58,8 +57,9 @@ struct Real : Item
 struct String : Item
 {
 	string data;
-	String(string a) :data(a) {}
-	Item* read(istringstream& st) 
+	String(string a) : data(a) {}
+	virtual bool operator<(const Item& x) const { return *this < x; }
+	Item* read(istringstream& st)
 	{
 		char c = st.get();
 		string b;
@@ -69,10 +69,7 @@ struct String : Item
 		}
 		return new String(b);
 	}
-	string type()
-	{
-		return "STRING";
-	}
+	string type() { return "STRING"; }
 	ostringstream write()
 	{
 		ostringstream st;
@@ -83,10 +80,9 @@ struct String : Item
 struct List : Item
 {
 	list<Item*> data;
-	List(list<Item*> a) { data = a; }
-	//List(const list<Item*>& a) { data = a; }
-	//List(list<Item*>&& a) { data = a; } 
-	Item* read(istringstream& st) 
+	List(list<Item*> a) : data(a) {}
+	virtual bool operator<(const Item& x) const { return *this < x; }
+	Item* read(istringstream& st)
 	{
 		list<Item*> B;
 		char c = st.get(), k;
@@ -94,11 +90,11 @@ struct List : Item
 		{
 			if (c == ']') return new List(B);
 			if (c == ',') st >> c;
-			if (c != '"' && c != '[') 
+			if (c != '"' && c != '[')
 			{
 				int p = c - '0';
 				k = st.get();
-				while (k != ' ') 
+				while (k != ' ')
 				{
 					p *= 10;
 					p += k - '0';
@@ -112,7 +108,7 @@ struct List : Item
 			{
 				string b;
 				k = st.get();
-				while (k != '"') 
+				while (k != '"')
 				{
 					b += k;
 					k = st.get();
@@ -129,30 +125,47 @@ struct List : Item
 		}
 		return new List(B);
 	}
-	string type()
-	{
-		return "LIST";
-	}
+	string type() { return "LIST"; }
 	/*ostringstream write()
 	{
 		ostringstream st;
 		if(type() == )
 		st << data;
 	}*/
-	~List()
+
+	~List() { while (!empty(data)) data.pop_back(); }
+};
+
+//bool f(list<Item*> a, list<Item*> b) { return 1; }
+
+struct WSEML
+{
+	Item* data;
+	//конструкторы
+	WSEML() : data(nullptr) {}
+	WSEML(Item* d) : data(d) {}
+	WSEML(const WSEML& P)
 	{
-		while (!empty(data))
-		{
-			data.pop_back();
-		}
+		//data = new Item;
+		*data = *P.data;
 	}
-};	
+	WSEML(WSEML&& P) : data(P.data)
+	{
+		P.data = nullptr;
+	}
+	//операции сравнения
+	const bool operator<(const WSEML& P) { return *this < P; }
+	//деструктор
+	~WSEML() { data->~Item(); }
+};
 
 int main()
 {
+	string str1 = "[1]";
 	string str = "[3,5.2,[2]]";
-	istringstream st(str);
+	istringstream st(str1);
+	/*Item* A;
+	A = A->read(st);*/
 
-	system("pause");
 	return 0;
 }
