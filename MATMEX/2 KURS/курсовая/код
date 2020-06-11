@@ -5,67 +5,370 @@
 
 using namespace std;
 
+struct Item;
+struct Null;
+struct Integer;
+struct Real;
+struct String;
+struct List;
+
+const bool srav_List_lt(list<Item*> a, list<Item*> b)
+{
+	while (!a.empty() && !b.empty())
+		if (a.front() == b.front())
+		{
+			a.pop_front();
+			b.pop_front();
+		}
+		else
+			if (a.front() < b.front()) return 1;
+			else return 0;
+	if (a.empty()) return 1;
+	else return 0;
+}
+
+const bool srav_List_eq(list<Item*> a, list<Item*> b)
+{
+	while (!a.empty() && !b.empty())
+		if (a.front() == b.front())
+		{
+			a.pop_front();
+			b.pop_front();
+		}
+		else return 0;
+	if (a.empty() && b.empty()) return 1;
+	else return 0;
+}
+
 struct Item
 {
-	/*virtual bool operator<(const Item&) const = 0;
+	virtual ~Item() {}
+
+	virtual bool operator<(const Item&) const = 0;
+	virtual bool operator<(const Null&) const = 0;
 	virtual bool operator<(const Integer&) const = 0;
 	virtual bool operator<(const Real&) const = 0;
 	virtual bool operator<(const String&) const = 0;
-	virtual bool operator<(const List&) const = 0;*/
-	virtual Item* read(istringstream& st) {}
-	virtual string type() {}
-	virtual void write(ostringstream& st) {}
-	virtual ~Item() {}
+	virtual bool operator<(const List&) const = 0;
+	virtual bool operator>(const Item&) const = 0;
+	virtual bool operator>(const Null&) const = 0;
+	virtual bool operator>(const Integer&) const = 0;
+	virtual bool operator>(const Real&) const = 0;
+	virtual bool operator>(const String&) const = 0;
+	virtual bool operator>(const List&) const = 0;
+	virtual bool operator<=(const Item&) const = 0;
+	virtual bool operator<=(const Null&) const = 0;
+	virtual bool operator<=(const Integer&) const = 0;
+	virtual bool operator<=(const Real&) const = 0;
+	virtual bool operator<=(const String&) const = 0;
+	virtual bool operator<=(const List&) const = 0;
+	virtual bool operator>=(const Item&) const = 0;
+	virtual bool operator>=(const Null&) const = 0;
+	virtual bool operator>=(const Integer&) const = 0;
+	virtual bool operator>=(const Real&) const = 0;
+	virtual bool operator>=(const String&) const = 0;
+	virtual bool operator>=(const List&) const = 0;
+	virtual bool operator==(const Item&) const = 0;
+	virtual bool operator==(const Null&) const = 0;
+	virtual bool operator==(const Integer&) const = 0;
+	virtual bool operator==(const Real&) const = 0;
+	virtual bool operator==(const String&) const = 0;
+	virtual bool operator==(const List&) const = 0;
+	virtual bool operator!=(const Item&) const = 0;
+	virtual bool operator!=(const Null&) const = 0;
+	virtual bool operator!=(const Integer&) const = 0;
+	virtual bool operator!=(const Real&) const = 0;
+	virtual bool operator!=(const String&) const = 0;
+	virtual bool operator!=(const List&) const = 0;
+
+	virtual bool cmd_lt(const Item&, const Item&) const = 0;
+	virtual bool cmd_lt(const Item&, const Null&) const = 0;
+	virtual bool cmd_lt(const Item&, const Integer&) const = 0;
+	virtual bool cmd_lt(const Item&, const Real&) const = 0;
+	virtual bool cmd_lt(const Item&, const String&) const = 0;
+	virtual bool cmd_lt(const Item&, const List&) const = 0;
+	virtual bool cmd_lt(const Null&, const Item&) const = 0;
+	virtual bool cmd_lt(const Null&, const Null&) const = 0;
+	virtual bool cmd_lt(const Null&, const Integer&) const = 0;
+	virtual bool cmd_lt(const Null&, const Real&) const = 0;
+	virtual bool cmd_lt(const Null&, const String&) const = 0;
+	virtual bool cmd_lt(const Null&, const List&) const = 0;
+
+	virtual int size() = 0;
+
+	//virtual void push_back();
+	//virtual void push_front();
+
+	virtual Item* read(stringstream& st) = 0;
+	virtual string type() = 0;
+	//virtual void write(stringstream& st);
+};
+
+struct Null : Item
+{
+	Item* data = nullptr;
+	Null() : data(nullptr) {}
+	bool operator<(const Item& x) const { return x > * this; }
+	bool operator<(const Null& x) const { return 0; }
+	bool operator<(const Integer& x) const { return 1; }
+	bool operator<(const Real& x) const { return 1; }
+	bool operator<(const String& x) const { return 1; }
+	bool operator<(const List& x) const { return 1; }
+	bool operator>(const Item& x) const { return x < *this; }
+	bool operator>(const Null& x) const { return 0; }
+	bool operator>(const Integer& x) const { return 0; }
+	bool operator>(const Real& x) const { return 0; }
+	bool operator>(const String& x) const { return 0; }
+	bool operator>(const List& x) const { return 0; }
+	bool operator<=(const Item& x) const { return x >= *this; }
+	bool operator<=(const Null& x) const { return 1; }
+	bool operator<=(const Integer& x) const { return 1; }
+	bool operator<=(const Real& x) const { return 1; }
+	bool operator<=(const String& x) const { return 1; }
+	bool operator<=(const List& x) const { return 1; }
+	bool operator>=(const Item& x) const { return x <= *this; }
+	bool operator>=(const Null& x) const { return 1; }
+	bool operator>=(const Integer& x) const { return 0; }
+	bool operator>=(const Real& x) const { return 0; }
+	bool operator>=(const String& x) const { return 0; }
+	bool operator>=(const List& x) const { return 0; }
+	bool operator==(const Item& x) const { return x == *this; }
+	bool operator==(const Null& x) const { return 1; }
+	bool operator==(const Integer& x) const { return 0; }
+	bool operator==(const Real& x) const { return 0; }
+	bool operator==(const String& x) const { return 0; }
+	bool operator==(const List& x) const { return 0; }
+	bool operator!=(const Item& x) const { return x != *this; }
+	bool operator!=(const Null& x) const { return 0; }
+	bool operator!=(const Integer& x) const { return 1; }
+	bool operator!=(const Real& x) const { return 1; }
+	bool operator!=(const String& x) const { return 1; }
+	bool operator!=(const List& x) const { return 1; }
+
+	bool cmd_lt(const Item& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Null& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Integer& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Real& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const String& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const List& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Null& y) const { return 0; }
+	bool cmd_lt(const Null& x, const Integer& y) const { return 1; }
+	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
+	bool cmd_lt(const Null& x, const String& y) const { return 1; }
+	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	int size() { return -1; }
+
+	void push_back() {}
+	void push_front() {}
+
+	Item* read(stringstream& st) { return new Null(); }
+	string type() { return "NULLOBJECT"; }
+	void write(stringstream& st) { st << "'" << "null" << "'"; }
 };
 
 struct Integer : Item
 {
 	int data;
+	Integer() : data(0) {}
 	Integer(int n) : data(n) {}
-	/*bool operator<(const Item& x) const { return * this < x; }
+	bool operator<(const Item& x) const { return x > * this; }
+	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return data < x.data; }
 	bool operator<(const Real& x) const { return 1; }
 	bool operator<(const String& x) const { return 1; }
-	bool operator<(const List& x) const { return 1; }*/
-	Item* read(istringstream& st)
+	bool operator<(const List& x) const { return 1; }
+	bool operator>(const Item& x) const { return x < *this; }
+	bool operator>(const Null& x) const { return 1; }
+	bool operator>(const Integer& x) const { return data > x.data; }
+	bool operator>(const Real& x) const { return 0; }
+	bool operator>(const String& x) const { return 0; }
+	bool operator>(const List& x) const { return 0; }
+	bool operator<=(const Item& x) const { return x >= *this; }
+	bool operator<=(const Null& x) const { return 1; }
+	bool operator<=(const Integer& x) const { return data <= x.data; }
+	bool operator<=(const Real& x) const { return 1; }
+	bool operator<=(const String& x) const { return 1; }
+	bool operator<=(const List& x) const { return 1; }
+	bool operator>=(const Item& x) const { return x <= *this; }
+	bool operator>=(const Null& x) const { return 1; }
+	bool operator>=(const Integer& x) const { return data >= x.data; }
+	bool operator>=(const Real& x) const { return 0; }
+	bool operator>=(const String& x) const { return 0; }
+	bool operator>=(const List& x) const { return 0; }
+	bool operator==(const Item& x) const { return x == *this; }
+	bool operator==(const Null& x) const { return 0; }
+	bool operator==(const Integer& x) const { return data == x.data; }
+	bool operator==(const Real& x) const { return 0; }
+	bool operator==(const String& x) const { return 0; }
+	bool operator==(const List& x) const { return 0; }
+	bool operator!=(const Item& x) const { return x != *this; }
+	bool operator!=(const Null& x) const { return 1; }
+	bool operator!=(const Integer& x) const { return data != x.data; }
+	bool operator!=(const Real& x) const { return 1; }
+	bool operator!=(const String& x) const { return 1; }
+	bool operator!=(const List& x) const { return 1; }
+
+	bool cmd_lt(const Item& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Null& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Integer& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Real& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const String& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const List& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Null& y) const { return 0; }
+	bool cmd_lt(const Null& x, const Integer& y) const { return 1; }
+	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
+	bool cmd_lt(const Null& x, const String& y) const { return 1; }
+	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	int size() { return -2; }
+
+	void push_back() {}
+	void push_front() {}
+
+	Item* read(stringstream& st)
 	{
 		int n;
 		st >> n;
 		return new Integer(n);
 	}
 	string type() { return "INTEGER"; }
-	void write(ostringstream& st) { st << data; }
+	void write(stringstream& st) { st << data; }
 };
 
 struct Real : Item
 {
 	double data;
+	Real() : data(0) {}
 	Real(double a) : data(a) {}
-	/*bool operator<(const Item& x) const { return *this < x; }
+	bool operator<(const Item& x) const { return x > * this; }
+	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return 0; }
 	bool operator<(const Real& x) const { return data < x.data; }
 	bool operator<(const String& x) const { return 1; }
-	bool operator<(const List& x) const { return 1; }*/
-	Item* read(istringstream& st)
+	bool operator<(const List& x) const { return 1; }
+	bool operator>(const Item& x) const { return x < *this; }
+	bool operator>(const Null& x) const { return 1; }
+	bool operator>(const Integer& x) const { return 1; }
+	bool operator>(const Real& x) const { return data > x.data; }
+	bool operator>(const String& x) const { return 0; }
+	bool operator>(const List& x) const { return 0; }
+	bool operator<=(const Item& x) const { return x >= *this; }
+	bool operator<=(const Null& x) const { return 0; }
+	bool operator<=(const Integer& x) const { return 0; }
+	bool operator<=(const Real& x) const { return data <= x.data; }
+	bool operator<=(const String& x) const { return 1; }
+	bool operator<=(const List& x) const { return 1; }
+	bool operator>=(const Item& x) const { return x <= *this; }
+	bool operator>=(const Null& x) const { return 1; }
+	bool operator>=(const Integer& x) const { return 1; }
+	bool operator>=(const Real& x) const { return data >= x.data; }
+	bool operator>=(const String& x) const { return 0; }
+	bool operator>=(const List& x) const { return 0; }
+	bool operator==(const Item& x) const { return x == *this; }
+	bool operator==(const Null& x) const { return 0; }
+	bool operator==(const Integer& x) const { return 0; }
+	bool operator==(const Real& x) const { return data == x.data; }
+	bool operator==(const String& x) const { return 0; }
+	bool operator==(const List& x) const { return 0; }
+	bool operator!=(const Item& x) const { return x != *this; }
+	bool operator!=(const Null& x) const { return 1; }
+	bool operator!=(const Integer& x) const { return 1; }
+	bool operator!=(const Real& x) const { return data != x.data; }
+	bool operator!=(const String& x) const { return 1; }
+	bool operator!=(const List& x) const { return 1; }
+
+	bool cmd_lt(const Item& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Null& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Integer& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Real& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const String& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const List& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Null& y) const { return 0; }
+	bool cmd_lt(const Null& x, const Integer& y) const { return 1; }
+	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
+	bool cmd_lt(const Null& x, const String& y) const { return 1; }
+	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	int size() { return -3; }
+
+	void push_back() {}
+	void push_front() {}
+
+	Item* read(stringstream& st)
 	{
 		double a;
 		st >> a;
 		return new Real(a);
 	}
 	string type() { return "REAL"; }
-	void write(ostringstream& st) { st << data; }
+	void write(stringstream& st) { st << data; }
 };
 
 struct String : Item
 {
 	string data;
+	String() : data("") {}
 	String(string a) : data(a) {}
-	/*bool operator<(const Item& x) const { return *this < x; }
+	bool operator<(const Item& x) const { return x > * this; }
+	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return 0; }
 	bool operator<(const Real& x) const { return 0; }
 	bool operator<(const String& x) const { return data < x.data; }
-	bool operator<(const List& x) const { return 1; }*/
-	Item* read(istringstream& st)
+	bool operator<(const List& x) const { return 1; }
+	bool operator>(const Item& x) const { return x < *this; }
+	bool operator>(const Null& x) const { return 1; }
+	bool operator>(const Integer& x) const { return 1; }
+	bool operator>(const Real& x) const { return 1; }
+	bool operator>(const String& x) const { return data > x.data; }
+	bool operator>(const List& x) const { return 0; }
+	bool operator<=(const Item& x) const { return x >= *this; }
+	bool operator<=(const Null& x) const { return 0; }
+	bool operator<=(const Integer& x) const { return 0; }
+	bool operator<=(const Real& x) const { return 0; }
+	bool operator<=(const String& x) const { return data <= x.data; }
+	bool operator<=(const List& x) const { return 1; }
+	bool operator>=(const Item& x) const { return x <= *this; }
+	bool operator>=(const Null& x) const { return 1; }
+	bool operator>=(const Integer& x) const { return 1; }
+	bool operator>=(const Real& x) const { return 1; }
+	bool operator>=(const String& x) const { return data >= x.data; }
+	bool operator>=(const List& x) const { return 0; }
+	bool operator==(const Item& x) const { return x == *this; }
+	bool operator==(const Null& x) const { return 0; }
+	bool operator==(const Integer& x) const { return 0; }
+	bool operator==(const Real& x) const { return 0; }
+	bool operator==(const String& x) const { return data == x.data; }
+	bool operator==(const List& x) const { return 0; }
+	bool operator!=(const Item& x) const { return x != *this; }
+	bool operator!=(const Null& x) const { return 1; }
+	bool operator!=(const Integer& x) const { return 1; }
+	bool operator!=(const Real& x) const { return 1; }
+	bool operator!=(const String& x) const { return data != x.data; }
+	bool operator!=(const List& x) const { return 1; }
+
+	bool cmd_lt(const Item& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Null& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Integer& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Real& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const String& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const List& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Null& y) const { return 0; }
+	bool cmd_lt(const Null& x, const Integer& y) const { return 1; }
+	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
+	bool cmd_lt(const Null& x, const String& y) const { return 1; }
+	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	int size() { return data.length(); }
+
+	void push_back(string a) { data += a; }
+	void push_front(string a) { data = a + data; }
+
+	Item* read(stringstream& st)
 	{
 		char c = st.get();
 		string b;
@@ -77,19 +380,80 @@ struct String : Item
 		return new String(b);
 	}
 	string type() { return "STRING"; }
-	void write(ostringstream& st) { st << data; }
+	void write(stringstream& st) { st << data; }
 };
+
+void DELETE(list<Item*>& data)
+{
+	while (!empty(data))
+	{
+		Item* tmp = data.back();
+		data.pop_back();
+		tmp->~Item();
+	}
+}
 
 struct List : Item
 {
 	list<Item*> data;
+	List() : data() {}
 	List(list<Item*> a) : data(a) {}
-	/*bool operator<(const Item& x) const { return *this < x; }
+	bool operator<(const Item& x) const { return x > * this; }
+	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return 0; }
 	bool operator<(const Real& x) const { return 0; }
 	bool operator<(const String& x) const { return 0; }
-	bool operator<(const List& x) const { return 1; }*/
-	Item* read(istringstream& st)
+	bool operator<(const List& x) const { return  srav_List_lt(data, x.data); }
+	bool operator>(const Item& x) const { return x < *this; }
+	bool operator>(const Null& x) const { return 1; }
+	bool operator>(const Integer& x) const { return 1; }
+	bool operator>(const Real& x) const { return 1; }
+	bool operator>(const String& x) const { return 1; }
+	bool operator>(const List& x) const { return srav_List_lt(x.data, data); }
+	bool operator<=(const Item& x) const { return x >= *this; }
+	bool operator<=(const Null& x) const { return 0; }
+	bool operator<=(const Integer& x) const { return 0; }
+	bool operator<=(const Real& x) const { return 0; }
+	bool operator<=(const String& x) const { return 0; }
+	bool operator<=(const List& x) const { return  !srav_List_lt(x.data, data); }
+	bool operator>=(const Item& x) const { return x <= *this; }
+	bool operator>=(const Null& x) const { return 1; }
+	bool operator>=(const Integer& x) const { return 1; }
+	bool operator>=(const Real& x) const { return 1; }
+	bool operator>=(const String& x) const { return 1; }
+	bool operator>=(const List& x) const { return  !srav_List_lt(data, x.data); }
+	bool operator==(const Item& x) const { return x == *this; }
+	bool operator==(const Null& x) const { return 0; }
+	bool operator==(const Integer& x) const { return 0; }
+	bool operator==(const Real& x) const { return 0; }
+	bool operator==(const String& x) const { return 0; }
+	bool operator==(const List& x) const { return  srav_List_eq(data, x.data); }
+	bool operator!=(const Item& x) const { return x != *this; }
+	bool operator!=(const Null& x) const { return 1; }
+	bool operator!=(const Integer& x) const { return 1; }
+	bool operator!=(const Real& x) const { return 1; }
+	bool operator!=(const String& x) const { return 1; }
+	bool operator!=(const List& x) const { return  !srav_List_eq(data, x.data); }
+
+	bool cmd_lt(const Item& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Null& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Integer& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const Real& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const String& y) const { return x < y; }
+	bool cmd_lt(const Item& x, const List& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Item& y) const { return x < y; }
+	bool cmd_lt(const Null& x, const Null& y) const { return 0; }
+	bool cmd_lt(const Null& x, const Integer& y) const { return 1; }
+	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
+	bool cmd_lt(const Null& x, const String& y) const { return 1; }
+	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	int size() { return data.size(); }
+
+	void push_back(char c) { data.push_back(new String("c")); }
+	void push_front(char c) { data.push_front(new String("c")); }
+
+	Item* read(stringstream& st)
 	{
 		list<Item*> B;
 		char c = st.get(), k;
@@ -99,15 +463,10 @@ struct List : Item
 			if (c == ',') st >> c;
 			if (c != '"' && c != '[')
 			{
-				int p = c - '0';
-				k = st.get();
-				while (k != ' ')
-				{
-					p *= 10;
-					p += k - '0';
-					k = st.get();
-				}
-				B.push_back(new Integer(p));
+				st << c;
+				double p = st.get();
+				if (round(p) == p) B.push_back(new Integer((int)p));
+				else B.push_back(new Real(p));
 				st >> c;
 				continue;
 			}
@@ -120,7 +479,9 @@ struct List : Item
 					b += k;
 					k = st.get();
 				}
-				B.push_back(new String(b));
+				if (b == "null") B.push_back(new Null());
+				else B.push_back(new String(b));
+				st >> c;
 				st >> c;
 				continue;
 			}
@@ -133,7 +494,7 @@ struct List : Item
 		return new List(B);
 	}
 	string type() { return "LIST"; }
-	void write(ostringstream& st)
+	/*void write(stringstream& st)
 	{
 		for (Item* n : data)
 		{
@@ -142,12 +503,10 @@ struct List : Item
 			if (n->type() == "LIST") st << ']';
 			st << ',';
 		}
-	}
+	}*/
 
-	~List() { while (!empty(data)) data.pop_back(); }
+	~List() { DELETE(data); }
 };
-
-//bool f(list<Item*> a, list<Item*> b) { return 1; }
 
 struct WSEML
 {
@@ -157,26 +516,76 @@ struct WSEML
 	WSEML(Item* d) : data(d) {}
 	WSEML(const WSEML& P)
 	{
-		//data = new Item;
+		data = nullptr;
 		*data = *P.data;
 	}
-	WSEML(WSEML&& P) : data(P.data)
-	{
-		P.data = nullptr;
-	}
+	WSEML(WSEML&& P) : data(P.data) { P.data = nullptr; }
 	//операции сравнения
-	const bool operator<(const WSEML& P) { return *this < P; }
+	const bool operator<(const WSEML& P) const { return P.data > this->data; }
+	const bool operator>(const WSEML& P) const { return P.data < this->data; }
+	const bool operator<=(const WSEML& P) const { return P.data >= this->data; }
+	const bool operator>=(const WSEML& P) const { return P.data <= this->data; }
+	const bool operator==(const WSEML& P) const { return P.data == this->data; }
+	const bool operator!=(const WSEML& P) const { return P.data != this->data; }
+
+	int size() { return data->size(); }
+
+	string type() { return data->type(); }
+
+	WSEML* read(stringstream& st) { return new WSEML(data->read(st)); }
+	//void write(stringstream& st) { data->write(st); }
 	//деструктор
 	~WSEML() { data->~Item(); }
 };
 
 int main()
 {
+	Null N;
+	Integer A(3), A1(4);
+	Real B(5.2);
+	String S("qwerty");
+	Item* PP = &A;
+	list<Item*> a = { PP };
+	List L(a);
+	cout << A.data << " " << B.data << endl;
+	cout << (N < B) << endl;
+	cout << (S != N) << endl;
+	cout << (A > B) << endl;
+	cout << (A1 <= A) << endl;
+	cout << (S < B) << endl;
+	cout << (A1 == S) << endl;
+	cout << (L < S) << endl;
+	cout << (A1 < L) << endl;
+	cout << endl;
+
+	cout << N.type() << " " << A.type() << " " << B.type() << " " << S.type() << " " << L.type() << endl;
+	cout << N.size() << " " << A.size() << " " << B.size() << " " << S.size() << " " << L.size() << endl;
+
+	Item& QN = N, & P = A, & P1 = A1, & Q = B, & QS = S, & QL = L;
+	cout << (QN < Q) << endl;
+	cout << (QS != QN) << endl;
+	cout << (P > Q) << endl;
+	cout << (P1 <= P) << endl;
+	cout << (QS < Q) << endl;
+	cout << (P1 == QS) << endl;
+	cout << (QL < QS) << endl;
+	cout << (P1 < QL) << endl;
+
+	cout << QN.type() << " " << P.type() << " " << Q.type() << " " << QS.type() << " " << QL.type() << endl;
+	cout << QN.size() << " " << P.size() << " " << Q.size() << " " << QS.size() << " " << QL.size() << endl;
+
 	string str1 = "[1]";
-	string str = "[3,5.2,[2]]";
-	istringstream st(str1);
-	/*Item* A;
-	A = A->read(st);*/
+	stringstream st1(str1);
+	P1 = *P1.read(st1);
+
+	WSEML W0(&N), W1(&P), W2(&Q), W3(&QS);
+	cout << (W0 < W2) << endl;
+	cout << (W3 != W0) << endl;
+	cout << (W1 > W2) << endl;
+	cout << (W3 <= W2) << endl;
+
+	cout << W0.type() << " " << W1.type() << " " << W2.type() << " " << W3.type() << endl;
+	cout << W0.size() << " " << W1.size() << " " << W2.size() << " " << W3.size() << endl;
 
 	return 0;
 }
