@@ -587,6 +587,9 @@ struct WSEML
 	const bool operator>=(const WSEML& P) const { return P.data <= data; }
 	const bool operator==(const WSEML& P) const { return P.data == data; }
 	const bool operator!=(const WSEML& P) const { return P.data != data; }
+
+	const WSEML operator+(const WSEML& P) const { return WSEML(data + P.data); }
+
 	WSEML& operator=(const WSEML& P) 
 	{
 		data = P.data->clone();
