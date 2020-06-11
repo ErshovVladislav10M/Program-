@@ -95,6 +95,13 @@ struct Item
 	virtual bool cmd_lt(const Null&, const String&) const = 0;
 	virtual bool cmd_lt(const Null&, const List&) const = 0;
 
+	virtual Item* operator+(const Item&) const = 0;
+	virtual Item* operator+(const Null&) const = 0;
+	virtual Item* operator+(const Integer&) const = 0;
+	virtual Item* operator+(const Real&) const = 0;
+	virtual Item* operator+(const String&) const = 0;
+	virtual Item* operator+(const List&) const = 0;
+
 	virtual Item* clone() = 0;
 
 	virtual int size() = 0;
@@ -161,6 +168,13 @@ struct Null : Item
 	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	Item* operator+(const Item& x) const { return x + *this; }
+	Item* operator+(const Null& x) const { return new Null(); }
+	Item* operator+(const Integer& x) const { return new Null(); }
+	Item* operator+(const Real& x) const { return new Null(); }
+	Item* operator+(const String& x) const { return new Null(); }
+	Item* operator+(const List& x) const { return new Null(); }
 
 	Item* clone() { return new Null(); }
 
@@ -229,6 +243,13 @@ struct Integer : Item
 	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	Item* operator+(const Item& x) const { return x + *this; }
+	Item* operator+(const Null& x) const { return new Integer(data); }
+	Item* operator+(const Integer& x) const { return new Integer(x.data + data); }
+	Item* operator+(const Real& x) const { return new Integer(data); }
+	Item* operator+(const String& x) const { return new Integer(data); }
+	Item* operator+(const List& x) const { return new Integer(data); }
 
 	Item* clone() { return new Integer(data); }
 
@@ -303,6 +324,13 @@ struct Real : Item
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
 
+	Item* operator+(const Item& x) const { return x + *this; }
+	Item* operator+(const Null& x) const { return new Real(data); }
+	Item* operator+(const Integer& x) const { return new Real(data); }
+	Item* operator+(const Real& x) const { return new Real(x.data + data); }
+	Item* operator+(const String& x) const { return new Real(data); }
+	Item* operator+(const List& x) const { return new Real(data); }
+
 	Item* clone() { return new Real(data); }
 
 	int size() { return -3; }
@@ -375,6 +403,13 @@ struct String : Item
 	bool cmd_lt(const Null& x, const Real& y) const { return 1; }
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
+
+	Item* operator+(const Item& x) const { return x + *this; }
+	Item* operator+(const Null& x) const { return new String(data); }
+	Item* operator+(const Integer& x) const { return new String(data); }
+	Item* operator+(const Real& x) const { return new String(data); }
+	Item* operator+(const String& x) const { return new String(data + x.data); }
+	Item* operator+(const List& x) const { return new String(data); }
 
 	Item* clone() { return new String(data); }
 
@@ -464,6 +499,13 @@ struct List : Item
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
 
+	Item* operator+(const Item& x) const { return x + *this; }
+	Item* operator+(const Null& x) const { return new List(data); }
+	Item* operator+(const Integer& x) const { return new List(data); }
+	Item* operator+(const Real& x) const { return new List(data); }
+	Item* operator+(const String& x) const { return new List(data); }
+	Item* operator+(const List& x) const { return new List(data); }
+
 	Item* clone() { return new List(data); }
 
 	int size() { return data.size(); }
@@ -531,11 +573,11 @@ struct WSEML
 	Item* data;
 	//конструкторы
 	WSEML() : data(nullptr) {}
-	WSEML(Item* d) : data(d) {}
-	WSEML(const WSEML& P)
+	WSEML(Item* d) : data(d->clone()) {}
+	WSEML(const WSEML& P) : data(P.data->clone())
 	{
-		data = nullptr;
-		*data = *P.data;
+		//data = nullptr;
+		//*data = *P.data;
 	}
 	WSEML(WSEML&& P) : data(P.data) { P.data = nullptr; }
 	//операции сравнения
@@ -558,7 +600,7 @@ struct WSEML
 	WSEML* read(stringstream& st) { return new WSEML(data->read(st)); }
 	void write(stringstream& st) { data->write(st); }
 	//деструктор
-	~WSEML() { data->~Item(); }
+	~WSEML() { delete data; }
 };
 
 int main()
