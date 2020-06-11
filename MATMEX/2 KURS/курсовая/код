@@ -11,6 +11,7 @@ struct Integer;
 struct Real;
 struct String;
 struct List;
+struct WSEML;
 
 const bool srav_List_lt(list<Item*> a, list<Item*> b)
 {
@@ -94,20 +95,23 @@ struct Item
 	virtual bool cmd_lt(const Null&, const String&) const = 0;
 	virtual bool cmd_lt(const Null&, const List&) const = 0;
 
+	virtual Item* clone() = 0;
+
 	virtual int size() = 0;
 
-	//virtual void push_back();
-	//virtual void push_front();
+	virtual void push_back() {}
+	virtual void push_front() {}
 
 	virtual Item* read(stringstream& st) = 0;
 	virtual string type() = 0;
-	//virtual void write(stringstream& st);
+	virtual void write(stringstream& st) {}
 };
 
 struct Null : Item
 {
 	Item* data = nullptr;
 	Null() : data(nullptr) {}
+	Null(const Null& P) : data(nullptr) {}
 	bool operator<(const Item& x) const { return x > * this; }
 	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return 1; }
@@ -158,6 +162,8 @@ struct Null : Item
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
 
+	Item* clone() { return new Null(); }
+
 	int size() { return -1; }
 
 	void push_back() {}
@@ -173,6 +179,7 @@ struct Integer : Item
 	int data;
 	Integer() : data(0) {}
 	Integer(int n) : data(n) {}
+	Integer(const Integer& P) : data(P.data) {}
 	bool operator<(const Item& x) const { return x > * this; }
 	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return data < x.data; }
@@ -223,6 +230,8 @@ struct Integer : Item
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
 
+	Item* clone() { return new Integer(data); }
+
 	int size() { return -2; }
 
 	void push_back() {}
@@ -243,6 +252,7 @@ struct Real : Item
 	double data;
 	Real() : data(0) {}
 	Real(double a) : data(a) {}
+	Real(const Real& P) : data(P.data) {}
 	bool operator<(const Item& x) const { return x > * this; }
 	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return 0; }
@@ -293,6 +303,8 @@ struct Real : Item
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
 
+	Item* clone() { return new Real(data); }
+
 	int size() { return -3; }
 
 	void push_back() {}
@@ -313,6 +325,7 @@ struct String : Item
 	string data;
 	String() : data("") {}
 	String(string a) : data(a) {}
+	String(const String& P) : data(P.data) {}
 	bool operator<(const Item& x) const { return x > * this; }
 	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return 0; }
@@ -363,6 +376,8 @@ struct String : Item
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
 
+	Item* clone() { return new String(data); }
+
 	int size() { return data.length(); }
 
 	void push_back(string a) { data += a; }
@@ -389,7 +404,7 @@ void DELETE(list<Item*>& data)
 	{
 		Item* tmp = data.back();
 		data.pop_back();
-		tmp->~Item();
+		delete tmp;
 	}
 }
 
@@ -398,6 +413,7 @@ struct List : Item
 	list<Item*> data;
 	List() : data() {}
 	List(list<Item*> a) : data(a) {}
+	List(const List& P) : data(P.data) {}
 	bool operator<(const Item& x) const { return x > * this; }
 	bool operator<(const Null& x) const { return 0; }
 	bool operator<(const Integer& x) const { return 0; }
@@ -448,6 +464,8 @@ struct List : Item
 	bool cmd_lt(const Null& x, const String& y) const { return 1; }
 	bool cmd_lt(const Null& x, const List& y) const { return 1; }
 
+	Item* clone() { return new List(data); }
+
 	int size() { return data.size(); }
 
 	void push_back(char c) { data.push_back(new String("c")); }
@@ -494,7 +512,7 @@ struct List : Item
 		return new List(B);
 	}
 	string type() { return "LIST"; }
-	/*void write(stringstream& st)
+	void write(stringstream& st)
 	{
 		for (Item* n : data)
 		{
@@ -503,7 +521,7 @@ struct List : Item
 			if (n->type() == "LIST") st << ']';
 			st << ',';
 		}
-	}*/
+	}
 
 	~List() { DELETE(data); }
 };
@@ -521,19 +539,24 @@ struct WSEML
 	}
 	WSEML(WSEML&& P) : data(P.data) { P.data = nullptr; }
 	//операции сравнения
-	const bool operator<(const WSEML& P) const { return P.data > this->data; }
-	const bool operator>(const WSEML& P) const { return P.data < this->data; }
-	const bool operator<=(const WSEML& P) const { return P.data >= this->data; }
-	const bool operator>=(const WSEML& P) const { return P.data <= this->data; }
-	const bool operator==(const WSEML& P) const { return P.data == this->data; }
-	const bool operator!=(const WSEML& P) const { return P.data != this->data; }
+	const bool operator<(const WSEML& P) const { return P.data > data; }
+	const bool operator>(const WSEML& P) const { return P.data < data; }
+	const bool operator<=(const WSEML& P) const { return P.data >= data; }
+	const bool operator>=(const WSEML& P) const { return P.data <= data; }
+	const bool operator==(const WSEML& P) const { return P.data == data; }
+	const bool operator!=(const WSEML& P) const { return P.data != data; }
+	WSEML& operator=(const WSEML& P) 
+	{
+		data = P.data->clone();
+		return *this; 
+	}
 
 	int size() { return data->size(); }
 
 	string type() { return data->type(); }
 
 	WSEML* read(stringstream& st) { return new WSEML(data->read(st)); }
-	//void write(stringstream& st) { data->write(st); }
+	void write(stringstream& st) { data->write(st); }
 	//деструктор
 	~WSEML() { data->~Item(); }
 };
@@ -544,8 +567,7 @@ int main()
 	Integer A(3), A1(4);
 	Real B(5.2);
 	String S("qwerty");
-	Item* PP = &A;
-	list<Item*> a = { PP };
+	list<Item*> a = { new Integer(39) };
 	List L(a);
 	cout << A.data << " " << B.data << endl;
 	cout << (N < B) << endl;
@@ -586,6 +608,8 @@ int main()
 
 	cout << W0.type() << " " << W1.type() << " " << W2.type() << " " << W3.type() << endl;
 	cout << W0.size() << " " << W1.size() << " " << W2.size() << " " << W3.size() << endl;
+
+	W0 = W1;
 
 	return 0;
 }
