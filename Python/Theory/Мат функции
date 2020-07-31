@@ -17,3 +17,6 @@ if any([i % 2 == 0 for i in nums]):
 #перебор значений и показателей
 for v in enumerate(nums):
    print(v)
+
+#библиотека math
+import math
