@@ -1,0 +1,9 @@
+class Person: //создание класса
+    name = "Tom"
+    def display_info(self): 
+        print("Привет, меня зовут", self.name) //использование экземпляра
+
+        
+person1 = Person() //создание переменной
+person1.display_info() //использование метода
+person1.name = "Sam" //изменение значения
