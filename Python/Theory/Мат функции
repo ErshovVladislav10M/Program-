@@ -20,3 +20,6 @@ for v in enumerate(nums):
 
 #библиотека math
 import math
+
+#использование функций
+print(math.sqrt(24))
