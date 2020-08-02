@@ -1,0 +1,86 @@
+import random
+import math
+import matplotlib.pyplot as plt
+
+#коэффициент корреляции
+p = 0.47
+#медиана по силе тока
+current_strength_mu = 31.1
+#средне квадртичное отклонение по силе тока
+current_strength_sigma = 0.484
+#медиана по времени фронта
+time_mu = 3.83
+#средне квадратичное отклонение по времени фронта
+time_sigma = 0.553
+#список Z_n и его индекс
+Z_n = []
+l_z = 0
+#список U_n и его индекс
+U_n = []
+l_u = 0
+#список I_p_n и его индекс
+I_p_n = []
+l_i = 0
+
+#вычисление I_p_n
+def compute_I_p_n():
+    Z_n[l_z] = random.uniform(0, 1)
+    l_z += 1
+    I_p_n[l_i] = math.exp(current_strength_mu + current_strength_sigma * Z_n[l - 1])
+    l_i += 1
+
+#вычисление t_f_n
+def t_f_n():
+    time_mu1 = time_mu + p * (time_sigma/current_strength_sigma) * (math.ln(I_p_n[l_i - 1]) - current_strength_mu) #time_mu*
+    time_sigma1 = time_sigma * math.sqrt(1 - p**2) #time_sigma*
+    Z_n[l_z] = random.uniform(0, 1)
+    l_z += 1
+    return math.exp(time_mu1 + time_sigma1 * Z_n[l - 1])
+
+#вычисление y_n
+def y_n():
+    U_n[l_u] = random.uniform(0, 1)
+    l_u += 1
+    return U_n[l_u - 1] * y_max_i(CFO, height, I_p_n[l_i - 1])
+
+#вероятность, что ток молнии не меньше данного
+def probability(current_strength):
+    return 1/(1 + (current_strength/31)**2.6)
+
+#вычисление y_min_i
+def y_min_i(height, num_i):
+    r_s_i = 10 * num_i**0.65
+    r_g_i = 0.9 * r_s_i
+    if(height >= r_g_i):
+        return r_s_i
+    else: 
+        return math.sqrt(r_s_i**2 - (r_g_i - height)**2)
+
+#вычисление y_max_i
+def y_max_i(CFO, height, num_i):
+    return 30 * (num_i * height)/(1.5 * CFO) * (1 + (0.4/math.sqrt(2)) * (1/math.sqrt(0.92)))
+#0.92 = 1 - 0.5 * 0.4**2
+
+#вычисление количства перекрытий на 100 км за год
+def num_of_insulation_flashovers(CFO, height, N_g = 1):
+    sum = 0.0
+    i = 1
+    while i <= 200:
+        if(y_max_i(CFO, height, i) > y_min_i(height, i)):
+            sum += (y_max_i(CFO, height, i) - y_min_i(height, i)) * (probability(i) - probability(i + 1))
+        i += 1
+    return 0.2 * sum * N_g
+
+#вывод графика
+def print_schedule(height):
+    i = 50
+    str1 = ""
+    while i <= 300:
+        j = 0
+        while j < 5:
+            str1 += " "
+            j += 1
+        print(str(i) + str1 + "*" + str(num_of_insulation_flashovers(i, height)))
+        i += 25
+
+print_schedule(10)
