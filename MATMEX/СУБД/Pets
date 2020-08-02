@@ -2,7 +2,7 @@ CREATE TABLE Person(
     Person_ID     INTEGER      NOT NULL,
     Last_Name	  VARCHAR(20)  NOT NULL,
     First_Name	  VARCHAR(20),
-    Phone	      VARCHAR(15)  NOT NULL,
+    Phone	      VARCHAR(15)  DEFAULT '89219778756' NOT NULL,
     Address	      VARCHAR(50)  NOT NULL,
 	L_F_Name AS Last_Name + First_Name,
 CONSTRAINT Person_PK PRIMARY KEY (Person_ID),
@@ -48,7 +48,7 @@ CONSTRAINT Service_PK PRIMARY KEY (Service_ID)
 )
 ;
 CREATE TABLE Employee_Service(
-    Employee_ID                   INTEGER         NOT NULL,
+    Employee_ID                   SMALLINT        NOT NULL,
     Service_ID                    INTEGER         NOT NULL,
     Is_Basic	                  INTEGER
 )
