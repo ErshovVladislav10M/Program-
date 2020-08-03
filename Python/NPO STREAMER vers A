@@ -40,7 +40,7 @@ def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", y
     # Plot the best fit line, set the linewidth (lw), color and
     # transparency (alpha) of the line
     i = 0
-    while i < 11:
+    while i < len(x_data):
         ax.scatter(x_data[i], y_data[i], s = 10, color = color, alpha = 0.75)
         i += 1
 
