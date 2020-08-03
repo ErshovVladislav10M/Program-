@@ -3,7 +3,6 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-#АЛГОРИТМ В
 #коэффициент корреляции
 p = 0.47
 #медиана по силе тока
