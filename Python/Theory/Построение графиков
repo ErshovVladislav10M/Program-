@@ -1,0 +1,15 @@
+import matplotlib.pyplot as plt #библиотеки для графиков
+import numpy as np
+
+A = [1, 2, 3, 4, 5, 6]
+B = [9, 8, 7, 6, 5, 4]
+
+#построение графика
+plt.plot(A, B, 'gx-') #g = green, x = будут крестики, - = будет линия
+plt.show() #вывод
+
+#длинная версия
+plt.plot(A, B, color = 'red', marker = 'o', linestyle = '--', markerfacecolor = 'blue', label = 'Линия 1')
+plt.grid() #добавление сетки
+plt.legend(loc = 'best') #добавление уже заданных названий линий(label)
+plt.show() #вывод
