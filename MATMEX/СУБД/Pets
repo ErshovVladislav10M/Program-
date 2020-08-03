@@ -18,7 +18,7 @@ CREATE TABLE Owner(
 CREATE TABLE Employee(
     Employee_ID   SMALLINT         NOT NULL,
     Spec	      VARCHAR(15),
-    Person_ID     INTEGER         NOT NULL,
+    Person_ID     INTEGER   DEFAULT 101   NOT NULL,
 CONSTRAINT Employee_PK PRIMARY KEY (Employee_ID),
 CONSTRAINT Employee_UN UNIQUE(Person_ID, Spec)
 )
@@ -80,10 +80,12 @@ ALTER TABLE Owner ADD CONSTRAINT FK_Owner_Person
 ALTER TABLE Employee ADD CONSTRAINT FK_Employee_Person 
     FOREIGN KEY (Person_ID)
     REFERENCES Person(Person_ID)
+	ON DELETE SET DEFAULT
 ;
 ALTER TABLE Pet ADD CONSTRAINT FK_Pet_0wner 
     FOREIGN KEY (Owner_ID)
     REFERENCES Owner(Owner_ID)
+	ON DELETE SET NULL
 ;
 ALTER TABLE Pet ADD CONSTRAINT FK_Pet_Pet_Type 
     FOREIGN KEY (Pet_Type_ID)
