@@ -12,4 +12,15 @@ plt.show() #вывод
 plt.plot(A, B, color = 'red', marker = 'o', linestyle = '--', markerfacecolor = 'blue', label = 'Линия 1')
 plt.grid() #добавление сетки
 plt.legend(loc = 'best') #добавление уже заданных названий линий(label)
+                         #'best' = место найдется само
+#plt.legend(loc = 'upper center', ncol = 2) #выше центра в 2 столбца
+plt.xlabel("x", fontsize = 14) #название оси x и размер шрифта
+plt.title('Schedule', fontsize = 15) #название графика
+plt.ylim(0, 10) #пределы по оси y
+
+plt.axhline(3, color = 'r', linystyle = '--') #пунктирный горизонт на высоте 3(для вертикали - h на v заменить)
+plt.text(4, 5, 'QWERTY') #добавление текста в точке (4,5)
 plt.show() #вывод
+
+#ссылка на галерею вариантов графиков
+#https://matplotlib.org/3.1.1/gallery/index.html
