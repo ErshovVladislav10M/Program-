@@ -1,0 +1,119 @@
+import random
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+#АЛГОРИТМ В
+#коэффициент корреляции
+p = 0.47
+#медиана по силе тока
+cur_str_median = 33.3
+#средне квадртичное отклонение по силе тока
+cur_str_sigma = 0.605
+#медиана по времени фронта
+time_median = 3.83
+#средне квадратичное отклонение по времени фронта
+time_sigma = 0.553
+#список I_p_n 
+I_p_n = []
+#список t_f_n
+t_f_n = []
+#список y_n 
+y_n = []
+
+def time_median1(I_p): #time_median*
+    return math.log(time_median) + p * (time_sigma/cur_str_sigma) * (math.log(I_p_n[len(I_p_n) - 1]) - math.log(cur_str_median))
+
+def time_sigma1(): #time_sigma*
+    return math.log(time_sigma) * math.sqrt(1 - p**2) 
+
+def fun1(value, median, sigma):
+    a1 = 1/(math.sqrt(2 * math.pi) * value * sigma)
+    a2 = math.exp(-(math.log(value) - math.log(median))**2/(2 * sigma**2)) 
+    return a1 * a2
+
+def fun2(median, sigma):
+       return math.exp(math.log(median) - sigma**2)
+
+def K_i():
+    return fun1(fun2(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
+
+def K_t(I_p):
+    return fun1(fun2(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
+
+#вычисление I_p_n
+def compute_I_p_n():
+    I_p = 1 + (200 - 1) * random.uniform(0, 1)
+    Z = random.uniform(0, 1)
+    while Z >= fun1(I_p, cur_str_median, cur_str_sigma)/K_i():
+        I_p = 1 + (200 - 1) * random.uniform(0, 1)
+        Z = random.uniform(0, 1)
+    I_p_n.append(I_p)
+
+#вычисление t_f_n
+def compute_t_f_n(I_p):
+    t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
+    Z = random.uniform(0, 1)
+    while Z >= fun1(t_f, time_median1(I_p), time_sigma1())/K_t(I_p):
+        t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
+        Z = random.uniform(0, 1)
+    t_f_n.append(t_f)
+
+#вычисление y_n
+def compute_y_n(y_max):
+    U_n = random.uniform(0, 1)
+    y_n.append(U_n * y_max)
+
+#1000 молний
+def create_lightn(n):
+    for i in range(n):
+        compute_I_p_n()
+        compute_t_f_n(I_p_n[len(I_p_n) - 1])
+        #compute_y_n(y_max)
+
+#график распределения тока молний
+def scatterplot_lightn(x_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
+    _, ax = plt.subplots()
+    #список для количества значений силы тока молний
+    y_data = []
+    for i in range(200):
+        y_data.append(0)
+    for i in range(len(x_data)):
+        y_data[math.floor(x_data[i])] += 1       
+    for i in range(len(y_data)):
+        if(y_data[i] != 0):
+            ax.scatter(i, y_data[i], s = 10, color = "b", alpha = 1)            
+    ax.set_title(title)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+#график распределения времени фронта
+def scatterplot_time(x_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
+    _, ax = plt.subplots()
+    #список для количества значений силы тока молний
+    y_data = []
+    for i in range(200):
+        y_data.append(0)
+    for i in range(len(x_data)):
+        y_data[math.floor(10*x_data[i])] += 1       
+    for i in range(len(y_data)):
+        if(y_data[i] != 0):
+            ax.scatter(i/10, y_data[i], s = 10, color = "b", alpha = 1)            
+    ax.set_title(title)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+#график распределения дл тока и времени фронта
+def scatterplot_2(x_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
+    _, ax = plt.subplots()
+    x_data.sort()     
+    for i in range(len(x_data)):
+        ax.scatter(x_data[i], i, s = 10, color = "b", alpha = 1)            
+    ax.set_title(title)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+#запуск
+create_lightn(10000)
+scatterplot_time(t_f_n, "t_f", "number", "time")
+plt.show()
