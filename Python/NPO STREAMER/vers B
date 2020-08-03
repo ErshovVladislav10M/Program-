@@ -110,14 +110,23 @@ def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", y
 
 #вывод графика
 def print_schedule(height, N_tot, y_max):
+    create_lightn(N_tot, y_max)
+    A = []
+    B = []
     for i in range(50, 325, 25):
         A.append(i)
         B.append(num_of_insulation_flashovers(i, height, N_tot, y_max))
+    #вариант получше))
+    plt.plot(A, B, color = 'red', marker = 'o', linestyle = '--', markerfacecolor = 'blue', label = 'Линия 1')
+    plt.xlabel('CFO (kV)', fontsize = 14)
+    plt.ylabel('Flashovers/100km/yr', fontsize = 14)
+    plt.title('Schedule', fontsize = 15)
+    #менее функциональный вариант
+    #scatterplot(A, B, "CFO (kV)", "Flashovers/100km/yr", "Schedule")
+    plt.grid()
+    plt.legend(loc = 'best')
+    plt.show()
 
 #запуск для 10 метровой линии
-create_lightn(10000, 0.6)
-A = []
-B = []
+#10000 молний с y_max = 0.6km
 print_schedule(10, 10000, 0.6)
-scatterplot(A, B, "CFO (kV)", "Flashovers/100km/yr", "Schedule")
-plt.show()
