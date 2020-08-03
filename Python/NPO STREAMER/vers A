@@ -25,11 +25,9 @@ def y_max_i(CFO, height, current_strength):
 #вычисление количства перекрытий на 100 км за год (B)
 def num_of_insulation_flashovers(CFO, height, N_g = 1):
     sum = 0.0
-    i = 1
-    while i <= 200:
+    for i in range(200):
         if(y_max_i(CFO, height, i) > y_min_i(height, i)):
             sum += (y_max_i(CFO, height, i) - y_min_i(height, i)) * (probability(i) - probability(i + 1))
-        i += 1
     return 0.2 * sum * N_g
 
 #график
@@ -39,10 +37,8 @@ def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", y
 
     # Plot the best fit line, set the linewidth (lw), color and
     # transparency (alpha) of the line
-    i = 0
-    while i < len(x_data):
+    for i in range(len(x_data)):
         ax.scatter(x_data[i], y_data[i], s = 10, color = color, alpha = 0.75)
-        i += 1
 
     # Label the axes and provide a title
     ax.set_title(title)
@@ -51,12 +47,9 @@ def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", y
 
 #вывод графика
 def print_schedule(height):
-    i = 50
-    str1 = ""
-    while i <= 300:
+    for i in range(50, 300, 25):
         A.append(i)
         B.append(num_of_insulation_flashovers(i, height))
-        i += 25
 
 #запуск для 10 метровой линии
 A = []
