@@ -1,0 +1,66 @@
+import random
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+#АЛГОРИТМ А
+#вероятность, что ток молнии не меньше данного
+def probability(current_strength):
+    return 1/(1 + (current_strength/31)**2.6)
+
+#вычисление y_min_i
+def y_min_i(height, current_strength):
+    r_s_i = 10 * current_strength**0.65
+    r_g_i = 0.9 * r_s_i
+    if(height >= r_g_i):
+        return r_s_i
+    else: 
+        return math.sqrt(r_s_i**2 - (r_g_i - height)**2)
+
+#вычисление y_max_i
+def y_max_i(CFO, height, current_strength):
+    return 30 * (current_strength * height)/(1.5 * CFO) * (1 + (0.4/math.sqrt(2)) * (1/math.sqrt(0.92)))
+#0.92 = 1 - 0.5 * 0.4**2
+
+#вычисление количства перекрытий на 100 км за год (B)
+def num_of_insulation_flashovers(CFO, height, N_g = 1):
+    sum = 0.0
+    i = 1
+    while i <= 200:
+        if(y_max_i(CFO, height, i) > y_min_i(height, i)):
+            sum += (y_max_i(CFO, height, i) - y_min_i(height, i)) * (probability(i) - probability(i + 1))
+        i += 1
+    return 0.2 * sum * N_g
+
+#график
+def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
+    # Create the plot object
+    _, ax = plt.subplots()
+
+    # Plot the best fit line, set the linewidth (lw), color and
+    # transparency (alpha) of the line
+    i = 0
+    while i < 11:
+        ax.scatter(x_data[i], y_data[i], s = 10, color = color, alpha = 0.75)
+        i += 1
+
+    # Label the axes and provide a title
+    ax.set_title(title)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+#вывод графика
+def print_schedule(height):
+    i = 50
+    str1 = ""
+    while i <= 300:
+        A.append(i)
+        B.append(num_of_insulation_flashovers(i, height))
+        i += 25
+
+#запуск для 10 метровой линии
+A = []
+B = []
+print_schedule(10)
+scatterplot(A, B, "CFO (kV)", "Flashovers/100km/yr", "Schedule")
+plt.show()
