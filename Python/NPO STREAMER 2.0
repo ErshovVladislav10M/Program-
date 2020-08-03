@@ -32,11 +32,37 @@ def num_of_insulation_flashovers(CFO, height, N_g = 1):
         i += 1
     return 0.2 * sum * N_g
 
-#A = []
-#B = []
-#print_schedule(10)
-#scatterplot(A, B, "CFO", "Flashovers", "XY")
-#plt.show()
+#график
+def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
+    # Create the plot object
+    _, ax = plt.subplots()
+
+    # Plot the best fit line, set the linewidth (lw), color and
+    # transparency (alpha) of the line
+    i = 0
+    while i < 11:
+        ax.scatter(x_data[i], y_data[i], s = 10, color = color, alpha = 0.75)
+        i += 1
+
+    # Label the axes and provide a title
+    ax.set_title(title)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+#вывод графика
+def print_schedule(height):
+    i = 50
+    str1 = ""
+    while i <= 300:
+        A.append(i)
+        B.append(num_of_insulation_flashovers(i, height))
+        i += 25
+
+A = []
+B = []
+print_schedule(10)
+scatterplot(A, B, "CFO (kV)", "Flashovers/100km/yr", "Schedule")
+plt.show()
 
 
 #АЛГОРИТМ В
@@ -98,7 +124,7 @@ def num_of_insulation_flashovers_B(CFO, height, N_g = 1):
     return 0.2 * sum * N_g
 
 #график
-def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
+def scatterplot_B(x_data, y_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
     # Create the plot object
     _, ax = plt.subplots()
 
@@ -115,7 +141,7 @@ def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", y
     ax.set_ylabel(y_label)
 
 #вывод графика
-def print_schedule(height):
+def print_schedule_B(height):
     i = 50
     str1 = ""
     while i <= 300:
@@ -124,10 +150,9 @@ def print_schedule(height):
         i += 25
 
 
-A = []
-B = []
-create_lightn()
-print_schedule(10)
-scatterplot(A, B, "CFO", "Flashovers", "XY")
-plt.show()CFO", "Flashovers", "XY")
-plt.show()
+#A = []
+#B = []
+#create_lightn()
+#print_schedule_B(10)
+#scatterplot_B(A, B, "CFO (kV)", "Flashovers/100km/yr", "Schedule")
+#plt.show()
