@@ -146,7 +146,7 @@ def print_schedule(N_tot, y_max, height_A, height_B):
     #Оформление графика
     plt.xlabel('CFO (kV)', fontsize = 14)
     plt.ylabel('Flashovers/100km/yr', fontsize = 14)
-    plt.title('Число отключений на 100 км в год', fontsize = 15)
+    plt.title('Число отключений от ИП на 100 км в год', fontsize = 15)
     plt.grid()
     plt.ylim(-10, 6)
     plt.xlim(30, 330)
@@ -155,20 +155,33 @@ def print_schedule(N_tot, y_max, height_A, height_B):
     plt.legend(loc = 'best')
     plt.show()
 
+#набор цветов для построения линий на графике
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 heightA = []
 heightB = []
 print('Введите количество молний: ')
 lightn_N = int(input())
-print('Введите количество линий для алгоритма А: ')
+print('Введите количество ВЛ для алгоритма А: ')
 N_A = int(input())
 for i in range(N_A):
-    print('Введите высоту линии ' + str(i + 1) + ' для алгоритма А: ')
+    print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма А: ')
     heightA.append(int(input()))
-print('Введите количество линий для алгоритма B: ')
+print('Введите количество ВЛ для алгоритма B: ')
 N_B = int(input())
 for i in range(N_B):
-    print('Введите высоту линии ' + str(i + 1) + ' для алгоритма B: ')
+    print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма B: ')
     heightB.append(int(input()))
-
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-print_schedule(lightn_N, 0.6, heightA, heightB)
+print('Ввести свое значение CFO?')
+str1 = input()
+if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
+    print('Введите значение CFO: ')
+    CFO_in = int(input())
+    create_lightn(lightn_N, 0.6)
+    for i in range(len(heightA)):
+        print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма А при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_A(CFO_in, heightA[i])))
+    for i in range(len(heightB)):
+        print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма B при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_B(CFO_in, heightB[i], lightn_N, 0.6)))
+print('Построить график для стандартного CFO?')
+str1 = input()
+if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
+    print_schedule(lightn_N, 0.6, heightA, heightB)
