@@ -21,7 +21,7 @@ def y_max_i(CFO, height, current_strength):
     return 30 * (current_strength * height)/(1.5 * CFO) * (1 + (0.4/math.sqrt(2)) * (1/math.sqrt(0.92)))
 #0.92 = 1 - 0.5 * 0.4**2
 
-#вычисление количства перекрытий на 100 км за год (B)
+#вычисление количства перекрытий на 100 км за год (A)
 def num_of_insulation_flashovers(CFO, height, N_g = 1):
     sum = 0.0
     for i in range(200):
