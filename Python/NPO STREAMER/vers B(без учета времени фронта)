@@ -91,42 +91,44 @@ def check_lightn(CFO, height):
         if(y_min_i(height, I_p_n[i]) < y_max_i(CFO, height, I_p_n[i])):
             if(y_n[i] <= y_max_i(CFO, height, I_p_n[i]) and y_n[i] >= y_min_i(height, I_p_n[i])):
                 N += 1
-    print(N)
+    #print(N)
     return N
 
 #вычисление количства перекрытий на 100 км за год (B)
 def num_of_insulation_flashovers(CFO, height, N_tot, y_max, N_g = 1):
     N = check_lightn(CFO, height)
     return 200 * N/N_tot * N_g * y_max
- 
-#график
-def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
-    _, ax = plt.subplots()
-    for i in range(len(x_data)):
-        ax.scatter(x_data[i], y_data[i], s = 10, color = color, alpha = 0.75)
-    ax.set_title(title)
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
 
-#вывод графика
-def print_schedule(height, N_tot, y_max):
-    create_lightn(N_tot, y_max)
+#Построение линий
+def create_line(N_tot, height, y_max, color):
     A = []
     B = []
     for i in range(50, 325, 25):
         A.append(i)
-        B.append(num_of_insulation_flashovers(i, height, N_tot, y_max))
-    #вариант получше))
-    plt.plot(A, B, color = 'red', marker = 'o', linestyle = '--', markerfacecolor = 'blue', label = 'Линия 1')
+        #print(num_of_insulation_flashovers(i, height, N_tot, y_max))
+        B.append(math.log(num_of_insulation_flashovers(i, height, N_tot, y_max) + 0.0001))
+    plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров')
+
+#вывод графика
+def print_schedule(N_tot, y_max, height):
+    create_lightn(N_tot, y_max)
+    #Линии для hieght[i]
+    for i in range(len(height)):
+        create_line(N_tot, height[i], y_max, colors[i])
+    #Оформление графика
     plt.xlabel('CFO (kV)', fontsize = 14)
     plt.ylabel('Flashovers/100km/yr', fontsize = 14)
     plt.title('Schedule', fontsize = 15)
-    #менее функциональный вариант
-    #scatterplot(A, B, "CFO (kV)", "Flashovers/100km/yr", "Schedule")
     plt.grid()
+    plt.ylim(-10, 6)
+    plt.xlim(30, 330)
+    for i in range(7):
+        plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
     plt.legend(loc = 'best')
     plt.show()
 
-#запуск для 10 метровой линии
-#10000 молний с y_max = 0.6km
-print_schedule(10, 10000, 0.6)
+#запуск для 10, 15, 20 метровой линии
+#30000 молний с y_max = 0.6km
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+height1 = [10, 15, 20]
+print_schedule(30000, 0.6, height1)
