@@ -117,41 +117,44 @@ def num_of_insulation_flashovers_A(CFO, height, N_g = 1):
     return 0.2 * sum * N_g
 
 #Построение линий по алгоритму А
-def create_line_A(height, color):
+def create_line_A(height, color, N_g = 1):
     A = []
     B = []
     for i in range(50, 325, 25):
         A.append(i)
-        B.append(math.log(num_of_insulation_flashovers_A(i, height) + 0.0001))
+        B.append(math.log(num_of_insulation_flashovers_A(i, height, N_g) + 0.0001))
     plt.plot(A, B, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров алг А')
 
 #Построение линий по алгоритму B
-def create_line_B(N_tot, height, y_max, color):
+def create_line_B(N_tot, height, y_max, color, N_g = 1):
     A = []
     B = []
     for i in range(50, 325, 25):
         A.append(i)
-        B.append(math.log(num_of_insulation_flashovers_B(i, height, N_tot, y_max) + 0.0001))
+        B.append(math.log(num_of_insulation_flashovers_B(i, height, N_tot, y_max, N_g) + 0.0001))
     plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров алг В')
 
 #вывод графика
-def print_schedule(N_tot, y_max, height_A, height_B):
+def print_schedule(N_tot, y_max, height_A, height_B, N_g = 1):
     create_lightn(N_tot, y_max)
+    #Оформление графика
+    plt.xlabel('CFO (kV)', fontsize = 14)
+    plt.ylabel('Flashovers/100km/yr', fontsize = 14)
+    plt.title('Число отключений от ИП на 100 км в год', fontsize = 15)
+    plt.ylim(-10, 6)
+    plt.xlim(30, 330)
+    for i in range(7):
+        plt.text(35, math.log(10**(2 - i)) + 0.2, str(10**(2 - i)))
+        plt.axhline(math.log(10**(2 - i)), color = 'lightgray', alpha = 0.25)
+    for i in range(50, 325, 25):
+        plt.axvline(i, color = 'lightgray', alpha = 0.25)
     #Линии для height_B[i] алгоритм B
     for i in range(len(height_B)):
         create_line_B(N_tot, height_B[i], y_max, colors[i])
     #Линии для height_A[i] алгоритм A
     for i in range(len(height_A)):
         create_line_A(height_A[i], colors[i])
-    #Оформление графика
-    plt.xlabel('CFO (kV)', fontsize = 14)
-    plt.ylabel('Flashovers/100km/yr', fontsize = 14)
-    plt.title('Число отключений от ИП на 100 км в год', fontsize = 15)
-    plt.grid()
-    plt.ylim(-10, 6)
-    plt.xlim(30, 330)
-    for i in range(7):
-        plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
+    #его вывод
     plt.legend(loc = 'best')
     plt.show()
 
