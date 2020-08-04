@@ -148,10 +148,10 @@ def print_schedule(N_tot, y_max, height_A, height_B, N_g = 1):
         plt.axhline(math.log(10**(2 - i)), color = 'lightgray', alpha = 0.25)
     for i in range(50, 325, 25):
         plt.axvline(i, color = 'lightgray', alpha = 0.25)
-    #Линии для height_B[i] алгоритм B
+    #Линии для height_B алгоритм B
     for i in range(len(height_B)):
         create_line_B(N_tot, height_B[i], y_max, colors[i])
-    #Линии для height_A[i] алгоритм A
+    #Линии для height_A алгоритм A
     for i in range(len(height_A)):
         create_line_A(height_A[i], colors[i])
     #его вывод
