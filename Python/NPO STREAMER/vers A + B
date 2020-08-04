@@ -173,18 +173,23 @@ N_B = int(input())
 for i in range(N_B):
     print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма B: ')
     heightB.append(int(input()))
-print('Создание молний')
-create_lightn(lightn_N, 0.6)
-print('Ввести свое значение CFO?')
+t = 0
+print('Ввести свое значение CFO, да/нет?')
 str1 = input()
 if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
-    print('Введите значение CFO: ')
+    print('Введите значение CFO, kV: ')
     CFO_in = int(input())
+    print('Вычисление')
+    create_lightn(lightn_N, 0.6)
+    t = 1
     for i in range(len(heightA)):
         print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма А при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_A(CFO_in, heightA[i])))
     for i in range(len(heightB)):
         print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма B при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_B(CFO_in, heightB[i], lightn_N, 0.6)))
-print('Построить график для стандартного CFO?')
+print('Построить график для стандартного CFO, да/нет?')
 str1 = input()
 if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
+    if(t == 0):
+        print('Вычисление')
+        create_lightn(lightn_N, 0.6)
     print_schedule(lightn_N, 0.6, heightA, heightB)
