@@ -1,9 +1,11 @@
+#Вычисление количества отключений на 100 км в год
+#по алгоритмам А(стандарт IEEE) и B(LIOV-MC ideal groud)
+
 import random
 import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-#АЛГОРИТМ В
 #коэффициент корреляции
 p = 0.47
 #медиана по силе тока
@@ -27,25 +29,29 @@ def time_median1(I_p): #time_median*
 def time_sigma1(): #time_sigma*
     return math.log(time_sigma) * math.sqrt(1 - p**2) 
 
-def fun1(value, median, sigma):
+#Плотность логнормального распределения
+def p_lognorm(value, median, sigma):
     a1 = 1/(math.sqrt(2 * math.pi) * value * sigma)
     a2 = math.exp(-(math.log(value) - math.log(median))**2/(2 * sigma**2)) 
     return a1 * a2
 
-def fun2(median, sigma):
+#Нахождение медианного значения
+def mod_p(median, sigma):
        return math.exp(math.log(median) - sigma**2)
 
-def K_i():
-    return fun1(fun2(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
+#Максимум плотности для тока молнии
+def max_p_I():
+    return p_lognorm(mod_p(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
 
-def K_t(I_p):
-    return fun1(fun2(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
+#Максимум плотности для времени фронта
+def max_p_t(I_p):
+    return p_lognorm(mod_p(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
 
 #вычисление I_p_n
 def compute_I_p_n():
     I_p = 1 + (200 - 1) * random.uniform(0, 1)
     Z = random.uniform(0, 1)
-    while Z >= fun1(I_p, cur_str_median, cur_str_sigma)/K_i():
+    while Z >= p_lognorm(I_p, cur_str_median, cur_str_sigma)/max_p_I():
         I_p = 1 + (200 - 1) * random.uniform(0, 1)
         Z = random.uniform(0, 1)
     I_p_n.append(I_p)
@@ -54,7 +60,7 @@ def compute_I_p_n():
 def compute_t_f_n(I_p):
     t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
     Z = random.uniform(0, 1)
-    while Z >= fun1(t_f, time_median1(I_p), time_sigma1())/K_t(I_p):
+    while Z >= p_lognorm(t_f, time_median1(I_p), time_sigma1())/max_p_t(I_p):
         t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
         Z = random.uniform(0, 1)
     t_f_n.append(t_f)
@@ -91,7 +97,6 @@ def check_lightn(CFO, height):
         if(y_min_i(height, I_p_n[i]) < y_max_i(CFO, height, I_p_n[i])):
             if(y_n[i] <= y_max_i(CFO, height, I_p_n[i]) and y_n[i] >= y_min_i(height, I_p_n[i])):
                 N += 1
-    #print(N)
     return N
 
 #вычисление количства перекрытий на 100 км за год (B)
@@ -141,7 +146,7 @@ def print_schedule(N_tot, y_max, height_A, height_B):
     #Оформление графика
     plt.xlabel('CFO (kV)', fontsize = 14)
     plt.ylabel('Flashovers/100km/yr', fontsize = 14)
-    plt.title('Schedule', fontsize = 15)
+    plt.title('Число отключений на 100 км в год', fontsize = 15)
     plt.grid()
     plt.ylim(-10, 6)
     plt.xlim(30, 330)
@@ -150,9 +155,20 @@ def print_schedule(N_tot, y_max, height_A, height_B):
     plt.legend(loc = 'best')
     plt.show()
 
-#запуск для 10, 15, 20 метровой линии
-#30000 молний с y_max = 0.6km
+heightA = []
+heightB = []
+print('Введите количество молний: ')
+lightn_N = int(input())
+print('Введите количество линий для алгоритма А: ')
+N_A = int(input())
+for i in range(N_A):
+    print('Введите высоту линии ' + str(i + 1) + ' для алгоритма А: ')
+    heightA.append(int(input()))
+print('Введите количество линий для алгоритма B: ')
+N_B = int(input())
+for i in range(N_B):
+    print('Введите высоту линии ' + str(i + 1) + ' для алгоритма B: ')
+    heightB.append(int(input()))
+
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-heightB = [10, 15, 20]
-heightA = [10]
-print_schedule(30000, 0.6, heightA, heightB)
+print_schedule(lightn_N, 0.6, heightA, heightB)
