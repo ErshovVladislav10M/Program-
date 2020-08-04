@@ -136,7 +136,6 @@ def create_line_B(N_tot, height, y_max, color, N_g = 1):
 
 #вывод графика
 def print_schedule(N_tot, y_max, height_A, height_B, N_g = 1):
-    create_lightn(N_tot, y_max)
     #Оформление графика
     plt.xlabel('CFO (kV)', fontsize = 14)
     plt.ylabel('Flashovers/100km/yr', fontsize = 14)
@@ -174,12 +173,13 @@ N_B = int(input())
 for i in range(N_B):
     print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма B: ')
     heightB.append(int(input()))
+print('Создание молний')
+create_lightn(lightn_N, 0.6)
 print('Ввести свое значение CFO?')
 str1 = input()
 if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
     print('Введите значение CFO: ')
     CFO_in = int(input())
-    create_lightn(lightn_N, 0.6)
     for i in range(len(heightA)):
         print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма А при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_A(CFO_in, heightA[i])))
     for i in range(len(heightB)):
