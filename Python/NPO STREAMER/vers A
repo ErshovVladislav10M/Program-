@@ -3,7 +3,6 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-#АЛГОРИТМ А
 #вероятность, что ток молнии не меньше данного
 def probability(current_strength):
     return 1/(1 + (current_strength/31)**2.6)
@@ -30,30 +29,33 @@ def num_of_insulation_flashovers(CFO, height, N_g = 1):
             sum += (y_max_i(CFO, height, i) - y_min_i(height, i)) * (probability(i) - probability(i + 1))
     return 0.2 * sum * N_g
 
-#график
-def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", yscale_log=False):
-    # Create the plot object
-    _, ax = plt.subplots()
-
-    # Plot the best fit line, set the linewidth (lw), color and
-    # transparency (alpha) of the line
-    for i in range(len(x_data)):
-        ax.scatter(x_data[i], y_data[i], s = 10, color = color, alpha = 0.75)
-
-    # Label the axes and provide a title
-    ax.set_title(title)
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
+#Построение линий
+def create_line(height, color):
+    A = []
+    B = []
+    for i in range(50, 325, 25):
+        A.append(i)
+        B.append(math.log(num_of_insulation_flashovers(i, height) + 0.0001))
+    plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров')
 
 #вывод графика
 def print_schedule(height):
-    for i in range(50, 300, 25):
-        A.append(i)
-        B.append(num_of_insulation_flashovers(i, height))
+    #Линии для hieght[i]
+    for i in range(len(height)):
+        create_line(height[i], colors[i])
+    #Оформление графика
+    plt.xlabel('CFO (kV)', fontsize = 14)
+    plt.ylabel('Flashovers/100km/yr', fontsize = 14)
+    plt.title('Schedule', fontsize = 15)
+    plt.grid()
+    plt.ylim(-10, 6)
+    plt.xlim(30, 330)
+    for i in range(7):
+        plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
+    plt.legend(loc = 'best')
+    plt.show()
 
-#запуск для 10 метровой линии
-A = []
-B = []
-print_schedule(10)
-scatterplot(A, B, "CFO (kV)", "Flashovers/100km/yr", "Schedule")
-plt.show()
+#запуск для 10, 15, 20 метровой линии
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+height1 = [10, 15, 20]
+print_schedule(height1)
