@@ -1,0 +1,145 @@
+import random
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+#АЛГОРИТМ В
+#коэффициент корреляции
+p = 0.47
+#медиана по силе тока
+cur_str_median = 33.3
+#средне квадртичное отклонение по силе тока
+cur_str_sigma = 0.605
+#медиана по времени фронта
+time_median = 3.83
+#средне квадратичное отклонение по времени фронта
+time_sigma = 0.553
+#список I_p_n 
+I_p_n = []
+#список t_f_n
+t_f_n = []
+#список y_n 
+y_n = []
+
+def time_median1(I_p): #time_median*
+    return math.log(time_median) + p * (time_sigma/cur_str_sigma) * (math.log(I_p_n[len(I_p_n) - 1]) - math.log(cur_str_median))
+
+def time_sigma1(): #time_sigma*
+    return math.log(time_sigma) * math.sqrt(1 - p**2) 
+
+def fun1(value, median, sigma):
+    a1 = 1/(math.sqrt(2 * math.pi) * value * sigma)
+    a2 = math.exp(-(math.log(value) - math.log(median))**2/(2 * sigma**2)) 
+    return a1 * a2
+
+def fun2(median, sigma):
+       return math.exp(math.log(median) - sigma**2)
+
+def K_i():
+    return fun1(fun2(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
+
+def K_t(I_p):
+    return fun1(fun2(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
+
+#вычисление I_p_n
+def compute_I_p_n():
+    I_p = 1 + (200 - 1) * random.uniform(0, 1)
+    Z = random.uniform(0, 1)
+    while Z >= fun1(I_p, cur_str_median, cur_str_sigma)/K_i():
+        I_p = 1 + (200 - 1) * random.uniform(0, 1)
+        Z = random.uniform(0, 1)
+    I_p_n.append(I_p)
+
+#вычисление t_f_n
+def compute_t_f_n(I_p):
+    t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
+    Z = random.uniform(0, 1)
+    while Z >= fun1(t_f, time_median1(I_p), time_sigma1())/K_t(I_p):
+        t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
+        Z = random.uniform(0, 1)
+    t_f_n.append(t_f)
+
+#вычисление y_n
+def compute_y_n(y_max):
+    U_n = random.uniform(0, 1)
+    y_n.append(U_n * y_max)
+
+#вычисление y_min_i
+def y_min_i(height, cur_str):
+    r_s_i = 10 * cur_str**0.65
+    r_g_i = 0.9 * r_s_i
+    if(height >= r_g_i):
+        return r_s_i
+    else: 
+        return math.sqrt(r_s_i**2 - (r_g_i - height)**2)
+
+#вычисление y_max_i
+def y_max_i(CFO, height, cur_str):
+    return 30 * (cur_str * height)/(1.5 * CFO) * (1 + (0.4/math.sqrt(2)) * (1/math.sqrt(0.92)))
+
+#создание молний
+def create_lightn(N_tot, y_max):
+    for i in range(N_tot):
+        compute_I_p_n()
+        compute_t_f_n(I_p_n[len(I_p_n) - 1])
+        compute_y_n(y_max * 1000)
+
+#проверка на перекрытия
+def check_lightn(CFO, height):
+    N = 0
+    for i in range(len(I_p_n)):
+        if(y_min_i(height, I_p_n[i]) < y_max_i(CFO, height, I_p_n[i])):
+            if(y_n[i] <= y_max_i(CFO, height, I_p_n[i]) and y_n[i] >= y_min_i(height, I_p_n[i])):
+                N += 1
+    #print(N)
+    return N
+
+#вычисление количства перекрытий на 100 км за год (B)
+def num_of_insulation_flashovers(CFO, height, N_tot, y_max, N_g = 1):
+    N = check_lightn(CFO, height)
+    return 200 * N/N_tot * N_g * y_max
+
+#Построение линий
+def create_line(N_tot, height, y_max, color):
+    A = []
+    B = []
+    #A1 = []
+    #B1 = []
+    for i in range(100, 625, 25):
+        A.append(i)
+        r = num_of_insulation_flashovers(i, height, N_tot, y_max)
+        B.append(r + 0.0001)
+        #A1.append(r + 0.0001)
+    #b = -0.295 / height
+    #a = A1[0] / math.exp(b*A[0])
+    #print(str(height) + ' ' + str(a) + ' ' + str(b))
+    #for i in range(100, 625, 25):
+    #    B1.append(a*math.exp(b*i) + 0.0001)
+    y_for_search = np.linspace(min(A), max(B), 100)
+    x_interp = np.interp(y_for_search, A, B)
+    plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров')
+    #plt.plot(A, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров')
+
+#вывод графика
+def print_schedule(N_tot, y_max, height):
+    create_lightn(N_tot, y_max)
+    #Линии для hieght[i]
+    for i in range(len(height)):
+        create_line(N_tot, height[i], y_max, colors[i])
+    #Оформление графика
+    plt.xlabel('CFO (kV)', fontsize = 14)
+    plt.ylabel('Flashovers/100km/yr', fontsize = 14)
+    plt.title('Schedule', fontsize = 15)
+    plt.grid()
+    #plt.ylim(-10, 6)
+    #plt.xlim(80, 700)
+    #for i in range(7):
+        #plt.text(85, math.log(10**(2 - i)), str(10**(2 - i)))
+    plt.legend(loc = 'best')
+    plt.show()
+
+#запуск для 10 метровой линии
+#30000 молний с y_max = 0.6km
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+height1 = [10, 20]
+print_schedule(30000, 0.6, height1)
