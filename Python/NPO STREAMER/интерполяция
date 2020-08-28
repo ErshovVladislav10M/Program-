@@ -115,15 +115,13 @@ def create_line(N_tot, height, y_max, color):
     #print(str(height) + ' ' + str(a) + ' ' + str(b))
     #for i in range(100, 625, 25):
     #    B1.append(a*math.exp(b*i) + 0.0001)
-    y_for_search = np.linspace(min(A), max(B), 100)
-    x_interp = np.interp(y_for_search, A, B)
     plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров')
     #plt.plot(A, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров')
 
 #вывод графика
 def print_schedule(N_tot, y_max, height):
     create_lightn(N_tot, y_max)
-    #Линии для hieght[i]
+    #Линии для height[i]
     for i in range(len(height)):
         create_line(N_tot, height[i], y_max, colors[i])
     #Оформление графика
@@ -140,6 +138,6 @@ def print_schedule(N_tot, y_max, height):
 
 #запуск для 10 метровой линии
 #30000 молний с y_max = 0.6km
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-height1 = [10, 20]
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple']
+height1 = [7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25]
 print_schedule(30000, 0.6, height1)
