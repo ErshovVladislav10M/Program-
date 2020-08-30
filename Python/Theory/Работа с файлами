@@ -10,7 +10,7 @@ for line in file: #построчное чтение
     print(line)
 
 #запись
-file1 = open("filename.txt", "w")
+file1 = open(r"filename.txt", "w") #r - для корректного чтения полного имени файла
 msg = file.write("This has been written to a file") #сама запись
 print(msg) #количество записанных байт 
 
