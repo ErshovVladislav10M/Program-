@@ -1,0 +1,9 @@
+def print_schedule_interp(str):
+    file2 = open(str, 'r') 
+    a = 0.0
+    for line in file2:
+        a = float(line)
+        print(a)
+    file2.close()
+
+print_schedule_interp(r'C:\Users\user\Desktop\file1.txt')
