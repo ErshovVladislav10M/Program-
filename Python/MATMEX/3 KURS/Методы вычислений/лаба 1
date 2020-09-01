@@ -1,8 +1,16 @@
 import math
 
-#вычисление функции
-def f(x):
+#функция
+def f0(x):
 	return 8 * math.cos(x) - x - 6
+
+#1 производная
+def f1(x):
+	return -8 * math.sin(x) - 1
+
+#2 производная
+def f2(x):
+	return -8 * math.cos(x)
 
 #задание начальных данных
 A = -9.0
@@ -16,43 +24,85 @@ X1 = A
 X2 = A + H
 count = 0
 
-print('Численные методы решения нелинейных уравнений')
+print('Численные методы решения нелинейных уравнений' + '\n')
+print('Начальные данные')
 print('A = ' + str(A))
 print('B = ' + str(B))
 print('8 * cos(x) - x - 6')
-print('Эпсилон = ' + str(E))
+print('Эпсилон = ' + str(E)  + '\n')
 
 #отделение корней
 #списки для хранения концов отрезков
+print('Отделение корней')
 Ai = []
 Bi = []
 for i in range(N):
-	if(f(X1) * f(X2) <= 0):
+	if(f0(X1) * f0(X2) <= 0):
 		count += 1
 		Ai.append(X1)
 		Bi.append(X2)
 	X1 += H
 	X2 += H
 for i in range(len(Ai)):
-	print(str(Ai[i]) + ' ' + str(Bi[i]))
-print('Количество отрезков ' + str(count))
+	print('[' + str(Ai[i]) + ', ' + str(Bi[i]) + ']')
+print('Количество отрезков ' + str(count) + '\n')
 
 #уточнение корней
 
-#1)метод половинного деления
+#1)метод бисекции
 def metod1(A, B):
+	print('Метод бисекции')
 	#список для хранения корней
 	Xi = []
 	#список для хранения длин отрезков
 	delta_i = []
+	#список для хранения количества шагов
+	Ni = [0, 0, 0, 0]
 	for i in range(len(A)):
 		a = A[i]
 		b = B[i]
 		while(b - a > 2 * E):
 			c = (a + b) / 2
-			if(f(a) * f(c) <= 0):
+			if(f0(a) * f0(c) <= 0):
 				b = c
 			else:
 				a = c
+			Ni[i] += 1
 		Xi.append((a + b) / 2)
 		delta_i.append((b - a) / 2)
+	for i in range(len(A)):
+		print('Начальное приближение ' + str(A[i]))
+		print('Количество шагов ' + str(Ni[i]))
+		print('Приближенное решение ' + str(Xi[i]))
+		print('Длина отрезка ' + str(delta_i[i]))
+		print('Абсолютная невязка ' + str(f0(Xi[i])) + '\n')
+
+#2)метод Ньютона
+def metod2(A, B):
+	print('Метод Ньютона')
+	#список для хранения корней
+	Xi = []
+	#два числа для вычислений
+	a = 0.0
+	b = 0.0
+	#список для разницы двух последних приближений
+	K = []
+	#список для хранения количества шагов
+	Ni = [0, 0, 0, 0]
+	for i in range(len(A)):
+		a = A[i]
+		while(abs(b - a) >= E):
+			b = a - f0(a)/f1(a)
+			a = b
+			Ni[i] += 1
+		Xi.append(b)
+		K.append(abs(b - a)) 
+	for i in range(len(A)):
+		print('Начальное приближение ' + str(A[i]))
+		print('Количество шагов ' + str(Ni[i]))
+		print('Приближенное решение ' + str(Xi[i]))
+		print('Модуль разности между двумя последними приближениями ' + str(K[i]))
+		print('Абсолютная невязка ' + str(f0(Xi[i])) + '\n')
+
+metod1(Ai, Bi)
+metod2(Ai, Bi)
