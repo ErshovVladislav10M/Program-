@@ -1,0 +1,58 @@
+import math
+
+#вычисление функции
+def f(x):
+	return 8 * math.cos(x) - x - 6
+
+#задание начальных данных
+A = -9.0
+B = 1.0
+#эпсилон
+E = 0.0000001
+#количество отрезков в разбиении
+N = 100
+H = (B - A) / N
+X1 = A
+X2 = A + H
+count = 0
+
+print('Численные методы решения нелинейных уравнений')
+print('A = ' + str(A))
+print('B = ' + str(B))
+print('8 * cos(x) - x - 6')
+print('Эпсилон = ' + str(E))
+
+#отделение корней
+#списки для хранения концов отрезков
+Ai = []
+Bi = []
+for i in range(N):
+	if(f(X1) * f(X2) <= 0):
+		count += 1
+		Ai.append(X1)
+		Bi.append(X2)
+	X1 += H
+	X2 += H
+for i in range(len(Ai)):
+	print(str(Ai[i]) + ' ' + str(Bi[i]))
+print('Количество отрезков ' + str(count))
+
+#уточнение корней
+
+#1)метод половинного деления
+def metod1(A, B):
+	#список для хранения корней
+	Xi = []
+	#список для хранения длин отрезков
+	delta_i = []
+	for i in range(len(A)):
+		a = A[i]
+		b = B[i]
+		while(b - a > 2 * E):
+			c = (a + b) / 2
+			if(f(a) * f(c) <= 0):
+				b = c
+			else:
+				a = c
+		Xi.append((a + b) / 2)
+		delta_i.append((b - a) / 2)
