@@ -138,29 +138,32 @@ def metod4(A, B):
 	print('4)Метод секущих')
 	#список для хранения корней
 	Xi = []
-	#два числа для вычислений
+	#три числа для вычислений
 	a = 0.0
 	b = 0.0
+	c = 0.0
 	#список для разницы двух последних приближений
 	delta_i = []
 	#список для хранения количества шагов
 	Ni = [0, 0, 0, 0]
 	for i in range(len(A)):
 		a = A[i]
-		b = a - f0(a)/f1(A[i])
-		while(abs(b - a) >= E):
+		b = B[i]
+		c = b - f0(b)/(f0(b) - f0(a)) * (b - a) 
+		while(abs(c - b) >= E):
 			a = b
-			b = a - f0(a)/f1(A[i])
+			b = c
+			c = b - f0(b)/(f0(b) - f0(a)) * (b - a) 
 			Ni[i] += 1
-		Xi.append(b)
-		delta_i.append(abs(b - a))
+		Xi.append(c)
+		delta_i.append(abs(c - b))
 	for i in range(len(A)):
 		print('Начальное приближение ' + str(A[i]))
 		print('Количество шагов ' + str(Ni[i]))
 		print('Приближенное решение ' + str(Xi[i]))
 		print('Модуль разности между двумя последними приближениями ' + str(delta_i[i]))
 		print('Абсолютная невязка ' + str(f0(Xi[i])) + '\n')
-
 metod1(Ai, Bi)
 metod2(Ai, Bi)
 metod3(Ai, Bi)
+metod4(Ai, Bi)
