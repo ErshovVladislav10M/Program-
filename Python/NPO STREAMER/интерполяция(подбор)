@@ -111,23 +111,26 @@ def create_line(N_tot, height, y_max, color):
         A1.append(r + 0.0001)
 
     b = -0.29 / height / (1 + (17.5 - height) / 50)
-    #b1 = math.log(A1[3]/A1[0])/(A[3] - A[0])
-    a = A1[0] / math.exp(b*A[0])
-    #print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
+    a = 2.7 * height / math.exp(b*A[0])
+    #a1 = A1[0] / math.exp(b*A[0])
+    #print(str(height) + ' ' + str(a) + ' ' + str(a1))
     for i in range(50, 125, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
     
     b = -0.29 / height / (0.9 + (30 - height) / 100)
-    #b1 = math.log(A1[6]/A1[3])/(A[6] - A[3])
-    a = A1[3] / math.exp(b*A[3])
-    #print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
+    #print(str(height) + ' ' + str(A1[3]))
+    a = (1.5 + (height - 7.5)*3 / 2.5) / math.exp(b*A[3])
+    #a1 = A1[3] / math.exp(b*A[3])
+    #print(str(height) + ' ' + str(a) + ' ' + str(a1))
     for i in range(125, 200, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (0.7 + (50 - height) / 70)
-    #b1 = math.log(A1[9]/A1[6])/(A[9] - A[6])
+    a1 = 0.02 * math.exp(1.5 + 0.6*(height - 7.5)/2.5)
+    print(str(height) + ' ' + str(A1[6]) + ' ' + str(a1))
+    #a = (1.5 + (height - 7.5)*3 / 2.5) / math.exp(b*A[6])
     a = A1[6] / math.exp(b*A[6])
-    #print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
+    #print(str(height) + ' ' + str(a) + ' ' + str(a1))
     for i in range(200, 275, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
@@ -146,9 +149,9 @@ def create_line(N_tot, height, y_max, color):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (1 + (35 - height) / 20)
-    b1 = math.log(A1[18]/A1[15])/(A[18] - A[15])
+    #b1 = math.log(A1[18]/A1[15])/(A[18] - A[15])
     a = A1[15] / math.exp(b*A[15])
-    print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
+    #print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
     for i in range(425, 525, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
