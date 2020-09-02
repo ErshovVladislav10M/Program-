@@ -57,7 +57,9 @@ def metod1(A, B):
 	#список для хранения длин отрезков
 	delta_i = []
 	#список для хранения количества шагов
-	Ni = [0, 0, 0, 0]
+	Ni = []
+    for i in range(len(A)):
+        Ni.append(0)
 	for i in range(len(A)):
 		a = A[i]
 		b = B[i]
@@ -88,7 +90,9 @@ def metod2(A, B):
 	#список для разницы двух последних приближений
 	delta_i = []
 	#список для хранения количества шагов
-	Ni = [0, 0, 0, 0]
+	Ni = []
+    for i in range(len(A)):
+        Ni.append(0)
 	for i in range(len(A)):
 		a = A[i]
 		b = a - f0(a)/f1(a)
@@ -116,7 +120,9 @@ def metod3(A, B):
 	#список для разницы двух последних приближений
 	delta_i = []
 	#список для хранения количества шагов
-	Ni = [0, 0, 0, 0]
+	Ni = []
+    for i in range(len(A)):
+        Ni.append(0)
 	for i in range(len(A)):
 		a = A[i]
 		b = a - f0(a)/f1(A[i])
@@ -145,7 +151,9 @@ def metod4(A, B):
 	#список для разницы двух последних приближений
 	delta_i = []
 	#список для хранения количества шагов
-	Ni = [0, 0, 0, 0]
+	Ni = []
+    for i in range(len(A)):
+        Ni.append(0)
 	for i in range(len(A)):
 		a = A[i]
 		b = B[i]
