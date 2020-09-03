@@ -1,0 +1,141 @@
+#Вычисление количества отключений на 100 км в год
+#по алгоритмам А(стандарт IEEE) и B(LIOV-MC ideal groud)
+
+import random
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+#вероятность, что ток молнии не меньше данного
+def probability(current_strength):
+    return 1/(1 + (current_strength/31)**2.6)
+
+#вычисление y_min_i
+def y_min_i(height, cur_str):
+    r_s_i = 10 * cur_str**0.65
+    r_g_i = 0.9 * r_s_i
+    if(height >= r_g_i):
+        return r_s_i
+    else: 
+        return math.sqrt(r_s_i**2 - (r_g_i - height)**2)
+
+#вычисление y_max_i
+def y_max_i(CFO, height, cur_str):
+    return 30 * (cur_str * height)/(1.5 * CFO) * (1 + (0.4/math.sqrt(2)) * (1/math.sqrt(0.92)))
+
+#вычисление количства перекрытий на 100 км за год (A)
+def num_of_insulation_flashovers_A(CFO, height, N_g = 1):
+    sum = 0.0
+    for i in range(200):
+        if(y_max_i(CFO, height, i) > y_min_i(height, i)):
+            sum += (y_max_i(CFO, height, i) - y_min_i(height, i)) * (probability(i) - probability(i + 1))
+    return 0.2 * sum * N_g
+
+#вычисление количства перекрытий на 100 км за год (B)
+def num_of_insulation_flashovers_B(CFO, height):
+    if(CFO >= 50 and CFO < 125):
+        b = -0.29 / height / (1 + (17.5 - height) / 50)
+        a = 2.7 * height / math.exp(b*50)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 125 and CFO < 200):
+        b = -0.29 / height / (0.9 + (30 - height) / 100)
+        a1 = -0.0003*height*height*height + 0.022*height*height + 0.9142*height - 6.5613
+        a = a1 / math.exp(b*125)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 200 and CFO < 275):
+        b = -0.29 / height * (0.7 + (50 - height) / 70)
+        a1 = -0.0007*height*height*height + 0.0532*height*height - 0.5423*height + 1.4937
+        a = a1 / math.exp(b*200)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 275 and CFO < 350):
+        b = -0.29 / height * (1 + (30 - height) / 50)
+        a1 = -0.0002*height*height*height + 0.025*height*height - 0.4191*height + 1.9246
+        if(height < 10):
+            a1 = 0
+        a = a1 / math.exp(b*275)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 350 and CFO < 425):
+        b = -0.29 / height * (1 + (40 - height) / 50)
+        a1 = 0.00004*height*height*height + 0.0071*height*height - 0.1891*height + 1.1885
+        if(height < 12.5):
+            a1 = 0
+        a = a1 / math.exp(b*350)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 425 and CFO < 525):
+        b = -0.29 / height * (1 + (35 - height) / 20)
+        a1 = -0.00002*height*height*height + 0.0064*height*height - 0.1823*height + 1.3751
+        if(height < 15):
+            a1 = 0
+        a = a1 / math.exp(b*425)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+
+#Построение линий по алгоритму А
+def create_line_A(height, color, N_g = 1):
+    A = []
+    B = []
+    for i in range(50, 525, 25):
+        A.append(i)
+        B.append(math.log(num_of_insulation_flashovers_A(i, height, N_g) + 0.0001))
+    plt.plot(A, B, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров алг А')
+
+#Построение линий по алгоритму B
+def create_line_B(height, color, N_g = 1):
+    A = []
+    B = []
+    for i in range(50, 525, 25):
+        A.append(i)
+        B.append(num_of_insulation_flashovers_B(i, height))
+        #print(i)
+        #print(num_of_insulation_flashovers_B(i, height))
+    plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров алг В')
+    
+#вывод графика
+def print_schedule(height_A, height_B, N_g = 1):
+    #Оформление графика
+    plt.xlabel('CFO (kV)', fontsize = 14)
+    plt.ylabel('Flashovers/100km/yr', fontsize = 14)
+    plt.title('Число отключений от ИП на 100 км в год', fontsize = 15)
+    plt.ylim(-10, 6)
+    plt.xlim(30, 600)
+    for i in range(7):
+        plt.text(35, math.log(10**(2 - i)) + 0.2, str(10**(2 - i)))
+        plt.axhline(math.log(10**(2 - i)), color = 'lightgray', alpha = 0.25)
+    for i in range(50, 325, 25):
+        plt.axvline(i, color = 'lightgray', alpha = 0.25)
+    #Линии для height_B алгоритм B
+    for i in range(len(height_B)):
+        create_line_B(height_B[i], colors[i])
+    #Линии для height_A алгоритм A
+    for i in range(len(height_A)):
+        create_line_A(height_A[i], colors[i])
+    #его вывод
+    plt.legend(loc = 'best')
+    plt.show()
+
+#запуск
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
+heightA = []
+heightB = []
+print('Введите количество ВЛ для алгоритма А: ')
+N_A = int(input())
+for i in range(N_A):
+    print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма А: ')
+    heightA.append(int(input()))
+print('Введите количество ВЛ для алгоритма B: ')
+N_B = int(input())
+for i in range(N_B):
+    print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма B: ')
+    heightB.append(int(input()))
+print('Ввести свое значение CFO, да/нет?')
+str1 = input()
+if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
+    print('Введите значение CFO, kV: ')
+    CFO_in = int(input())
+    for i in range(len(heightA)):
+        print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма А при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_A(CFO_in, heightA[i])))
+    for i in range(len(heightB)):
+        print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма B при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_B(CFO_in, heightB[i])))
+print('Построить график для стандартного CFO, да/нет?')
+str1 = input()
+if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
+    print_schedule(heightA, heightB)
