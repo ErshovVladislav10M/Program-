@@ -70,6 +70,10 @@ def compute_y_n(y_max):
     U_n = random.uniform(0, 1)
     y_n.append(U_n * y_max)
 
+#вероятность, что ток молнии не меньше данного
+def probability(current_strength):
+    return 1/(1 + (current_strength/31)**2.6)
+
 #вычисление y_min_i
 def y_min_i(height, cur_str):
     r_s_i = 10 * cur_str**0.65
