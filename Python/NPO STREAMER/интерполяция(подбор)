@@ -111,47 +111,44 @@ def create_line(N_tot, height, y_max, color):
         A1.append(r + 0.0001)
 
     b = -0.29 / height / (1 + (17.5 - height) / 50)
-    a = 2.7 * height / math.exp(b*A[0])
-    #a1 = A1[0] / math.exp(b*A[0])
-    #print(str(height) + ' ' + str(a) + ' ' + str(a1))
+    a = 2.7 * height / math.exp(b*50)
     for i in range(50, 125, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
     
     b = -0.29 / height / (0.9 + (30 - height) / 100)
-    #print(str(height) + ' ' + str(A1[3]))
-    a = (1.5 + (height - 7.5)*3 / 2.5) / math.exp(b*A[3])
-    #a1 = A1[3] / math.exp(b*A[3])
-    #print(str(height) + ' ' + str(a) + ' ' + str(a1))
+    a1 = -0.0003*height*height*height + 0.022*height*height + 0.9142*height - 6.5613
+    a = a1 / math.exp(b*125)
     for i in range(125, 200, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (0.7 + (50 - height) / 70)
-    a1 = 0.02 * math.exp(1.5 + 0.6*(height - 7.5)/2.5)
-    print(str(height) + ' ' + str(A1[6]) + ' ' + str(a1))
-    #a = (1.5 + (height - 7.5)*3 / 2.5) / math.exp(b*A[6])
-    a = A1[6] / math.exp(b*A[6])
-    #print(str(height) + ' ' + str(a) + ' ' + str(a1))
+    a1 = -0.0007*height*height*height + 0.0532*height*height - 0.5423*height + 1.4937
+    a = a1 / math.exp(b*200)
     for i in range(200, 275, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (1 + (30 - height) / 50)
-    #b1 = math.log(A1[12]/A1[9])/(A[12] - A[9])
-    a = A1[9] / math.exp(b*A[9])
-    #print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
+    a1 = -0.0003*height*height*height + 0.0281*height*height - 0.4516*height + 2.0015
+    a = A1[9] / math.exp(b*275)
     for i in range(275, 350, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (1 + (40 - height) / 50)
-    #b1 = math.log(A1[15]/A1[12])/(A[15] - A[12])
-    a = A1[12] / math.exp(b*A[12])
-    #print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
+    a1 = 0.00004*height*height*height + 0.0071*height*height - 0.1891*height + 1.1885
+    if(height < 12.5):
+        a1 = 0
+    a = a1 / math.exp(b*350)
     for i in range(350, 425, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (1 + (35 - height) / 20)
-    #b1 = math.log(A1[18]/A1[15])/(A[18] - A[15])
-    a = A1[15] / math.exp(b*A[15])
-    #print(str(height) + ' ' + str(a) + ' ' + str(b) + ' ' + str(b1))
+    #file1 = open(r'C:\Users\user\Desktop\file1.txt', 'a')
+    #file1.write(str(A1[15]) + '\n')
+    #file1.close()
+    a1 = -0.00002*height*height*height + 0.0064*height*height - 0.1823*height + 1.3751
+    if(height < 15):
+        a1 = 0
+    a = a1 / math.exp(b*425)
     for i in range(425, 525, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
@@ -179,5 +176,5 @@ def print_schedule(N_tot, y_max, height):
 #запуск 
 #30000 молний с y_max = 0.6km
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
-height1 = [7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30]
+height1 = [8.75, 11.25, 13.75, 16.25, 18.75, 21.25, 23.75, 26.25, 28.75]
 print_schedule(30000, 0.6, height1)
