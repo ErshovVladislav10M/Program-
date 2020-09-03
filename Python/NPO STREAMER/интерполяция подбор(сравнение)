@@ -128,7 +128,9 @@ def create_line(N_tot, height, y_max, color):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (1 + (30 - height) / 50)
-    a1 = -0.0003*height*height*height + 0.0281*height*height - 0.4516*height + 2.0015
+    a1 = -0.0002*height*height*height + 0.025*height*height - 0.4191*height + 1.9246
+    if(height < 10):
+        a1 = 0
     a = a1 / math.exp(b*275)
     for i in range(275, 350, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
@@ -142,9 +144,7 @@ def create_line(N_tot, height, y_max, color):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (1 + (35 - height) / 20)
-    #file1 = open(r'C:\Users\user\Desktop\file1.txt', 'a')
-    #file1.write(str(A1[15]) + '\n')
-    #file1.close()
+    
     a1 = -0.00002*height*height*height + 0.0064*height*height - 0.1823*height + 1.3751
     if(height < 15):
         a1 = 0
@@ -176,5 +176,5 @@ def print_schedule(N_tot, y_max, height):
 #запуск 
 #30000 молний с y_max = 0.6km
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
-height1 = [8.75, 11.25, 13.75, 16.25, 18.75, 21.25, 23.75, 26.25, 28.75]
+height1 = [7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30]
 print_schedule(30000, 0.6, height1)
