@@ -100,7 +100,7 @@ def print_schedule(height_A, height_B, N_g = 1):
     for i in range(7):
         plt.text(35, math.log(10**(2 - i)) + 0.2, str(10**(2 - i)))
         plt.axhline(math.log(10**(2 - i)), color = 'lightgray', alpha = 0.25)
-    for i in range(50, 325, 25):
+    for i in range(50, 625, 25):
         plt.axvline(i, color = 'lightgray', alpha = 0.25)
     #Линии для height_B алгоритм B
     for i in range(len(height_B)):
@@ -120,17 +120,17 @@ print('Введите количество ВЛ для алгоритма А: ')
 N_A = int(input())
 for i in range(N_A):
     print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма А: ')
-    heightA.append(int(input()))
+    heightA.append(float(input()))
 print('Введите количество ВЛ для алгоритма B: ')
 N_B = int(input())
 for i in range(N_B):
     print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма B: ')
-    heightB.append(int(input()))
+    heightB.append(float(input()))
 print('Ввести свое значение CFO, да/нет?')
 str1 = input()
 if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
     print('Введите значение CFO, kV: ')
-    CFO_in = int(input())
+    CFO_in = float(input())
     for i in range(len(heightA)):
         print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма А при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_A(CFO_in, heightA[i])))
     for i in range(len(heightB)):
