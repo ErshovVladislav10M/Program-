@@ -32,127 +32,109 @@ def metod0(A, B, N):
 
 #УТОЧНЕНИЕ КОРНЕЙ
 #1)метод бисекции
-def metod1(A, B):
+def metod1(a, b):
 	print('1)Метод бисекции')
-	#список для хранения корней
-	Xi = []
-	#список для хранения длин отрезков
-	delta_i = []
-	#список для хранения количества шагов
-	Ni = []
-	for i in range(len(A)):
-	  Ni.append(0)
-	for i in range(len(A)):
-		a = A[i]
-		b = B[i]
-		while(b - a > 2 * E):
-			c = (a + b) / 2
-			if(f0(a) * f0(c) <= 0):
-				b = c
-			else:
-				a = c
-			Ni[i] += 1
-		Xi.append((a + b) / 2)
-		delta_i.append((b - a) / 2)
-	for i in range(len(A)):
-		print('Начальное приближение ' + str(A[i]))
-		print('Количество шагов ' + str(Ni[i]))
-		print('Приближенное решение ' + str(Xi[i]))
-		print('Длина отрезка ' + str(delta_i[i]))
-		print('Абсолютная невязка ' + str(f0(Xi[i])) + '\n')
+	print('Начальное приближение ' + str(a))
+	#Корень
+	X = 0.0
+	#Длина отрезка
+	delta = 0.0
+	#Количество шагов
+	N = 0
+	while(b - a > 2 * E):
+		c = (a + b) / 2
+		if(f0(a) * f0(c) <= 0):
+			b = c
+		else:
+			a = c
+		N += 1
+	X = (a + b) / 2
+	delta = (b - a) / 2
+	print('Количество шагов ' + str(N))
+	print('Приближенное решение ' + str(X))
+	print('Длина отрезка ' + str(delta))
+	print('Абсолютная невязка ' + str(f0(X)) + '\n')
 
 #2)метод Ньютона
-def metod2(A, B):
+def metod2(a, b):
 	print('2)Метод Ньютона')
-	#список для хранения корней
-	Xi = []
-	#два числа для вычислений
-	a = 0.0
-	b = 0.0
-	#список для разницы двух последних приближений
-	delta_i = []
-	#список для хранения количества шагов
-	Ni = []
-	for i in range(len(A)):
-	  Ni.append(0)
-	for i in range(len(A)):
-		a = A[i]
+	print('Начальное приближение ' + str((a + b)/2))
+	#Корень
+	X = 0.0
+	#Длина отрезка
+	delta = 0.0
+	#Количество шагов
+	N = 1
+	if(f0((a + b)/2) == 0):
+		N = 0
+	a = (a + b)/2
+	b = a - f0(a)/f1(a)
+	while(abs(b - a) >= E):
+		a = b
 		b = a - f0(a)/f1(a)
-		while(abs(b - a) >= E):
-			a = b
-			b = a - f0(a)/f1(a)
-			Ni[i] += 1
-		Xi.append(b)
-		delta_i.append(abs(b - a))
-	for i in range(len(A)):
-		print('Начальное приближение ' + str(A[i]))
-		print('Количество шагов ' + str(Ni[i]))
-		print('Приближенное решение ' + str(Xi[i]))
-		print('Модуль разности между двумя последними приближениями ' + str(delta_i[i]))
-		print('Абсолютная невязка ' + str(f0(Xi[i])) + '\n')
+		N += 1
+	X = b
+	delta = abs(b - a)
+	print('Количество шагов ' + str(N))
+	print('Приближенное решение ' + str(X))
+	print('Модуль разности между двумя последними приближениями ' + str(delta))
+	print('Абсолютная невязка ' + str(f0(X)) + '\n')
 
 #3)метод Ньютона модифицированный
-def metod3(A, B):
+def metod3(a, b):
 	print('3)Метод Ньютона модифицированный')
-	#список для хранения корней
-	Xi = []
-	#два числа для вычислений
-	a = 0.0
-	b = 0.0
-	#список для разницы двух последних приближений
-	delta_i = []
-	#список для хранения количества шагов
-	Ni = []
-	for i in range(len(A)):
-	  Ni.append(0)
-	for i in range(len(A)):
-		a = A[i]
-		b = a - f0(a)/f1(A[i])
-		while(abs(b - a) >= E):
-			a = b
-			b = a - f0(a)/f1(A[i])
-			Ni[i] += 1
-		Xi.append(b)
-		delta_i.append(abs(b - a))
-	for i in range(len(A)):
-		print('Начальное приближение ' + str(A[i]))
-		print('Количество шагов ' + str(Ni[i]))
-		print('Приближенное решение ' + str(Xi[i]))
-		print('Модуль разности между двумя последними приближениями ' + str(delta_i[i]))
-		print('Абсолютная невязка ' + str(f0(Xi[i])) + '\n')
+	print('Начальное приближение ' + str((a + b)/2))
+	#Корень
+	X = 0.0
+	#Длина отрезка
+	delta = 0.0
+	#Количество шагов
+	N = 1
+	if(f0((a + b)/2) == 0):
+		N = 0
+	a1 = (a + b)/2
+	a = (a + b)/2
+	b = a - f0(a)/f1(a1)
+	while(abs(b - a) >= E):
+		a = b
+		b = a - f0(a)/f1(a1)
+		N += 1
+	X = b
+	delta = abs(b - a)
+	print('Количество шагов ' + str(N))
+	print('Приближенное решение ' + str(X))
+	print('Модуль разности между двумя последними приближениями ' + str(delta))
+	print('Абсолютная невязка ' + str(f0(X)) + '\n')
 
 #4)метод секущих
-def metod4(A, B):
+def metod4(a, b):
 	print('4)Метод секущих')
-	#список для хранения корней
-	Xi = []
-	#три числа для вычислений
-	a = 0.0
-	b = 0.0
-	c = 0.0
-	#список для разницы двух последних приближений
-	delta_i = []
-	#список для хранения количества шагов
-	Ni = []
-	for i in range(len(A)):
-	  Ni.append(0)
-	for i in range(len(A)):
-		a = A[i]
-		b = B[i]
+	print('Начальное приближение ' + str(a))
+	#Корень
+	X = 0.0
+	#Длина отрезка
+	delta = 0.0
+	#Количество шагов
+	N = 2
+	if(f0(a) == 0):
+		N = 0
+		b = a
+		c = a
+	else:
+		if(f0(b) == 0):
+			N = 1
 		c = b - f0(b)/(f0(b) - f0(a)) * (b - a) 
-		while(abs(c - b) >= E):
-			a = b
-			b = c
-			c = b - f0(b)/(f0(b) - f0(a)) * (b - a) 
-			Ni[i] += 1
-		Xi.append(c)
-		delta_i.append(abs(c - b))
-	for i in range(len(A)):
-		print('Начальное приближение ' + str(A[i]))
-		print('Количество шагов ' + str(Ni[i]))
-		print('Приближенное решение ' + str(Xi[i]))
-		print('Модуль разности между двумя последними приближениями ' + str(delta_i[i]))
-		print('Абсолютная невязка ' + str(f0(Xi[i])) + '\n')
+	while(abs(c - b) >= E):
+		a = b
+		b = c
+		c = b - f0(b)/(f0(b) - f0(a)) * (b - a) 
+		N += 1
+	X = c
+	delta = abs(c - b)
+	print('Количество шагов ' + str(N))
+	print('Приближенное решение ' + str(X))
+	print('Модуль разности между двумя последними приближениями ' + str(delta))
+	print('Абсолютная невязка ' + str(f0(X)) + '\n')
 
 #задание начальных данных
 A = -8.0
@@ -174,7 +156,9 @@ print('Погрешность = ' + str(E)  + '\n')
 
 #запуск
 metod0(A, B, N)
-metod1(Ai, Bi)
-metod2(Ai, Bi)
-metod3(Ai, Bi)
-metod4(Ai, Bi)
+for i in range(len(Ai)):
+	print('Корень номер ' + str(i + 1))
+	metod1(Ai[i], Bi[i])
+	metod2(Ai[i], Bi[i])
+	metod3(Ai[i], Bi[i])
+	metod4(Ai[i], Bi[i])
