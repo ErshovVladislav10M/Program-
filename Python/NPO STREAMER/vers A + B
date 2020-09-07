@@ -161,8 +161,9 @@ def print_schedule(N_tot, y_max, height_A, height_B, N_g = 1):
     plt.legend(loc = 'best')
     plt.show()
 
+#запуск
 #набор цветов для построения линий на графике
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
 heightA = []
 heightB = []
 print('Введите количество молний: ')
