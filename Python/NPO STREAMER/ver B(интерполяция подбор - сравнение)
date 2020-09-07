@@ -156,8 +156,8 @@ def create_line(N_tot, height, y_max, color):
     for i in range(425, 525, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
-    plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров')
-    plt.plot(A, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров')
+    plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров по алгоритму')
+    plt.plot(A, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров по приближенной функции')
 
 #вывод графика
 def print_schedule(N_tot, y_max, height):
