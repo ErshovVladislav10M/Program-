@@ -40,11 +40,15 @@ def num_of_insulation_flashovers_B(CFO, height):
     if(CFO >= 125 and CFO < 200):
         b = -0.29 / height / (0.9 + (30 - height) / 100)
         a1 = -0.0003*height*height*height + 0.022*height*height + 0.9142*height - 6.5613
+        if(height < 7.5):
+            a1 = 0
         a = a1 / math.exp(b*125)
         return math.log(a*math.exp(b*CFO) + 0.0001)
     if(CFO >= 200 and CFO < 275):
         b = -0.29 / height * (0.7 + (50 - height) / 70)
         a1 = -0.0007*height*height*height + 0.0532*height*height - 0.5423*height + 1.4937
+        if(height < 7.5):
+            a1 = 0
         a = a1 / math.exp(b*200)
         return math.log(a*math.exp(b*CFO) + 0.0001)
     if(CFO >= 275 and CFO < 350):
