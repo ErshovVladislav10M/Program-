@@ -1,5 +1,5 @@
 #Вычисление количества отключений на 100 км в год
-#по алгоритмам А(стандарт IEEE) и B(LIOV-MC ideal groud)
+#по алгоритмам А(стандарт IEEE) и B(LIOV-MC ideal groud - приближенная функция)
 
 import random
 import math
@@ -117,6 +117,7 @@ def print_schedule(height_A, height_B, N_g = 1):
     plt.show()
 
 #запуск
+#набор цветов для построения линий на графике
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
 heightA = []
 heightB = []
