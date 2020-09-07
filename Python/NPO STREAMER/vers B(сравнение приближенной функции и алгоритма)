@@ -1,3 +1,6 @@
+#Вычисление количества отключений на 100 км в год
+#по алгоритмам B(LIOV-MC ideal groud) и приближенной функции
+
 import random
 import math
 import matplotlib.pyplot as plt
@@ -102,42 +105,42 @@ def num_of_insulation_flashovers_fun(CFO, height):
     if(CFO >= 50 and CFO < 125):
         b = -0.29 / height / (1 + (17.5 - height) / 50)
         a = 2.7 * height / math.exp(b*50)
-        return math.log(a*math.exp(b*CFO) + 0.0001)
+        return a*math.exp(b*CFO)
     if(CFO >= 125 and CFO < 200):
         b = -0.29 / height / (0.9 + (30 - height) / 100)
         a1 = -0.0003*height*height*height + 0.022*height*height + 0.9142*height - 6.5613
         if(height < 7.5):
             a1 = 0
         a = a1 / math.exp(b*125)
-        return math.log(a*math.exp(b*CFO) + 0.0001)
+        return a*math.exp(b*CFO)
     if(CFO >= 200 and CFO < 275):
         b = -0.29 / height * (0.7 + (50 - height) / 70)
         a1 = -0.0007*height*height*height + 0.0532*height*height - 0.5423*height + 1.4937
         if(height < 7.5):
             a1 = 0
         a = a1 / math.exp(b*200)
-        return math.log(a*math.exp(b*CFO) + 0.0001)
+        return a*math.exp(b*CFO)
     if(CFO >= 275 and CFO < 350):
         b = -0.29 / height * (1 + (30 - height) / 50)
         a1 = -0.0002*height*height*height + 0.025*height*height - 0.4191*height + 1.9246
         if(height < 10):
             a1 = 0
         a = a1 / math.exp(b*275)
-        return math.log(a*math.exp(b*CFO) + 0.0001)
+        return a*math.exp(b*CFO)
     if(CFO >= 350 and CFO < 425):
         b = -0.29 / height * (1 + (40 - height) / 50)
         a1 = 0.00004*height*height*height + 0.0071*height*height - 0.1891*height + 1.1885
         if(height < 12.5):
             a1 = 0
         a = a1 / math.exp(b*350)
-        return math.log(a*math.exp(b*CFO) + 0.0001)
+        return a*math.exp(b*CFO)
     if(CFO >= 425 and CFO < 525):
         b = -0.29 / height * (1 + (35 - height) / 20)
         a1 = -0.00002*height*height*height + 0.0064*height*height - 0.1823*height + 1.3751
         if(height < 15):
             a1 = 0
         a = a1 / math.exp(b*425)
-        return math.log(a*math.exp(b*CFO) + 0.0001)
+        return a*math.exp(b*CFO)
 
 #вычисление количства перекрытий на 100 км за год (алгоритм B)
 def num_of_insulation_flashovers(CFO, height, N_tot, y_max, N_g = 1):
@@ -152,7 +155,7 @@ def create_line(N_tot, height, y_max, color):
     for i in range(50, 525, 25):
         A.append(i)
         B.append(math.log(num_of_insulation_flashovers(i, height, N_tot, y_max) + 0.0001))
-        B1.append(num_of_insulation_flashovers_fun(i, height))
+        B1.append(math.log(num_of_insulation_flashovers_fun(i, height) + 0.0001))
 
     plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров по алгоритму')
     plt.plot(A, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров по приближенной функции')
