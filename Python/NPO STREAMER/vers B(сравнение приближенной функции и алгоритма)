@@ -97,92 +97,111 @@ def check_lightn(CFO, height):
                 N += 1
     return N
 
-#вычисление количства перекрытий на 100 км за год (B)
+#вычисление количства перекрытий на 100 км за год (приближенная функция)
+def num_of_insulation_flashovers_fun(CFO, height):
+    if(CFO >= 50 and CFO < 125):
+        b = -0.29 / height / (1 + (17.5 - height) / 50)
+        a = 2.7 * height / math.exp(b*50)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 125 and CFO < 200):
+        b = -0.29 / height / (0.9 + (30 - height) / 100)
+        a1 = -0.0003*height*height*height + 0.022*height*height + 0.9142*height - 6.5613
+        if(height < 7.5):
+            a1 = 0
+        a = a1 / math.exp(b*125)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 200 and CFO < 275):
+        b = -0.29 / height * (0.7 + (50 - height) / 70)
+        a1 = -0.0007*height*height*height + 0.0532*height*height - 0.5423*height + 1.4937
+        if(height < 7.5):
+            a1 = 0
+        a = a1 / math.exp(b*200)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 275 and CFO < 350):
+        b = -0.29 / height * (1 + (30 - height) / 50)
+        a1 = -0.0002*height*height*height + 0.025*height*height - 0.4191*height + 1.9246
+        if(height < 10):
+            a1 = 0
+        a = a1 / math.exp(b*275)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 350 and CFO < 425):
+        b = -0.29 / height * (1 + (40 - height) / 50)
+        a1 = 0.00004*height*height*height + 0.0071*height*height - 0.1891*height + 1.1885
+        if(height < 12.5):
+            a1 = 0
+        a = a1 / math.exp(b*350)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+    if(CFO >= 425 and CFO < 525):
+        b = -0.29 / height * (1 + (35 - height) / 20)
+        a1 = -0.00002*height*height*height + 0.0064*height*height - 0.1823*height + 1.3751
+        if(height < 15):
+            a1 = 0
+        a = a1 / math.exp(b*425)
+        return math.log(a*math.exp(b*CFO) + 0.0001)
+
+#вычисление количства перекрытий на 100 км за год (алгоритм B)
 def num_of_insulation_flashovers(CFO, height, N_tot, y_max, N_g = 1):
     N = check_lightn(CFO, height)
     return 200 * N/N_tot * N_g * y_max
 
-#Построение линий
+#Построение линий по алгоритму
 def create_line(N_tot, height, y_max, color):
     A = []
     B = []
-    A1 = []
     B1 = []
     for i in range(50, 525, 25):
         A.append(i)
-        r = num_of_insulation_flashovers(i, height, N_tot, y_max)
-        B.append(math.log(r + 0.0001))
-        A1.append(r + 0.0001)
-
-    b = -0.29 / height / (1 + (17.5 - height) / 50)
-    a = 2.7 * height / math.exp(b*50)
-    for i in range(50, 125, 25):
-        B1.append(math.log(a*math.exp(b*i) + 0.0001))
-    
-    b = -0.29 / height / (0.9 + (30 - height) / 100)
-    a1 = -0.0003*height*height*height + 0.022*height*height + 0.9142*height - 6.5613
-    if(height < 7.5):
-        a1 = 0
-    a = a1 / math.exp(b*125)
-    for i in range(125, 200, 25):
-        B1.append(math.log(a*math.exp(b*i) + 0.0001))
-
-    b = -0.29 / height * (0.7 + (50 - height) / 70)
-    a1 = -0.0007*height*height*height + 0.0532*height*height - 0.5423*height + 1.4937
-    if(height < 7.5):
-        a1 = 0
-    a = a1 / math.exp(b*200)
-    for i in range(200, 275, 25):
-        B1.append(math.log(a*math.exp(b*i) + 0.0001))
-
-    b = -0.29 / height * (1 + (30 - height) / 50)
-    a1 = -0.0002*height*height*height + 0.025*height*height - 0.4191*height + 1.9246
-    if(height < 10):
-        a1 = 0
-    a = a1 / math.exp(b*275)
-    for i in range(275, 350, 25):
-        B1.append(math.log(a*math.exp(b*i) + 0.0001))
-
-    b = -0.29 / height * (1 + (40 - height) / 50)
-    a1 = 0.00004*height*height*height + 0.0071*height*height - 0.1891*height + 1.1885
-    if(height < 12.5):
-        a1 = 0
-    a = a1 / math.exp(b*350)
-    for i in range(350, 425, 25):
-        B1.append(math.log(a*math.exp(b*i) + 0.0001))
-
-    b = -0.29 / height * (1 + (35 - height) / 20)
-    
-    a1 = -0.00002*height*height*height + 0.0064*height*height - 0.1823*height + 1.3751
-    if(height < 15):
-        a1 = 0
-    a = a1 / math.exp(b*425)
-    for i in range(425, 525, 25):
-        B1.append(math.log(a*math.exp(b*i) + 0.0001))
+        B.append(math.log(num_of_insulation_flashovers(i, height, N_tot, y_max) + 0.0001))
+        B1.append(num_of_insulation_flashovers_fun(i, height))
 
     plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров по алгоритму')
     plt.plot(A, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров по приближенной функции')
 
 #вывод графика
 def print_schedule(N_tot, y_max, height):
-    create_lightn(N_tot, y_max)
     #Линии для height[i]
     for i in range(len(height)):
         create_line(N_tot, height[i], y_max, colors[i])
     #Оформление графика
     plt.xlabel('CFO (kV)', fontsize = 14)
     plt.ylabel('Flashovers/100km/yr', fontsize = 14)
-    plt.title('Schedule', fontsize = 15)
+    plt.title('Число отключений от ИП на 100 км в год', fontsize = 15)
     plt.grid()
-    #plt.ylim(-10, 6)
-    #plt.xlim(30, 600)
+    plt.ylim(-10, 6)
+    plt.xlim(30, 600)
     for i in range(7):
         plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
     plt.legend(loc = 'best')
     plt.show()
 
-#запуск 
-#30000 молний с y_max = 0.6km
+#запуск
+#набор цветов для построения линий на графике
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
-height1 = [7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30]
-print_schedule(30000, 0.6, height1)
+heightB = []
+print('Введите количество молний: ')
+lightn_N = int(input())
+print('Введите количество ВЛ для сравнения алгоритма B и приближенной функции: ')
+N_B = int(input())
+for i in range(N_B):
+    print('Введите высоту ВЛ ' + str(i + 1) + ' для алгоритма B: ')
+    heightB.append(int(input()))
+t = 0
+print('Ввести свое значение CFO, да/нет?')
+str1 = input()
+if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
+    print('Введите значение CFO, kV: ')
+    CFO_in = int(input())
+    print('Вычисление')
+    create_lightn(lightn_N, 0.6)
+    t = 1
+    for i in range(len(heightB)):
+        print('Колиство отключений ВЛ ' + str(i + 1) + ' для приближенной функции при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers_fun(CFO_in, heightB[i])))
+    for i in range(len(heightB)):
+        print('Колиство отключений ВЛ ' + str(i + 1) + ' для алгоритма B при ' + str(CFO_in) + ': ' + str(num_of_insulation_flashovers(CFO_in, heightB[i], lightn_N, 0.6)))
+print('Построить график для стандартного CFO, да/нет?')
+str1 = input()
+if(str1 == 'Да' or str1 == 'да' or str1 == 'ДА'):
+    if(t == 0):
+        print('Вычисление')
+        create_lightn(lightn_N, 0.6)
+    print_schedule(lightn_N, 0.6, heightB)
