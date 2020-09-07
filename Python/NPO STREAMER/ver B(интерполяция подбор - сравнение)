@@ -117,12 +117,16 @@ def create_line(N_tot, height, y_max, color):
     
     b = -0.29 / height / (0.9 + (30 - height) / 100)
     a1 = -0.0003*height*height*height + 0.022*height*height + 0.9142*height - 6.5613
+    if(height < 7.5):
+        a1 = 0
     a = a1 / math.exp(b*125)
     for i in range(125, 200, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
 
     b = -0.29 / height * (0.7 + (50 - height) / 70)
     a1 = -0.0007*height*height*height + 0.0532*height*height - 0.5423*height + 1.4937
+    if(height < 7.5):
+        a1 = 0
     a = a1 / math.exp(b*200)
     for i in range(200, 275, 25):
         B1.append(math.log(a*math.exp(b*i) + 0.0001))
