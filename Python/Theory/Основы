@@ -54,5 +54,11 @@ def multiply (a, b):
 operation = multiply
 print(operation (2,5)) #10
 
+#можно вернуть несколько значений
+def fun2():
+  return 1, 2
+#использование ее результатов
+i, j = fun2()
+
 #null
 print(None)
