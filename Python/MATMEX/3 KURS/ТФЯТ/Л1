@@ -1,0 +1,19 @@
+#Python:
+
+import math
+
+def fun(k):
+    n = -1/2 + math.sqrt(1 / 4 + 2 * k) + 2
+    n1 = int(n)
+    #если n - целое
+    if(n == n1):
+        return 1, n1 - 2
+    #n - не целое
+    else:
+        j = int(k - (n1 - 1) * (n1 - 2) / 2)
+        #print(str(k) + ' ' + str(n1))
+        i = int(n1 - j)
+        return i, j
+
+I, J = fun(2)
+print(str(I) + ' ' + str(J))
