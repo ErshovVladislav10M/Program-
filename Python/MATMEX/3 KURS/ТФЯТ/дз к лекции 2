@@ -1,0 +1,78 @@
+file = open(r'C:\Users\user\Desktop\file.txt', 'r')
+str1 = file.read()
+
+Out = []
+i = -1
+Neterminal = []
+neterminal = 11
+Terminal = []
+terminal = 51
+Semantika = []
+semantika = 101
+while (i < len(str1) - 7):
+    i += 1
+    c = str1[i]
+    if(c == ':'):
+        Out.append(1)
+        continue
+    if(c == '('):
+        Out.append(2)
+        continue
+    if(c == ')'):
+        Out.append(3)
+        continue
+    if(c == '.'):
+        Out.append(4)
+        continue
+    if(c == '*'):
+        Out.append(5)
+        continue
+    if(c == ';'):
+        Out.append(6)
+        continue
+    if(c == ','):
+        Out.append(7)
+        continue
+    if(c == '#'):
+        Out.append(8)
+        continue
+    if(c == '['):
+        Out.append(9)
+        continue
+    if(c == ']'):
+        Out.append(10)
+        continue
+    if(c == '$'):
+        i += 1
+        c = str1[i]
+        while(str1[i] != ' '):
+            i += 1
+            c += str1[i]
+        Semantika.append(c)
+        Out.append(semantika)
+        semantika += 1
+        continue
+    if(c == "'"):
+        i += 1
+        c = str1[i]
+        while(str1[i] != "'"):
+            i += 1
+            c += str1[i]
+        Out.append(terminal)
+        terminal += 1
+        continue
+    if(ord(c) >= 97 and ord(c) <= 122):
+        while(ord(str1[i]) >= 97 and ord(str1[i]) <= 122):
+            i += 1
+            c += str1[i]
+        Out.append(terminal)
+        terminal += 1
+        continue
+
+Out.append(1000)
+
+
+
+print(str1)
+print(len(str1))
+print(Out)
