@@ -95,7 +95,6 @@ def check_lightn(CFO, height):
         if(y_min_i(height, I_p_n[i]) < y_max_i(CFO, height, I_p_n[i])):
             if(y_n[i] <= y_max_i(CFO, height, I_p_n[i]) and y_n[i] >= y_min_i(height, I_p_n[i])):
                 N += 1
-    #print(N)
     return N
 
 #вычисление количства перекрытий на 100 км за год (B)
@@ -109,7 +108,6 @@ def create_line(N_tot, height, y_max, color):
     B = []
     for i in range(50, 525, 25):
         A.append(i)
-        #print(num_of_insulation_flashovers(i, height, N_tot, y_max))
         B.append(math.log(num_of_insulation_flashovers(i, height, N_tot, y_max) + 0.0001))
     plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров')
 
