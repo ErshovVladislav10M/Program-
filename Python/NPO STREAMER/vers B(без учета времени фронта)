@@ -27,25 +27,29 @@ def time_median1(I_p): #time_median*
 def time_sigma1(): #time_sigma*
     return math.log(time_sigma) * math.sqrt(1 - p**2) 
 
-def fun1(value, median, sigma):
+#Плотность логнормального распределения
+def p_lognorm(value, median, sigma):
     a1 = 1/(math.sqrt(2 * math.pi) * value * sigma)
     a2 = math.exp(-(math.log(value) - math.log(median))**2/(2 * sigma**2)) 
     return a1 * a2
 
-def fun2(median, sigma):
+#Нахождение медианного значения
+def mod_p(median, sigma):
        return math.exp(math.log(median) - sigma**2)
 
-def K_i():
-    return fun1(fun2(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
+#Максимум плотности для тока молнии
+def max_p_i():
+    return p_lognorm(mod_p(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
 
-def K_t(I_p):
-    return fun1(fun2(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
+#Максимум плотности для времени фронта
+def max_p_t(I_p):
+    return p_lognorm(mod_p(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
 
 #вычисление I_p_n
 def compute_I_p_n():
     I_p = 1 + (200 - 1) * random.uniform(0, 1)
     Z = random.uniform(0, 1)
-    while Z >= fun1(I_p, cur_str_median, cur_str_sigma)/K_i():
+    while Z >= p_lognorm(I_p, cur_str_median, cur_str_sigma)/max_p_i():
         I_p = 1 + (200 - 1) * random.uniform(0, 1)
         Z = random.uniform(0, 1)
     I_p_n.append(I_p)
@@ -54,7 +58,7 @@ def compute_I_p_n():
 def compute_t_f_n(I_p):
     t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
     Z = random.uniform(0, 1)
-    while Z >= fun1(t_f, time_median1(I_p), time_sigma1())/K_t(I_p):
+    while Z >= p_lognorm(t_f, time_median1(I_p), time_sigma1())/max_p_t(I_p):
         t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
         Z = random.uniform(0, 1)
     t_f_n.append(t_f)
@@ -103,7 +107,7 @@ def num_of_insulation_flashovers(CFO, height, N_tot, y_max, N_g = 1):
 def create_line(N_tot, height, y_max, color):
     A = []
     B = []
-    for i in range(50, 325, 25):
+    for i in range(50, 525, 25):
         A.append(i)
         #print(num_of_insulation_flashovers(i, height, N_tot, y_max))
         B.append(math.log(num_of_insulation_flashovers(i, height, N_tot, y_max) + 0.0001))
@@ -121,7 +125,7 @@ def print_schedule(N_tot, y_max, height):
     plt.title('Schedule', fontsize = 15)
     plt.grid()
     plt.ylim(-10, 6)
-    plt.xlim(30, 330)
+    plt.xlim(30, 530)
     for i in range(7):
         plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
     plt.legend(loc = 'best')
@@ -129,6 +133,6 @@ def print_schedule(N_tot, y_max, height):
 
 #запуск для 10, 15, 20 метровой линии
 #30000 молний с y_max = 0.6km
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-height1 = [10, 15, 20]
-print_schedule(30000, 0.6, height1)
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
+height_of_line = [10, 15, 20]
+print_schedule(30000, 0.6, height_of_line)
