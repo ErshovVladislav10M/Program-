@@ -1,0 +1,76 @@
+import math
+
+#функция вычисления коэффицента E_s
+def compute_E_s(num_flashovers, length, max_num_flashovers):
+    E_s = []
+    for i in range(len(num_flashovers)):
+        E_s.append(num_flashovers[i] / max_num_flashovers * length)
+    return E_s
+
+#функция вычисления коэффицента delta_E_s
+def compute_delta_E_s(E_s):
+    delta_E_s = [0]
+    for i in range(len(E_s) - 1):
+        delta_E_s.append((E_s[0] - E_s[i + 1]) / (i + 1))
+    return delta_E_s
+
+#нахождения индекса максимума в двумерном списке
+def find_max_index(list2):
+    max = 0.0
+    i1 = 0
+    j1 = 0
+    for i in range(len(list2)):
+        for j in range(len(list2[i])):
+            if (max < list2[i][j]):
+                max = list2[i][j]
+                i1 = i
+                j1 = j
+    return i1, j1
+
+#нахождения максимума в двумерном списке
+def find_max(list2):
+    max = 0.0
+    for i in range(len(list2)):
+        for j in range(len(list2[i])):
+            if (max < list2[i][j]):
+                max = list2[i][j]
+    return max
+
+#изменение списка delta_E_s после выбора постановки разрядников
+def change_delta_E_s(E_s, delta_E_s, i):
+    for j in range(i + 1):
+        delta_E_s[j] = 0.0
+    for j in range(len(E_s) - i - 1):
+        delta_E_s[j + i + 1] = (E_s[i] - E_s[j + i + 1]) / (j + 1) 
+    return delta_E_s
+
+#функция оптимального выбора для постановки разрядниоков
+def compute_optimal_choice(num_flashovers, span_length):
+    E = []
+    delta_E = []
+    answer = []
+    for i in range(len(num_flashovers)):
+        E_s = compute_E_s(num_flashovers[i], span_length[i], find_max(num_flashovers))
+        delta_E_s = compute_delta_E_s(E_s)
+        E.append(E_s)
+        delta_E.append(delta_E_s)
+    print(delta_E)
+    while (find_max(delta_E) > 0):
+        k, l = find_max_index(delta_E)
+        answer.append(str(k + 1) + str(l))
+        delta_E[k] = change_delta_E_s(E[k], delta_E[k], l)
+        print(delta_E)
+    print(answer)
+
+#входные данные
+#длины пролетов
+span_length = [100, 400, 500]
+#количества отключений для пролетов
+num_flashovers_1 = [10, 7.5, 4.5, 2.3]
+num_flashovers_2 = [6, 4, 1.5, 1]
+num_flashovers_3 = [4, 2, 1.1, 0.1]
+#общий список
+num_flashovers_all = [num_flashovers_1, num_flashovers_2, num_flashovers_3]
+
+#запуск
+compute_optimal_choice(num_flashovers_all, span_length)
