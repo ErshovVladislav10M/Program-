@@ -63,7 +63,7 @@ def compute_optimal_choice(num_flashovers, span_length):
     print(answer)
 
 #входные данные
-#длины пролетов
+#длины пролетов(м)
 span_length = [100, 400, 500]
 #количества отключений для пролетов
 num_flashovers_1 = [10, 7.5, 4.5, 2.3]
