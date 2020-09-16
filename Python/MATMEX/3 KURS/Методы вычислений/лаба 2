@@ -58,7 +58,7 @@ while True:
     for i in range(len(z_j)):
         d[z_j[i]] = abs(z_j[i] - x)
     list_d = list(d.items())
-    list_d.sort(key=lambda i: i[1])
+    list_d.sort(key = lambda i: i[1])
     k = 0
     for i in list_d:
         x_j.append(i[0])
