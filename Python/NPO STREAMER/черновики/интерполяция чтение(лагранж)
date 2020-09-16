@@ -46,8 +46,6 @@ def create_line(height, color):
     for i in range(50, 505, 5):
         A1.append(i)
         B1.append(Lagrang(i, A, B))
-    for i in range(len(B)):
-        B[i] = math.log(B[i] + 0.0001)
     for i in range(len(B1)):
         if (B1[i] < 0.000001):
             for j in range(len(B1) - i):
