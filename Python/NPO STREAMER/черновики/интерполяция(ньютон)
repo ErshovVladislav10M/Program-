@@ -117,11 +117,6 @@ def compute_multiplier(i, h, Y_value):
 
 #интерполяция точки x по Ньютону от списка координат точек
 def Newton(x, X_value, Y_value):
-    k = 0
-    while(X_value[k] <= x and k < len(X_value) - 1):
-        k += 1
-    if(Y_value[k - 1] == math.log(0.0001)):
-        return math.log(0.0001)
     compute_y = 0.0
     for i in range(len(Y_value)):
         t = 1.0
@@ -134,14 +129,21 @@ def Newton(x, X_value, Y_value):
 def create_line(N_tot, height, y_max, color):
     A = []
     B = []
-    for i in range(50, 605, 5):
+    for i in range(25, 625, 25):
         A.append(i)
-        B.append(math.log(num_of_insulation_flashovers(i, height, N_tot, y_max) + 0.0001))
+        B.append(num_of_insulation_flashovers(i, height, N_tot, y_max))
     A1 = []
     B1 = []
     for i in range(50, 505, 5):
         A1.append(i)
         B1.append(Newton(i, A, B))
+    for i in range(len(B)):
+        B[i] = math.log(B[i] + 0.0001)
+    for i in range(len(B1)):
+        if(B1[i] < 0.0001):
+            for j in range(len(B1) - i):
+                B1[j + i] = 0.0001
+        B1[i] = math.log(B1[i])
     plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров по алгоритму')
     plt.plot(A1, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров по Ньютону')
 
@@ -166,5 +168,5 @@ def print_schedule(N_tot, y_max, height):
 #запуск для 10, 15, 20 метровой линии
 #30000 молний с y_max = 0.6km
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
-height_of_line = [7.5, 10, 12.5]
+height_of_line = [15, 17.5, 20]
 print_schedule(30000, 0.6, height_of_line)
