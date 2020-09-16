@@ -1,0 +1,76 @@
+import math
+
+#исходная функция
+def f(x):
+	return math.exp(x) - x
+
+#Вычисление y по многочлену Лагранжа
+def compute_y(x, x_value):
+    y = 0.0
+    for i in range(len(x_value)):
+        y1 = 1.0
+        for j in range(len(x_value)):
+            if(j != i):
+                y1 *= x - x_value[j]
+        y2 = 1.0
+        for j in range(len(x_value)):
+            if(j != i):
+                y2 *= x_value[i] - x_value[j]
+        y += f(x_value[i]) * (y1 / y2)
+    return y
+
+#сортировка
+def sort(list1, x, n):
+    list_left = []
+    list_right = []
+    list_result = []
+    i = 0
+    while (list1[i] < x):
+        list_left.append(list1[i])
+        i += 1
+    while (i < len(list1)):
+        list_right.append(list1[i])
+        i += 1
+    i = 0
+    while (i < n):
+        i += 1
+
+print('Задача алгеброического интерполирования')
+print('Вариант 3' + '\n')
+
+print('Введите начальные данные')
+print('Введите количество точек(m + 1)')
+m = int(input()) - 1
+print('Введите левый конец отрезка')
+a = float(input())
+print('Введите правый конец отрезка')
+b = float(input())
+
+#список точек
+z_j = []
+step_x = (b - a) / m
+k = 0
+while (b >= a + step_x * k):
+    z_j.append(a + step_x * k)
+    k += 1
+#вывод значений
+print('\n' + 'z_j' + '\t' + 'f(z_j)')
+for i in range(len(z_j)):
+    print(str(z_j[i]) + '\t' + str(f(z_j[i]))) 
+
+while True:
+    print('\n' + 'Введите x - точку интерполирования')
+    x = float(input())
+    while True:
+        print('Введите n - степень интерполяционнго многочлена')
+        n = int(input())
+        if(n > m):
+            print('Введите n меньший или равный m = ' + str(m))
+        else:
+            break
+    #x_j = sort(z_i, n, x)
+    print('Найденное значение ' + str(compute_y(x, z_j)))
+    print('Абсолютная погрешность ' + str(f(x) - compute_y(x, z_j)))
+    print('\n' + 'Ввести новые значения x и n? (да/нет)')
+    if(input() == 'нет'):
+        break
