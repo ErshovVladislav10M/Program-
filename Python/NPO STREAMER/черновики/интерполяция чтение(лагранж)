@@ -1,9 +1,79 @@
-def print_schedule_interp(str):
-    file2 = open(str, 'r') 
-    a = 0.0
-    for line in file2:
-        a = float(line)
-        print(a)
-    file2.close()
+import math
+import matplotlib.pyplot as plt
+import numpy as np
 
-print_schedule_interp(r'C:\Users\user\Desktop\file1.txt')
+#интерполяция точки x по Лагранжу от списка координат точек
+def Lagrang(x, X_value, Y_value):
+    compute_y = 0.0
+    for i in range(len(Y_value)):
+        y1 = 1.0
+        for j in range(len(Y_value)):
+            if(j != i):
+                y1 *= x - X_value[j]
+        y2 = 1.0
+        for j in range(len(Y_value)):
+            if(j != i):
+                y2 *= X_value[i] - X_value[j]
+        compute_y += Y_value[i] * (y1 / y2)
+    return compute_y
+
+#Построение линий
+def create_line(height, color):
+    file = open(r'C:\Users\user\Desktop\height\file' + str(height) + '.txt', 'r')
+    A = []
+    B = []
+    k = 25
+    for line in file:
+        num = 0.0
+        j = 0
+        t = 0
+        t1 = 0
+        while (line[j] != '\n'):   
+            if (line[j] == '.'):
+                if(j == 2):
+                    t1 = 1
+                    num *= 10
+                j += 1
+                t += 1
+                continue
+            num += float(line[j]) * 10 ** (t1 - j + t)
+            j += 1
+        B.append(num)
+        A.append(k)
+        k += 25
+    A1 = []
+    B1 = []
+    for i in range(50, 505, 5):
+        A1.append(i)
+        B1.append(Lagrang(i, A, B))
+    for i in range(len(B)):
+        B[i] = math.log(B[i] + 0.0001)
+    for i in range(len(B1)):
+        if (B1[i] < 0.000001):
+            for j in range(len(B1) - i):
+                B1[j + i] = 0.0001
+        B1[i] = math.log(B1[i])
+    plt.plot(A1, B1, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров по Ньютону')
+
+#вывод графика
+def print_schedule(height):
+    #Линии для hieght[i]
+    for i in range(len(height)):
+        create_line(height[i], colors[i])
+    #Оформление графика
+    plt.xlabel('CFO (kV)', fontsize = 14)
+    plt.ylabel('Flashovers/100km/yr', fontsize = 14)
+    plt.title('Schedule', fontsize = 15)
+    plt.grid()
+    plt.ylim(-10, 6)
+    plt.xlim(30, 530)
+    for i in range(7):
+        plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
+    plt.legend(loc = 'best')
+    plt.show()
+
+#запуск для 10, 15, 20 метровой линии
+#30000 молний с y_max = 0.6km
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
+height_of_line = [7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30]
+print_schedule(height_of_line)
