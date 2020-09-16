@@ -27,25 +27,29 @@ def time_median1(I_p): #time_median*
 def time_sigma1(): #time_sigma*
     return math.log(time_sigma) * math.sqrt(1 - p**2) 
 
-def fun1(value, median, sigma):
-    a1 = 1/(math.sqrt(2 * math.pi) * value * sigma)
-    a2 = math.exp(-(math.log(value) - math.log(median))**2/(2 * sigma**2)) 
+#Плотность логнормального распределения
+def p_lognorm(value, median, sigma):
+    a1 = 1 / (math.sqrt(2 * math.pi) * value * sigma)
+    a2 = math.exp(-(math.log(value) - math.log(median))**2 / (2 * sigma**2)) 
     return a1 * a2
 
-def fun2(median, sigma):
+#Нахождение медианного значения
+def mod_p(median, sigma):
        return math.exp(math.log(median) - sigma**2)
 
-def K_i():
-    return fun1(fun2(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
+#Максимум плотности для тока молнии
+def max_p_i():
+    return p_lognorm(mod_p(cur_str_median, cur_str_sigma), cur_str_median, cur_str_sigma)
 
-def K_t(I_p):
-    return fun1(fun2(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
+#Максимум плотности для времени фронта
+def max_p_t(I_p):
+    return p_lognorm(mod_p(time_median1(I_p), time_sigma1()), time_median1(I_p), time_sigma1())
 
 #вычисление I_p_n
 def compute_I_p_n():
     I_p = 1 + (200 - 1) * random.uniform(0, 1)
     Z = random.uniform(0, 1)
-    while Z >= fun1(I_p, cur_str_median, cur_str_sigma)/K_i():
+    while Z >= p_lognorm(I_p, cur_str_median, cur_str_sigma) / max_p_i():
         I_p = 1 + (200 - 1) * random.uniform(0, 1)
         Z = random.uniform(0, 1)
     I_p_n.append(I_p)
@@ -54,7 +58,7 @@ def compute_I_p_n():
 def compute_t_f_n(I_p):
     t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
     Z = random.uniform(0, 1)
-    while Z >= fun1(t_f, time_median1(I_p), time_sigma1())/K_t(I_p):
+    while Z >= p_lognorm(t_f, time_median1(I_p), time_sigma1()) / max_p_t(I_p):
         t_f = 0.5 + (20 - 0.5) * random.uniform(0, 1)
         Z = random.uniform(0, 1)
     t_f_n.append(t_f)
@@ -77,7 +81,7 @@ def y_min_i(height, cur_str):
 def y_max_i(CFO, height, cur_str):
     if(CFO == 0):
         CFO += 0.1
-    return 30 * (cur_str * height)/(1.5 * CFO) * (1 + (0.4/math.sqrt(2)) * (1/math.sqrt(0.92)))
+    return 30 * (cur_str * height) / (1.5 * CFO) * (1 + (0.4 / math.sqrt(2)) * (1 / math.sqrt(0.92)))
 
 #создание молний
 def create_lightn(N_tot, y_max):
@@ -98,47 +102,49 @@ def check_lightn(CFO, height):
 #вычисление количства перекрытий на 100 км за год (B)
 def num_of_insulation_flashovers(CFO, height, N_tot, y_max, N_g = 1):
     N = check_lightn(CFO, height)
-    return 200 * N/N_tot * N_g * y_max
+    return 200 * N / N_tot * N_g * y_max
 
-def lagrang(CFO, X, Y):
-    sum = 0.0
-    for i in range(len(Y)):
-        sum1 = 1.0
-        for j in range(len(Y)):
+#интерполяция точки x по Лагранжу от списка координат точек
+def Lagrang(x, X_value, Y_value):
+    compute_y = 0.0
+    for i in range(len(Y_value)):
+        y1 = 1.0
+        for j in range(len(Y_value)):
             if(j != i):
-                sum1 *= CFO - X[j]
-        sum2 = 1.0
-        for j in range(len(Y)):
+                y1 *= x - X_value[j]
+        y2 = 1.0
+        for j in range(len(Y_value)):
             if(j != i):
-                sum2 *= X[i] - X[j]
-        sum += Y[i] * (sum1 / sum2)
-    return sum
+                y2 *= X_value[i] - X_value[j]
+        compute_y += Y_value[i] * (y1 / y2)
+    return compute_y
 
 #Построение линий
 def create_line(N_tot, height, y_max, color):
     A = []
     B = []
-    for i in range(0, 725, 5):
+    for i in range(25, 625, 25):
         A.append(i)
-        r = num_of_insulation_flashovers(i, height, N_tot, y_max)
-        B.append(r + 0.0001)
-    file1 = open(r'C:\Users\user\Desktop\file1.txt', 'a') 
-    for i in range(len(A)):
-        file1.write(str(A[i]) + '\n')
-        file1.write(str(B[i]) + '\n')
-    file1.close()
-    #A1 = []
-    #B1 = []
-    #for i in range(50, 505, 1):
-    #    A1.append(i)
-    #    B1.append(lagrang(i, A, B))
-    #plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров')
-    #plt.plot(A1, B1, color = color, linestyle = '--', markerfacecolor = color, label = str(height) + ' метров')
+        B.append(num_of_insulation_flashovers(i, height, N_tot, y_max))
+    A1 = []
+    B1 = []
+    for i in range(50, 505, 5):
+        A1.append(i)
+        B1.append(Lagrang(i, A, B))
+    for i in range(len(B)):
+        B[i] = math.log(B[i] + 0.0001)
+    for i in range(len(B1)):
+        if(B1[i] < 0.000001):
+            for j in range(len(B1) - i):
+                B1[j + i] = 0.0001
+        B1[i] = math.log(B1[i])
+    plt.plot(A, B, color = color, marker = 'o', linestyle = '-', markerfacecolor = color, label = str(height) + ' метров по алгоритму')
+    plt.plot(A1, B1, color = color, marker = 'o', linestyle = '--', markerfacecolor = color, label = str(height) + ' метров по Ньютону')
 
 #вывод графика
 def print_schedule(N_tot, y_max, height):
     create_lightn(N_tot, y_max)
-    #Линии для height[i]
+    #Линии для hieght[i]
     for i in range(len(height)):
         create_line(N_tot, height[i], y_max, colors[i])
     #Оформление графика
@@ -146,15 +152,15 @@ def print_schedule(N_tot, y_max, height):
     plt.ylabel('Flashovers/100km/yr', fontsize = 14)
     plt.title('Schedule', fontsize = 15)
     plt.grid()
-    #plt.ylim(-10, 6)
-    #plt.xlim(30, 600)
-    #for i in range(7):
-    #    plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
+    plt.ylim(-10, 6)
+    plt.xlim(30, 530)
+    for i in range(7):
+        plt.text(35, math.log(10**(2 - i)), str(10**(2 - i)))
     plt.legend(loc = 'best')
     plt.show()
 
-#запуск для 10 метровой линии
+#запуск для 10, 15, 20 метровой линии
 #30000 молний с y_max = 0.6km
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple']
-height1 = [7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25]
-print_schedule(10000, 0.6, height1)
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'purple', 'brown', 'gray']
+height_of_line = [25]
+print_schedule(30000, 0.6, height_of_line)
