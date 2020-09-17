@@ -45,7 +45,10 @@ def swertka(str1):
     while (i < len(str1) - 9):
         i += 1
         c = str1[i]
-        if(c == ' ' or c == '\n'):
+        if(c == ' '):
+            continue
+        if(c == '\n'):
+            Out.append('\n')
             continue
         if(c == ':'):
             Out.append(1)
@@ -108,6 +111,7 @@ def swertka(str1):
                 Out.append(find_index(Terminal, c) + 51)
             continue
         i = word_definition(str1, i)
+    Out.append('\n')
     Out.append(1000)
 
 file = open(r'C:\Users\user\Desktop\file.txt', 'r')
@@ -118,7 +122,16 @@ swertka(str2)
 
 
 print(str2)
-print(Out)
+i = 0
+while (i < len(Out)):
+    print_line = []
+    while (Out[i] != '\n'):
+        print_line.append(Out[i])
+        i += 1
+        if(i >= len(Out)):
+            break
+    print(print_line)
+    i += 1
 print(Neterminal)
 print(Terminal)
 print(Semantika)
