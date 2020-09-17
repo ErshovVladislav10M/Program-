@@ -77,7 +77,7 @@ while True:
     print_table(x_j, 'x_j')
 
     print('Найденное значение ' + str(compute_y(x, x_j)))
-    print('Абсолютная погрешность ' + str(initial_fun(x) - compute_y(x, x_j)))
+    print('Абсолютная погрешность ' + str(abs(initial_fun(x) - compute_y(x, x_j))))
     print('\n' + 'Ввести новые значения x и n? (да/нет)')
     if(input() == 'нет'):
         break
