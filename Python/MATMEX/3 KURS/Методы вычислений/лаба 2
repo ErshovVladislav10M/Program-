@@ -1,8 +1,18 @@
 import math
 
 #исходная функция
-def f(x):
+def initial_fun(x):
 	return math.exp(x) - x
+
+#степенная функция
+def polynomial(x):
+	return x ** 4 - x ** 3 + x ** 2 - x + 1
+
+#Вывод значений таблицы и значений initial_fun от них
+def print_table(x_value, name_variable):
+    print('\n' + name_variable + '\t' + 'f(' + name_variable + ')')
+    for i in range(len(x_value)):
+        print(str(x_value[i]) + '\t' + str(initial_fun(x_value[i]))) 
 
 #Вычисление y по многочлену Лагранжа
 def compute_y(x, x_value):
@@ -16,19 +26,20 @@ def compute_y(x, x_value):
         for j in range(len(x_value)):
             if(j != i):
                 y2 *= x_value[i] - x_value[j]
-        y += f(x_value[i]) * (y1 / y2)
+        y += initial_fun(x_value[i]) * (y1 / y2)
     return y
 
 print('Задача алгеброического интерполирования')
 print('Вариант 3' + '\n')
 
 print('Введите начальные данные')
-print('Введите количество точек(m + 1)')
-m = int(input()) - 1
 print('Введите левый конец отрезка')
 a = float(input())
 print('Введите правый конец отрезка')
 b = float(input())
+print('Введите количество значений в таблице')
+m = int(input()) - 1
+print('Отрезок разбит на m = ' + str(m) + ' подотрезков')
 
 #список точек
 z_j = []
@@ -38,9 +49,7 @@ while (b >= a + step_x * k):
     z_j.append(a + step_x * k)
     k += 1
 #вывод значений
-print('\n' + 'z_j' + '\t' + 'f(z_j)')
-for i in range(len(z_j)):
-    print(str(z_j[i]) + '\t' + str(f(z_j[i]))) 
+print_table(z_j, 'z_j')
 
 while True:
     print('\n' + 'Введите x - точку интерполирования')
@@ -54,24 +63,21 @@ while True:
             break
 
     x_j = []
-    d = {}
+    dict1 = {}
     for i in range(len(z_j)):
-        d[z_j[i]] = abs(z_j[i] - x)
-    list_d = list(d.items())
-    list_d.sort(key = lambda i: i[1])
+        dict1[z_j[i]] = abs(z_j[i] - x)
+    list_dict1 = list(dict1.items())
+    list_dict1.sort(key = lambda i: i[1])
     k = 0
-    for i in list_d:
+    for i in list_dict1:
         x_j.append(i[0])
         k += 1
-        if(k >= n):
+        if(k >= n + 1):
             break
-
-    print('\n' + 'x_j' + '\t' + 'f(x_j)')
-    for i in range(len(x_j)):
-        print(str(x_j[i]) + '\t' + str(f(x_j[i]))) 
+    print_table(x_j, 'x_j')
 
     print('Найденное значение ' + str(compute_y(x, x_j)))
-    print('Абсолютная погрешность ' + str(f(x) - compute_y(x, x_j)))
+    print('Абсолютная погрешность ' + str(initial_fun(x) - compute_y(x, x_j)))
     print('\n' + 'Ввести новые значения x и n? (да/нет)')
     if(input() == 'нет'):
         break
