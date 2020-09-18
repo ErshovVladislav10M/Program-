@@ -154,12 +154,15 @@ print(str2)
 i = 0
 while (i < len(Out)):
     print_line = []
+    c = ' '
     while (Out[i] != '\n'):
-        print_line.append(Out[i])
+        c += str(Out[i])
+        if(str(Out[i]) != ' '):
+            c += ' '
         i += 1
         if(i >= len(Out)):
             break
-    print(print_line)
+    print(c)
     i += 1
 print(Neterminal)
 print(Terminal)
