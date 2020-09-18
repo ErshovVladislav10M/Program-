@@ -1,27 +1,26 @@
 Out = []
 Neterminal = []
-neterminal = 11
 Terminal = []
-terminal = 51
+terminal_index = 51
 Semantika = []
-semantika = 101
+semantika_index = 101
 Special_characters = [':', ';', ')', '(', '.', '*', ',', '#', '[', ']', ' ', '\n']
 
-#чтение слов(t = 0, если терминал, и t = 1, если нетерминал)
-def read_word(str1, i, t = 0):
-    c = str1[i]
-    i += 1
-    while (str1[i] != ' '):
-        if(str1[i] == "'"):
-            i += 1
+#считывание и определение слов(t = 0, если терминал, и t = 1, если нетерминал)
+def read_word(str1, index, t = 0):
+    c = str1[index]
+    index += 1
+    while (str1[index] != ' '):
+        if(str1[index] == "'"):
+            index += 1
             continue
-        if(ord(str1[i]) < 97 and ord(str1[i]) > 122):
+        if(ord(str1[index]) < 97 and ord(str1[index]) > 122):
             t = 1
-        c += str1[i]
-        i += 1
-    if(str1[i + 1] == ':'):
+        c += str1[index]
+        index += 1
+    if(str1[index + 1] == ':'):
         t = 1    
-    return i, t, c
+    return index, t, c
 
 #Определение нетерминалов
 def Neterminal_definition(str1):
@@ -41,9 +40,10 @@ def Neterminal_definition(str1):
             Neterminal.append(c)
             t = 0
 
-def find_index(A, a):
-    for i in range(len(A)):
-        if(A[i] == a):
+#поиск индекса значения в списке
+def find_index(list1, variable):
+    for i in range(len(list1)):
+        if(list1[i] == variable):
             return i
     return -1
 
@@ -60,9 +60,9 @@ def word_definition(str1, i, t = 0):
     if(t == 0 and Neterminal.count(c) == 0):
         if(Terminal.count(c) == 0):
             Terminal.append(c)
-            global terminal
-            Out.append(terminal)
-            terminal += 1
+            global terminal_index
+            Out.append(terminal_index)
+            terminal_index += 1
         else:
             Out.append(find_index(Terminal, c) + 51)
     else:
@@ -75,6 +75,7 @@ def swertka(str1):
         i += 1
         c = str1[i]
         if(c == ' '):
+            Out.append(' ')
             continue
         if(c == '\n'):
             Out.append('\n')
@@ -118,9 +119,9 @@ def swertka(str1):
                 i += 1
             if(Semantika.count(c) == 0):
                 Semantika.append(c)
-                global semantika
-                Out.append(semantika)
-                semantika += 1
+                global semantika_index
+                Out.append(semantika_index)
+                semantika_index += 1
             else:
                 Out.append(find_index(Semantika, c) + 101)
             continue
@@ -133,9 +134,9 @@ def swertka(str1):
                 i += 1
             if(Terminal.count(c) == 0):
                 Terminal.append(c)
-                global terminal
-                Out.append(terminal)
-                terminal += 1
+                global terminal_index
+                Out.append(terminal_index)
+                terminal_index += 1
             else:
                 Out.append(find_index(Terminal, c) + 51)
             continue
@@ -143,18 +144,19 @@ def swertka(str1):
     Out.append('\n')
     Out.append(1000)
 
+#чтение текстового представления грамматики
 file = open(r'C:\Users\user\Desktop\file.txt', 'r')
 str2 = file.read()
 
+#запуск
 Neterminal_definition(str2)
 swertka(str2)
 
-
-print(str2)
+#вывод лексем в числовом виде
 i = 0
 while (i < len(Out)):
     print_line = []
-    c = ' '
+    c = ''
     while (Out[i] != '\n'):
         c += str(Out[i])
         if(str(Out[i]) != ' '):
@@ -164,6 +166,3 @@ while (i < len(Out)):
             break
     print(c)
     i += 1
-print(Neterminal)
-print(Terminal)
-print(Semantika)
