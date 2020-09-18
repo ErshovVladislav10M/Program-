@@ -5,6 +5,41 @@ Terminal = []
 terminal = 51
 Semantika = []
 semantika = 101
+Special_characters = [':', ';', ')', '(', '.', '*', ',', '#', '[', ']', ' ', '\n']
+
+#чтение слов(t = 0, если терминал, и t = 1, если нетерминал)
+def read_word(str1, i, t = 0):
+    c = str1[i]
+    i += 1
+    while (str1[i] != ' '):
+        if(str1[i] == "'"):
+            i += 1
+            continue
+        if(ord(str1[i]) < 97 and ord(str1[i]) > 122):
+            t = 1
+        c += str1[i]
+        i += 1
+    if(str1[i + 1] == ':'):
+        t = 1    
+    return i, t, c
+
+#Определение нетерминалов
+def Neterminal_definition(str1):
+    i = -1
+    while (i < len(str1) - 9):
+        i += 1
+        if (Special_characters.count(str1[i]) != 0):
+            continue
+        if (str1[i] == '$'):
+            i, t, c = read_word(str1, i + 1)
+            continue
+        if (str1[i] == "'"):
+            i, t, c = read_word(str1, i + 1)
+            continue
+        i, t, c = read_word(str1, i)
+        if (t == 1):
+            Neterminal.append(c)
+            t = 0
 
 def find_index(A, a):
     for i in range(len(A)):
@@ -20,9 +55,9 @@ def word_definition(str1, i, t = 0):
             t = 1
         c += str1[i]
         i += 1
-    if(str1[i + 1] == ':' or Neterminal.count(c) != 0):
+    if(str1[i + 1] == ':'):
         t = 1
-    if(t == 0):
+    if(t == 0 and Neterminal.count(c) == 0):
         if(Terminal.count(c) == 0):
             Terminal.append(c)
             global terminal
@@ -31,13 +66,7 @@ def word_definition(str1, i, t = 0):
         else:
             Out.append(find_index(Terminal, c) + 51)
     else:
-        if(Neterminal.count(c) == 0):
-            Neterminal.append(c)
-            global neterminal
-            Out.append(neterminal)
-            neterminal += 1
-        else:
-            Out.append(find_index(Neterminal, c) + 11)
+        Out.append(find_index(Neterminal, c) + 11)
     return i
 
 def swertka(str1):
@@ -117,8 +146,8 @@ def swertka(str1):
 file = open(r'C:\Users\user\Desktop\file.txt', 'r')
 str2 = file.read()
 
+Neterminal_definition(str2)
 swertka(str2)
-
 
 
 print(str2)
