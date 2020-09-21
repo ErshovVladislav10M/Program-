@@ -9,24 +9,24 @@ def polynomial(x):
 	return x ** 4 - x ** 3 + x ** 2 - x + 1
 
 #Вывод значений таблицы и значений initial_fun от них
-def print_table(x_value, name_variable):
+def print_table(array_of_values, name_variable):
     print('\n' + name_variable + '\t' + 'f(' + name_variable + ')')
-    for i in range(len(x_value)):
-        print(str(x_value[i]) + '\t' + str(initial_fun(x_value[i]))) 
+    for i in range(len(array_of_values)):
+        print(str(array_of_values[i]) + '\t' + str(initial_fun(array_of_values[i]))) 
 
 #Вычисление y по многочлену Лагранжа
-def compute_y(x, x_value):
+def compute_y(x, array_of_values):
     y = 0.0
-    for i in range(len(x_value)):
+    for i in range(len(array_of_values)):
         y1 = 1.0
-        for j in range(len(x_value)):
+        for j in range(len(array_of_values)):
             if(j != i):
-                y1 *= x - x_value[j]
+                y1 *= x - array_of_values[j]
         y2 = 1.0
-        for j in range(len(x_value)):
+        for j in range(len(array_of_values)):
             if(j != i):
-                y2 *= x_value[i] - x_value[j]
-        y += initial_fun(x_value[i]) * (y1 / y2)
+                y2 *= array_of_values[i] - array_of_values[j]
+        y += initial_fun(array_of_values[i]) * (y1 / y2)
     return y
 
 print('Задача алгеброического интерполирования')
