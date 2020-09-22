@@ -12,7 +12,7 @@ def polynomial(x):
 def print_table(array_of_values, name_variable):
     print('\n' + name_variable + '\t' + 'f(' + name_variable + ')')
     for i in range(len(array_of_values)):
-        print(str(array_of_values[i]) + '\t' + str(initial_fun(array_of_values[i]))) 
+        print(str(i + 1) + ')' + str(array_of_values[i]) + '\t' + str(initial_fun(array_of_values[i]))) 
 
 #Вычисление y по многочлену Лагранжа
 def compute_y(x, array_of_values):
@@ -55,11 +55,9 @@ while True:
     print('\n' + 'Введите x - точку интерполирования')
     x = float(input())
     while True:
-        print('Введите n - степень интерполяционнго многочлена')
+        print('Введите n - степень интерполяционнго многочлена (0 <= n <= ' + str(m) + ')')
         n = int(input())
-        if(n > m):
-            print('Введите n меньший или равный m = ' + str(m))
-        else:
+        if(n <= m and n >= 0):
             break
 
     x_j = []
@@ -76,7 +74,7 @@ while True:
             break
     print_table(x_j, 'x_j')
 
-    print('Найденное значение ' + str(compute_y(x, x_j)))
+    print('Найденное значение по интерполяционному многочлену Лагранжа: ' + str(compute_y(x, x_j)))
     print('Абсолютная погрешность ' + str(abs(initial_fun(x) - compute_y(x, x_j))))
     print('\n' + 'Ввести новые значения x и n? (да/нет)')
     if(input() == 'нет'):
