@@ -34,14 +34,6 @@ def compute_num_arrester_tower(num_placement):
     else:
         return 0, 1
 
-#Вывод относительной эффективности от количества разрядников
-def print_efficiency(num_section, num_placement, relative_efficiency):
-    print('Секция ' + str(num_section))
-    num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(num_placement)
-    print('Разрядников от ПУМ ' + str(num_arrester_DLS))
-    print('Разрядников от ИП ' + str(num_arrester_IO))
-    print('Относителная эффективность: ' + str(relative_efficiency))
-
 #Высчитывание эффективности для одного варианта расстановки для секции
 def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length): 
     initial_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * section_length / 100
@@ -59,6 +51,15 @@ def compute_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length):
         efficiency.append(compute_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, section_length))
     return efficiency
 
+#Вывод эффективности от варианта расстановки разрядников
+def print_efficiency(num_section, num_placement, num_flashovers_DLS, num_flashovers_IO, section_length):
+    print('Секция ' + str(num_section))
+    num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(num_placement)
+    print('Разрядников от ПУМ ' + str(num_arrester_DLS))
+    print('Разрядников от ИП ' + str(num_arrester_IO))
+    relative_efficiency = compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length)
+    print('Относителная эффективность: ' + str(relative_efficiency))
+
 #Функция оптимального выбора для постановки разрядников
 def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length):
     efficiency_all = []
@@ -67,8 +68,9 @@ def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_l
         efficiency_all.append(efficiency)
     while(find_max(efficiency_all) != 0):
         i1, j1 = find_max_index(efficiency_all)
-        print_efficiency(i1 + 1, j1, efficiency_all[i1][j1])
+        print_efficiency(i1 + 1, j1, num_flashovers_DLS_all[i1], num_flashovers_IO_all[i1], section_length[i1])
         efficiency_all[i1][j1] = 0
+
 
 
 #входные данные
