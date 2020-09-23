@@ -27,36 +27,43 @@ def find_max(list2):
 def compute_num_arrester_section(section_length, span_length, arrester_on_tower):
     return section_length * 1000 / span_length * arrester_on_tower
 
+#Определение числа разрядников на столб от варианта размещения
+def compute_num_arrester_tower(num_placement):
+    if(num_placement != 0):
+        return num_placement, 0
+    else:
+        return 0, 1
+
 #Вывод относительной эффективности от количества разрядников
 def print_efficiency(num_section, num_placement, relative_efficiency):
     print('Секция ' + str(num_section))
-    if(num_placement != 0):
-        num_arrester_DLS = num_placement
-        num_arrester_IO = 0
-    else:
-        num_arrester_DLS = 0
-        num_arrester_IO = 1
+    num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(num_placement)
     print('Разрядников от ПУМ ' + str(num_arrester_DLS))
     print('Разрядников от ИП ' + str(num_arrester_IO))
     print('Относителная эффективность: ' + str(relative_efficiency))
 
-#Высчитывание относительной эффективности для секции
-def compute_efficiency(num_flashovers_DLS, num_flashovers_IO, span_length, section_length):
-    efficiency = []
+#Высчитывание эффективности для одного варианта расстановки для секции
+def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length): 
     initial_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * section_length / 100
-    
-    num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[2]) * section_length / 100
-    efficiency.append(initial_num_flashovers * 100 / (num_flashovers * 0.5))
-    for i in range(3):
-        num_flashovers = (num_flashovers_DLS[i + 1] + num_flashovers_IO[i + 1]) * section_length / 100
-        efficiency.append(initial_num_flashovers * 100 / (num_flashovers * (i + 1)))
+    if(num_placement == 0):
+        num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[2]) * section_length / 100
+        return initial_num_flashovers * 100 / (num_flashovers * 0.5)
+    else:
+        num_flashovers = (num_flashovers_DLS[num_placement] + num_flashovers_IO[num_placement]) * section_length / 100
+        return initial_num_flashovers * 100 / (num_flashovers * num_placement)
+
+#Высчитывание эффективности для секции
+def compute_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length):
+    efficiency = []
+    for i in range(4):
+        efficiency.append(compute_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, section_length))
     return efficiency
 
 #Функция оптимального выбора для постановки разрядников
 def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length):
     efficiency_all = []
     for i in range(len(span_length)):
-        efficiency = compute_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], span_length[i], section_length[i])
+        efficiency = compute_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], section_length[i])
         efficiency_all.append(efficiency)
     while(find_max(efficiency_all) != 0):
         i1, j1 = find_max_index(efficiency_all)
@@ -66,7 +73,7 @@ def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_l
 
 #входные данные
 #длины пролетов cекций(м)
-span_length = [200, 300, 400]
+span_length = [200, 500, 400]
 #длина секций(км)
 section_length = [10, 10, 10]
 #количества отключений для секций на 100 км линии в год
