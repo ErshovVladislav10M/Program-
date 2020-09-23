@@ -35,40 +35,40 @@ def compute_num_arrester_tower(num_placement):
         return 0, 1
 
 #Высчитывание эффективности для одного варианта расстановки для секции
-def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length): 
+def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO): 
     initial_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * section_length / 100
     if(num_placement == 0):
         num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[2]) * section_length / 100
-        return initial_num_flashovers * 100 / (num_flashovers * 0.5)
+        return initial_num_flashovers * 100 / (num_flashovers * cost_arrester_IO)
     else:
         num_flashovers = (num_flashovers_DLS[num_placement] + num_flashovers_IO[num_placement]) * section_length / 100
-        return initial_num_flashovers * 100 / (num_flashovers * num_placement)
+        return initial_num_flashovers * 100 / (num_flashovers * num_placement * cost_arrester_DLS)
 
 #Высчитывание эффективности для секции
-def compute_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length):
+def compute_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
     efficiency = []
     for i in range(4):
-        efficiency.append(compute_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, section_length))
+        efficiency.append(compute_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO))
     return efficiency
 
 #Вывод эффективности от варианта расстановки разрядников
-def print_efficiency(num_section, num_placement, num_flashovers_DLS, num_flashovers_IO, section_length):
+def print_efficiency(num_section, num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
     print('Секция ' + str(num_section))
     num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(num_placement)
     print('Разрядников от ПУМ ' + str(num_arrester_DLS))
     print('Разрядников от ИП ' + str(num_arrester_IO))
-    relative_efficiency = compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length)
-    print('Относителная эффективность: ' + str(relative_efficiency))
+    relative_efficiency = compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO)
+    print('Относителная эффективность: ' + str(relative_efficiency) + '\n')
 
 #Функция оптимального выбора для постановки разрядников
-def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length):
+def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length, cost_arrester_DLS, cost_arrester_IO):
     efficiency_all = []
     for i in range(len(span_length)):
-        efficiency = compute_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], section_length[i])
+        efficiency = compute_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], section_length[i], cost_arrester_DLS, cost_arrester_IO)
         efficiency_all.append(efficiency)
     while(find_max(efficiency_all) != 0):
         i1, j1 = find_max_index(efficiency_all)
-        print_efficiency(i1 + 1, j1, num_flashovers_DLS_all[i1], num_flashovers_IO_all[i1], section_length[i1])
+        print_efficiency(i1 + 1, j1, num_flashovers_DLS_all[i1], num_flashovers_IO_all[i1], section_length[i1], cost_arrester_DLS, cost_arrester_IO)
         efficiency_all[i1][j1] = 0
 
 
@@ -90,6 +90,9 @@ num_flashovers_IO_3 = [5, 1, 0.5, 0]
 #общий список
 num_flashovers_DLS_all = [num_flashovers_DLS_1, num_flashovers_DLS_2, num_flashovers_DLS_3]
 num_flashovers_IO_all = [num_flashovers_IO_1, num_flashovers_IO_2, num_flashovers_IO_3]
+#cтоимость разрядников
+cost_arrester_DLS = 1
+cost_arrester_IO = 0.5
 
 #запуск 
-compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length)
+compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length, cost_arrester_DLS, cost_arrester_IO)
