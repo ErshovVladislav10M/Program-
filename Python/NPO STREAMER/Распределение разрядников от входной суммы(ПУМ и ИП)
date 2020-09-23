@@ -53,8 +53,8 @@ def print_placement(num_section, num_placement, num_flashovers_DLS, num_flashove
     num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(num_placement)
     print('Разрядников от ПУМ ' + str(num_arrester_DLS) + ' штук(у)')
     print('Разрядников от ИП ' + str(num_arrester_IO) + ' штук(у)')
-    relative_efficiency = compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO)
-    print('Относителная эффективность: ' + str(relative_efficiency))
+    #relative_efficiency = compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO)
+    #print('Относителная эффективность: ' + str(relative_efficiency))
 
 #Функция оптимального выбора для постановки разрядников
 def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO):
@@ -112,20 +112,22 @@ def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
         cost_arrester = cost_arrester_DLS * new_arrester_DLS
         cost_arrester += cost_arrester_IO * new_arrester_IO 
 
+        #снятие ИП разрядников при навешивании разрядников ПУМ
         if(num_arrester_IO_tower_section[index_section[i] - 1] == 1 and amount_money >= cost_arrester):
             num_arrester_IO_return = compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], 1)
             amount_money += cost_arrester_IO * num_arrester_IO_return
             num_arrester_IO_all -= num_arrester_IO_return
+            print('C секции ' + str(index_section[i]))
             print('Убрано разрядников от ИП ' + str(num_arrester_IO_return))
-            print('Возвращено денег ' + str(cost_arrester_IO * num_arrester_IO_return))
+            print('Возвращено денег ' + str(cost_arrester_IO * num_arrester_IO_return) + '\n')
 
-        num_arrester_DLS_tower_section[index_section[i] - 1] += num_arrester_DLS
-        num_arrester_IO_tower_section[index_section[i] - 1] = num_arrester_IO
-
+        #навешивание разрядников
         if(amount_money >= cost_arrester):
+            num_arrester_DLS_tower_section[index_section[i] - 1] += num_arrester_DLS
+            num_arrester_IO_tower_section[index_section[i] - 1] = num_arrester_IO
             amount_money -= cost_arrester
             print_placement(index_section[i], index_num_placement[i], num_flashovers_DLS_all[index_section[i] - 1], 
-                             num_flashovers_IO_all[index_section[i] - 1], section_length[index_section[i] - 1], cost_arrester_DLS, cost_arrester_IO)
+                            num_flashovers_IO_all[index_section[i] - 1], section_length[index_section[i] - 1], cost_arrester_DLS, cost_arrester_IO)
             print('Поставлено разрядников ' + str(new_arrester_DLS + new_arrester_IO))
             print('Потрачено денег ' + str(cost_arrester) + '\n')
         else: 
