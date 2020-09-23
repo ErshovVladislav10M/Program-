@@ -55,7 +55,7 @@ def print_answer(answer, span_length, section_length):
     for i in range(len(answer)):
         print(str(i + 1) + ')Довести количество разрядников на ' + answer[i][0] + ' секции до ' + answer[i][1])
         num_arrester += compute_num_arrester_section(section_length[int(answer[i][0]) - 1], span_length[int(answer[i][0]) - 1], int(answer[i][1]))
-        print(' Использовано разрядников ' + str(num_arrester))
+        print('  Использовано разрядников ' + str(num_arrester))
 
 #функция оптимального выбора для постановки разрядниоков
 def compute_optimal_choice(num_flashovers, span_length, section_length):
