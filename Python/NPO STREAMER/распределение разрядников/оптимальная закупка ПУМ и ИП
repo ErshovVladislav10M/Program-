@@ -105,7 +105,7 @@ def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
     num_arrester_IO_all = 0
 
     i = 0
-    while(i < len(index_section) and amount_money > 0):
+    while(i < len(index_section)):
         num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(index_num_placement[i])
 
         if(num_arrester_DLS_tower_section[index_section[i] - 1] > num_arrester_DLS):
@@ -124,7 +124,8 @@ def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
         cost_arrester += cost_arrester_IO * new_arrester_IO 
 
         #снятие ИП разрядников при навешивании разрядников ПУМ
-        if(num_arrester_IO_tower_section[index_section[i] - 1] == 1 and amount_money >= cost_arrester):
+        if(num_arrester_IO_tower_section[index_section[i] - 1] == 1 and
+           amount_money >= cost_arrester - cost_arrester_IO * compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], 1)):
             num_arrester_IO_tower_section[index_section[i] - 1] = 0
             num_arrester_IO_return = compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], 1)
             amount_money += cost_arrester_IO * num_arrester_IO_return
@@ -172,10 +173,10 @@ num_flashovers_IO_3 = [5, 1, 0.5, 0]
 num_flashovers_DLS_all = [num_flashovers_DLS_1, num_flashovers_DLS_2, num_flashovers_DLS_3]
 num_flashovers_IO_all = [num_flashovers_IO_1, num_flashovers_IO_2, num_flashovers_IO_3]
 #стоимость разрядников
-cost_arrester_DLS = 2
+cost_arrester_DLS = 5
 cost_arrester_IO = 0.5
 #количество денег на разрядники
-amount_money = 400
+amount_money = 337.5
 
 #запуск 
 optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length, cost_arrester_DLS, cost_arrester_IO)
