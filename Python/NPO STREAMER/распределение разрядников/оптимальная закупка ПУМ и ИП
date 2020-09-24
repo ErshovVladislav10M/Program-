@@ -23,14 +23,14 @@ def find_max(list2):
                 max = list2[i][j]
     return max
 
-#Определение числа разрядников на столб от варианта размещения
+#Определение числа разрядников на столб от варианта расстановки
 def compute_num_arrester_tower(num_placement):
     if(num_placement != 0):
         return num_placement, 0
     else:
         return 0, 1
 
-#Высчитывание эффективности для одного варианта расстановки для секции
+#Вычисление эффективности для одного варианта расстановки для секции
 def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO): 
     initial_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * section_length / 100
     if(num_placement == 0):
@@ -40,7 +40,7 @@ def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashove
         num_flashovers = (num_flashovers_DLS[num_placement] + num_flashovers_IO[num_placement]) * section_length / 100
         return initial_num_flashovers * 100 / (num_flashovers * num_placement * cost_arrester_DLS)
 
-#Высчитывание эффективности для секции
+#Вычисление эффективности для секции
 def compute_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
     efficiency = []
     for i in range(4):
@@ -56,8 +56,8 @@ def print_placement(num_section, num_placement, num_flashovers_DLS, num_flashove
     #relative_efficiency = compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO)
     #print('Относителная эффективность: ' + str(relative_efficiency))
 
-#Функция оптимального выбора для постановки разрядников
-def compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO):
+#Сортировка по оптимальности вариантов размещения разрядников
+def sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO):
     efficiency_all = []
     index_section = []
     index_num_placement = []
@@ -83,12 +83,23 @@ def compute_num_arrester_line(section_length, span_length, arrester_on_tower):
         num_arrester += compute_num_arrester_section(section_length[i], span_length[i], arrester_on_tower[i])
     return num_arrester
 
+#Вычисление эффективности не полной расстановки разрядников на секцию
+
+#Доразмещение разрядников на оставшиеся деньги
+#def f(amount_money, index_section, index_num_placement, index_now):
+#    max_efficiency = 0
+#    for i in range(index_now, len(index_section), 1):
+#        if(max_efficiency < )
+#    return 1
+
 #Оптимальное размещение разрядников от количества денег на их покупку
 def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length, cost_arrester_DLS, cost_arrester_IO):
-    index_section, index_num_placement = compute_optimal_choice(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO)
+    index_section, index_num_placement = sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO)
+    
     #число разрядников на одном столбе секций
     num_arrester_DLS_tower_section = [0, 0, 0]
     num_arrester_IO_tower_section = [0, 0, 0]
+    
     #всего на линии разрядников
     num_arrester_DLS_all = 0
     num_arrester_IO_all = 0
@@ -114,6 +125,7 @@ def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
 
         #снятие ИП разрядников при навешивании разрядников ПУМ
         if(num_arrester_IO_tower_section[index_section[i] - 1] == 1 and amount_money >= cost_arrester):
+            num_arrester_IO_tower_section[index_section[i] - 1] = 0
             num_arrester_IO_return = compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], 1)
             amount_money += cost_arrester_IO * num_arrester_IO_return
             num_arrester_IO_all -= num_arrester_IO_return
@@ -160,7 +172,7 @@ num_flashovers_IO_3 = [5, 1, 0.5, 0]
 num_flashovers_DLS_all = [num_flashovers_DLS_1, num_flashovers_DLS_2, num_flashovers_DLS_3]
 num_flashovers_IO_all = [num_flashovers_IO_1, num_flashovers_IO_2, num_flashovers_IO_3]
 #стоимость разрядников
-cost_arrester_DLS = 5
+cost_arrester_DLS = 2
 cost_arrester_IO = 0.5
 #количество денег на разрядники
 amount_money = 400
