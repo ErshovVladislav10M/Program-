@@ -2,7 +2,7 @@
 #постановки разрядниокв на опоры секций от суммы денег
 
 #нахождения индекса максимума в двумерном списке
-def find_max_index(list2):
+def find_max_ind(list2):
     max = 0.0
     i1 = 0
     j1 = 0
@@ -24,14 +24,14 @@ def find_max(list2):
     return max
 
 #Определение числа разрядников на столб от варианта расстановки
-def compute_num_arrester_tower(num_placement):
+def comp_num_arrester_tower(num_placement):
     if(num_placement != 0):
         return num_placement, 0
     else:
         return 0, 1
 
 #Вычисление эффективности для одного варианта расстановки для секции
-def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO): 
+def comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO): 
     initial_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * section_length / 100
     if(num_placement == 0):
         num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[2]) * section_length / 100
@@ -41,60 +41,60 @@ def compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashove
         return initial_num_flashovers * 100 / (num_flashovers * num_placement * cost_arrester_DLS)
 
 #Вычисление эффективности для секции
-def compute_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
+def comp_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
     efficiency = []
     for i in range(4):
-        efficiency.append(compute_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO))
+        efficiency.append(comp_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO))
     return efficiency
 
 #Вывод расстановки разрядников
 def print_placement(num_section, num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
     print('Ставим на одну опору секции ' + str(num_section))
-    num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(num_placement)
+    num_arrester_DLS, num_arrester_IO = comp_num_arrester_tower(num_placement)
     print('Разрядников от ПУМ ' + str(num_arrester_DLS) + ' штук(у)')
     print('Разрядников от ИП ' + str(num_arrester_IO) + ' штук(у)')
-    #relative_efficiency = compute_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO)
+    #relative_efficiency = comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO)
     #print('Относителная эффективность: ' + str(relative_efficiency))
 
 #Сортировка по оптимальности вариантов размещения разрядников
 def sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO):
     efficiency_all = []
-    index_section = []
-    index_num_placement = []
+    ind_section = []
+    ind_num_placement = []
     for i in range(len(section_length)):
-        efficiency = compute_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], section_length[i], cost_arrester_DLS, cost_arrester_IO)
+        efficiency = comp_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], section_length[i], cost_arrester_DLS, cost_arrester_IO)
         efficiency_all.append(efficiency)
     while(find_max(efficiency_all) != 0):
-        i1, j1 = find_max_index(efficiency_all)
+        i1, j1 = find_max_ind(efficiency_all)
         #print_placement(i1 + 1, j1, num_flashovers_DLS_all[i1], num_flashovers_IO_all[i1], section_length[i1])
         efficiency_all[i1][j1] = 0
-        index_section.append(i1 + 1)
-        index_num_placement.append(j1)
-    return index_section, index_num_placement
+        ind_section.append(i1 + 1)
+        ind_num_placement.append(j1)
+    return ind_section, ind_num_placement
 
 #вычисление количества разрядников на секцию
-def compute_num_arrester_section(section_length, span_length, arrester_on_tower):
+def comp_num_arrester_section(section_length, span_length, arrester_on_tower):
     return section_length * 1000 / span_length * arrester_on_tower
 
 #вычисление количества разрядников на линию
-def compute_num_arrester_line(section_length, span_length, arrester_on_tower):
+def comp_num_arrester_line(section_length, span_length, arrester_on_tower):
     num_arrester = 0.0
     for i in range(len(arrester_on_tower)):
-        num_arrester += compute_num_arrester_section(section_length[i], span_length[i], arrester_on_tower[i])
+        num_arrester += comp_num_arrester_section(section_length[i], span_length[i], arrester_on_tower[i])
     return num_arrester
 
 #Вычисление эффективности не полной расстановки разрядников на секцию
 
 #Доразмещение разрядников на оставшиеся деньги
-#def f(amount_money, index_section, index_num_placement, index_now):
+#def f(amount_money, ind_section, ind_num_placement, ind_now):
 #    max_efficiency = 0
-#    for i in range(index_now, len(index_section), 1):
+#    for i in range(ind_now, len(ind_section), 1):
 #        if(max_efficiency < )
 #    return 1
 
 #Оптимальное размещение разрядников от количества денег на их покупку
 def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length, cost_arrester_DLS, cost_arrester_IO):
-    index_section, index_num_placement = sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO)
+    ind_section, ind_num_placement = sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO)
     
     #число разрядников на одном столбе секций
     num_arrester_DLS_tower_section = [0, 0, 0]
@@ -105,42 +105,42 @@ def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
     num_arrester_IO_all = 0
 
     i = 0
-    while(i < len(index_section)):
-        num_arrester_DLS, num_arrester_IO = compute_num_arrester_tower(index_num_placement[i])
+    while(i < len(ind_section)):
+        num_arrester_DLS, num_arrester_IO = comp_num_arrester_tower(ind_num_placement[i])
 
-        if(num_arrester_DLS_tower_section[index_section[i] - 1] > num_arrester_DLS):
+        if(num_arrester_DLS_tower_section[ind_section[i] - 1] > num_arrester_DLS):
             i += 1
             continue
-        if(num_arrester_IO == 1 and num_arrester_DLS_tower_section[index_section[i] - 1] != 0):
+        if(num_arrester_IO == 1 and num_arrester_DLS_tower_section[ind_section[i] - 1] != 0):
             i += 1
             continue
 
-        num_arrester_DLS -= num_arrester_DLS_tower_section[index_section[i] - 1]
+        num_arrester_DLS -= num_arrester_DLS_tower_section[ind_section[i] - 1]
 
-        new_arrester_DLS = compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], num_arrester_DLS)
-        new_arrester_IO = compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], num_arrester_IO)
+        new_arrester_DLS = comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], num_arrester_DLS)
+        new_arrester_IO = comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], num_arrester_IO)
 
         cost_arrester = cost_arrester_DLS * new_arrester_DLS
         cost_arrester += cost_arrester_IO * new_arrester_IO 
 
         #снятие ИП разрядников при навешивании разрядников ПУМ
-        if(num_arrester_IO_tower_section[index_section[i] - 1] == 1 and
-           amount_money >= cost_arrester - cost_arrester_IO * compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], 1)):
-            num_arrester_IO_tower_section[index_section[i] - 1] = 0
-            num_arrester_IO_return = compute_num_arrester_section(section_length[index_section[i] - 1], span_length[index_section[i] - 1], 1)
+        if(num_arrester_IO_tower_section[ind_section[i] - 1] == 1 and
+           amount_money >= cost_arrester - cost_arrester_IO * comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], 1)):
+            num_arrester_IO_tower_section[ind_section[i] - 1] = 0
+            num_arrester_IO_return = comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], 1)
             amount_money += cost_arrester_IO * num_arrester_IO_return
             num_arrester_IO_all -= num_arrester_IO_return
-            print('C секции ' + str(index_section[i]))
+            print('C секции ' + str(ind_section[i]))
             print('Убрано разрядников от ИП ' + str(num_arrester_IO_return))
             print('Возвращено денег ' + str(cost_arrester_IO * num_arrester_IO_return) + '\n')
 
         #навешивание разрядников
         if(amount_money >= cost_arrester):
-            num_arrester_DLS_tower_section[index_section[i] - 1] += num_arrester_DLS
-            num_arrester_IO_tower_section[index_section[i] - 1] = num_arrester_IO
+            num_arrester_DLS_tower_section[ind_section[i] - 1] += num_arrester_DLS
+            num_arrester_IO_tower_section[ind_section[i] - 1] = num_arrester_IO
             amount_money -= cost_arrester
-            print_placement(index_section[i], index_num_placement[i], num_flashovers_DLS_all[index_section[i] - 1], 
-                            num_flashovers_IO_all[index_section[i] - 1], section_length[index_section[i] - 1], cost_arrester_DLS, cost_arrester_IO)
+            print_placement(ind_section[i], ind_num_placement[i], num_flashovers_DLS_all[ind_section[i] - 1], 
+                            num_flashovers_IO_all[ind_section[i] - 1], section_length[ind_section[i] - 1], cost_arrester_DLS, cost_arrester_IO)
             print('Поставлено разрядников ' + str(new_arrester_DLS + new_arrester_IO))
             print('Потрачено денег ' + str(cost_arrester) + '\n')
         else: 
