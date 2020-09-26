@@ -3,7 +3,8 @@
 
 # Нахождения индекса максимума в двумерном списке.
 """Ввод: список
-   Вывод: индекс"""
+   Вывод: индекс максимума
+"""
 def find_max_ind(list2):
     max = 0.0
     i1 = 0
@@ -18,7 +19,8 @@ def find_max_ind(list2):
 
 # Нахождения максимума в двумерном списке.
 """Ввод: список 
-   Вывод: максимум"""
+   Вывод: максимум
+"""
 def find_max(list2):
     max = 0.0
     for i in range(len(list2)):
@@ -29,7 +31,8 @@ def find_max(list2):
 
 # Вычисление числа разрядников на столб от варианта расстановки
 """Ввод: числовой вариант расстановки 
-   Вывод: первое число - разрядники от ПУМ, второе - от ИП"""
+   Вывод: первое число - разрядники от ПУМ, второе - от ИП
+"""
 def comp_num_arrester_tower(num_placement):
     if(num_placement != 0):
         return num_placement, 0
@@ -40,7 +43,8 @@ def comp_num_arrester_tower(num_placement):
 """Ввод: числовой вариант расстановки, список отключений от ПУМ, 
    список отключений от ИП, длина секции, цена одного разрядника от ПУМ,
    цена одного разрядника от ИП
-   Вывод: коэффициент эффективности"""
+   Вывод: коэффициент эффективности
+"""
 def comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, 
                               sect_len, cost_arrester_DLS, cost_arrester_IO): 
     init_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * sect_len / 100
@@ -54,7 +58,8 @@ def comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_
 # Вычисление коэффициента эффективности для секции.
 """Ввод: список отключений от ПУМ, список отключений от ИП, длина секции,
    цена одного разрядника от ПУМ, цена одного разрядника от ИП
-   Вывод: коэффициент эффективности"""
+   Вывод: коэффициент эффективности
+"""
 def comp_efficiency(num_flashovers_DLS, num_flashovers_IO, sect_len, 
                     cost_arrester_DLS, cost_arrester_IO):
     efficiency = []
@@ -66,7 +71,8 @@ def comp_efficiency(num_flashovers_DLS, num_flashovers_IO, sect_len,
 """Ввод: номер секции, вариант расстановки, список отключений от ПУМ, 
    список отключений от ИП, длина секции, цена одного разрядника от ПУМ,
    цена одного разрядника от ИП
-   Вывод: номер секции, число разрядников от ПУМ, число разрядников от ИП"""
+   Вывод: номер секции, число разрядников от ПУМ, число разрядников от ИП
+"""
 def print_placement(num_sect, num_placement, num_flashovers_DLS,
                     num_flashovers_IO, sect_len, cost_arrester_DLS, cost_arrester_IO):
     print('Ставим на одну опору секции ' + str(num_sect))
@@ -81,7 +87,8 @@ def print_placement(num_sect, num_placement, num_flashovers_DLS,
    список отключений от ИП для всех секций, длина всех секций,
    цена одного разрядника от ПУМ, цена одного разрядника от ИП
    Вывод: отсортированный список номеров секций,
-   отсортированный список вариантов расстановок разрядников"""
+   отсортированный список вариантов расстановок разрядников
+"""
 def sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, 
                            sect_len_all, cost_arrester_DLS, cost_arrester_IO):
     efficiency_all = []
@@ -101,14 +108,16 @@ def sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all,
 
 # Вычисление количества разрядников на секцию.
 """Ввод: длина секции, длина пролета, количество разрядников на опору
-   Вывод: число разрядников"""
+   Вывод: число разрядников
+"""
 def comp_num_arrester_sect(sect_len, span_len, arrester_on_tower):
     return sect_len * 1000 / span_len * arrester_on_tower
 
 # Вычисление количества разрядников на линию.
 """Ввод: длина всех секций, длина пролетов для всех секций,
    количество разрядников на опору для всех секций
-   Вывод: число разрядников"""
+   Вывод: число разрядников
+"""
 def comp_num_arrester_line(sect_len_all, span_len_all, arrester_on_tower_all):
     num_arrester = 0.0
     for i in range(len(arrester_on_tower)):
@@ -130,7 +139,8 @@ def comp_num_arrester_line(sect_len_all, span_len_all, arrester_on_tower_all):
    список отключений от ИП для всех секций, длина пролетов для всех секций, 
    длина всех секций, цена одного разрядника от ПУМ, цена одного разрядника от ИП
    Вывод: результата навешивания разрядников, результата снятия разрядников,
-   конечное число разрядников на линии, оставшаяся сумма денег"""
+   конечное число разрядников на линии, оставшаяся сумма денег
+"""
 def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
                    span_len_all, sect_len_all, cost_arrester_DLS, cost_arrester_IO):
     ind_sect, ind_num_placement = sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, sect_len_all, cost_arrester_DLS, cost_arrester_IO)
