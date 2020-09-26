@@ -1,146 +1,185 @@
-#алгоритм вычисления оптимальной последователности 
-#постановки разрядниокв на опоры секций от суммы денег
+# Алгоритм вычисления оптимальной последователности постановки
+# разрядниокв на опоры секций от суммы денег на из покупку.
 
-#нахождения индекса максимума в двумерном списке
+# Нахождения индекса максимума в двумерном списке.
+"""Ввод: список
+   Вывод: индекс"""
 def find_max_ind(list2):
     max = 0.0
     i1 = 0
     j1 = 0
     for i in range(len(list2)):
         for j in range(len(list2[i])):
-            if (max < list2[i][j]):
+            if(max < list2[i][j]):
                 max = list2[i][j]
                 i1 = i
                 j1 = j
     return i1, j1
 
-#нахождения максимума в двумерном списке
+# Нахождения максимума в двумерном списке.
+"""Ввод: список 
+   Вывод: максимум"""
 def find_max(list2):
     max = 0.0
     for i in range(len(list2)):
         for j in range(len(list2[i])):
-            if (max < list2[i][j]):
+            if(max < list2[i][j]):
                 max = list2[i][j]
     return max
 
-#Определение числа разрядников на столб от варианта расстановки
+# Вычисление числа разрядников на столб от варианта расстановки
+"""Ввод: числовой вариант расстановки 
+   Вывод: первое число - разрядники от ПУМ, второе - от ИП"""
 def comp_num_arrester_tower(num_placement):
     if(num_placement != 0):
         return num_placement, 0
     else:
         return 0, 1
 
-#Вычисление эффективности для одного варианта расстановки для секции
-def comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO): 
-    initial_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * section_length / 100
+# Вычисление коэффициента эффективности для одного варианта расстановки для секции.
+"""Ввод: числовой вариант расстановки, список отключений от ПУМ, 
+   список отключений от ИП, длина секции, цена одного разрядника от ПУМ,
+   цена одного разрядника от ИП
+   Вывод: коэффициент эффективности"""
+def comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, 
+                              sect_len, cost_arrester_DLS, cost_arrester_IO): 
+    init_num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[0]) * sect_len / 100
     if(num_placement == 0):
-        num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[2]) * section_length / 100
-        return initial_num_flashovers * 100 / (num_flashovers * cost_arrester_IO)
+        num_flashovers = (num_flashovers_DLS[0] + num_flashovers_IO[2]) * sect_len / 100
+        return init_num_flashovers * 100 / (num_flashovers * cost_arrester_IO)
     else:
-        num_flashovers = (num_flashovers_DLS[num_placement] + num_flashovers_IO[num_placement]) * section_length / 100
-        return initial_num_flashovers * 100 / (num_flashovers * num_placement * cost_arrester_DLS)
+        num_flashovers = (num_flashovers_DLS[num_placement] + num_flashovers_IO[num_placement]) * sect_len / 100
+        return init_num_flashovers * 100 / (num_flashovers * num_placement * cost_arrester_DLS)
 
-#Вычисление эффективности для секции
-def comp_efficiency(num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
+# Вычисление коэффициента эффективности для секции.
+"""Ввод: список отключений от ПУМ, список отключений от ИП, длина секции,
+   цена одного разрядника от ПУМ, цена одного разрядника от ИП
+   Вывод: коэффициент эффективности"""
+def comp_efficiency(num_flashovers_DLS, num_flashovers_IO, sect_len, 
+                    cost_arrester_DLS, cost_arrester_IO):
     efficiency = []
     for i in range(4):
-        efficiency.append(comp_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO))
+        efficiency.append(comp_efficiency_variation(i, num_flashovers_DLS, num_flashovers_IO, sect_len, cost_arrester_DLS, cost_arrester_IO))
     return efficiency
 
-#Вывод расстановки разрядников
-def print_placement(num_section, num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO):
-    print('Ставим на одну опору секции ' + str(num_section))
+# Вывод расстановки разрядников для секции.
+"""Ввод: номер секции, вариант расстановки, список отключений от ПУМ, 
+   список отключений от ИП, длина секции, цена одного разрядника от ПУМ,
+   цена одного разрядника от ИП
+   Вывод: номер секции, число разрядников от ПУМ, число разрядников от ИП"""
+def print_placement(num_sect, num_placement, num_flashovers_DLS,
+                    num_flashovers_IO, sect_len, cost_arrester_DLS, cost_arrester_IO):
+    print('Ставим на одну опору секции ' + str(num_sect))
     num_arrester_DLS, num_arrester_IO = comp_num_arrester_tower(num_placement)
     print('Разрядников от ПУМ ' + str(num_arrester_DLS) + ' штук(у)')
     print('Разрядников от ИП ' + str(num_arrester_IO) + ' штук(у)')
-    #relative_efficiency = comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, section_length, cost_arrester_DLS, cost_arrester_IO)
+    #relative_efficiency = comp_efficiency_variation(num_placement, num_flashovers_DLS, num_flashovers_IO, sect_len, cost_arrester_DLS, cost_arrester_IO)
     #print('Относителная эффективность: ' + str(relative_efficiency))
 
-#Сортировка по оптимальности вариантов размещения разрядников
-def sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO):
+# Сортировка по эффективности вариантов размещения разрядников.
+"""Ввод: список отключений от ПУМ для всех секций, 
+   список отключений от ИП для всех секций, длина всех секций,
+   цена одного разрядника от ПУМ, цена одного разрядника от ИП
+   Вывод: отсортированный список номеров секций,
+   отсортированный список вариантов расстановок разрядников"""
+def sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, 
+                           sect_len_all, cost_arrester_DLS, cost_arrester_IO):
     efficiency_all = []
-    ind_section = []
+    ind_sect = []
     ind_num_placement = []
-    for i in range(len(section_length)):
-        efficiency = comp_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], section_length[i], cost_arrester_DLS, cost_arrester_IO)
+    for i in range(len(sect_len_all)):
+        efficiency = comp_efficiency(num_flashovers_DLS_all[i], num_flashovers_IO_all[i], 
+                                     sect_len_all[i], cost_arrester_DLS, cost_arrester_IO)
         efficiency_all.append(efficiency)
     while(find_max(efficiency_all) != 0):
         i1, j1 = find_max_ind(efficiency_all)
-        #print_placement(i1 + 1, j1, num_flashovers_DLS_all[i1], num_flashovers_IO_all[i1], section_length[i1])
+        #print_placement(i1 + 1, j1, num_flashovers_DLS_all[i1], num_flashovers_IO_all[i1], sect_len[i1])
         efficiency_all[i1][j1] = 0
-        ind_section.append(i1 + 1)
+        ind_sect.append(i1 + 1)
         ind_num_placement.append(j1)
-    return ind_section, ind_num_placement
+    return ind_sect, ind_num_placement
 
-#вычисление количества разрядников на секцию
-def comp_num_arrester_section(section_length, span_length, arrester_on_tower):
-    return section_length * 1000 / span_length * arrester_on_tower
+# Вычисление количества разрядников на секцию.
+"""Ввод: длина секции, длина пролета, количество разрядников на опору
+   Вывод: число разрядников"""
+def comp_num_arrester_sect(sect_len, span_len, arrester_on_tower):
+    return sect_len * 1000 / span_len * arrester_on_tower
 
-#вычисление количества разрядников на линию
-def comp_num_arrester_line(section_length, span_length, arrester_on_tower):
+# Вычисление количества разрядников на линию.
+"""Ввод: длина всех секций, длина пролетов для всех секций,
+   количество разрядников на опору для всех секций
+   Вывод: число разрядников"""
+def comp_num_arrester_line(sect_len_all, span_len_all, arrester_on_tower_all):
     num_arrester = 0.0
     for i in range(len(arrester_on_tower)):
-        num_arrester += comp_num_arrester_section(section_length[i], span_length[i], arrester_on_tower[i])
+        num_arrester += comp_num_arrester_sect(sect_len_all[i], span_len_all[i],
+                                               arrester_on_tower_all[i])
     return num_arrester
 
 #Вычисление эффективности не полной расстановки разрядников на секцию
 
 #Доразмещение разрядников на оставшиеся деньги
-#def f(amount_money, ind_section, ind_num_placement, ind_now):
+#def f(amount_money, ind_sect, ind_num_placement, ind_now):
 #    max_efficiency = 0
-#    for i in range(ind_now, len(ind_section), 1):
+#    for i in range(ind_now, len(ind_sect), 1):
 #        if(max_efficiency < )
 #    return 1
 
-#Оптимальное размещение разрядников от количества денег на их покупку
-def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length, cost_arrester_DLS, cost_arrester_IO):
-    ind_section, ind_num_placement = sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, section_length, cost_arrester_DLS, cost_arrester_IO)
+# Оптимальное размещение разрядников от количества денег на их покупку.
+"""Ввод: сумма денег на покупку, список отключений от ПУМ для всех секций, 
+   список отключений от ИП для всех секций, длина пролетов для всех секций, 
+   длина всех секций, цена одного разрядника от ПУМ, цена одного разрядника от ИП
+   Вывод: результата навешивания разрядников, результата снятия разрядников,
+   конечное число разрядников на линии, оставшаяся сумма денег"""
+def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
+                   span_len_all, sect_len_all, cost_arrester_DLS, cost_arrester_IO):
+    ind_sect, ind_num_placement = sort_optimal_placement(num_flashovers_DLS_all, num_flashovers_IO_all, sect_len_all, cost_arrester_DLS, cost_arrester_IO)
     
-    #число разрядников на одном столбе секций
-    num_arrester_DLS_tower_section = [0, 0, 0]
-    num_arrester_IO_tower_section = [0, 0, 0]
+    # число разрядников на одном столбе секций на текущий момент времени
+    num_arrester_DLS_tower_sect = [0, 0, 0]
+    num_arrester_IO_tower_sect = [0, 0, 0]
     
-    #всего на линии разрядников
+    # всего разрядников на линии на текущий момент времени
     num_arrester_DLS_all = 0
     num_arrester_IO_all = 0
 
     i = 0
-    while(i < len(ind_section)):
+    while(i < len(ind_sect)):
         num_arrester_DLS, num_arrester_IO = comp_num_arrester_tower(ind_num_placement[i])
 
-        if(num_arrester_DLS_tower_section[ind_section[i] - 1] > num_arrester_DLS):
+        if(num_arrester_DLS_tower_sect[ind_sect[i] - 1] > num_arrester_DLS):
             i += 1
             continue
-        if(num_arrester_IO == 1 and num_arrester_DLS_tower_section[ind_section[i] - 1] != 0):
+        if(num_arrester_IO == 1 and num_arrester_DLS_tower_sect[ind_sect[i] - 1] != 0):
             i += 1
             continue
 
-        num_arrester_DLS -= num_arrester_DLS_tower_section[ind_section[i] - 1]
+        num_arrester_DLS -= num_arrester_DLS_tower_sect[ind_sect[i] - 1]
 
-        new_arrester_DLS = comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], num_arrester_DLS)
-        new_arrester_IO = comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], num_arrester_IO)
+        new_arrester_DLS = comp_num_arrester_sect(sect_len_all[ind_sect[i] - 1], span_len_all[ind_sect[i] - 1], num_arrester_DLS)
+        new_arrester_IO = comp_num_arrester_sect(sect_len_all[ind_sect[i] - 1], span_len_all[ind_sect[i] - 1], num_arrester_IO)
 
         cost_arrester = cost_arrester_DLS * new_arrester_DLS
         cost_arrester += cost_arrester_IO * new_arrester_IO 
 
-        #снятие ИП разрядников при навешивании разрядников ПУМ
-        if(num_arrester_IO_tower_section[ind_section[i] - 1] == 1 and
-           amount_money >= cost_arrester - cost_arrester_IO * comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], 1)):
-            num_arrester_IO_tower_section[ind_section[i] - 1] = 0
-            num_arrester_IO_return = comp_num_arrester_section(section_length[ind_section[i] - 1], span_length[ind_section[i] - 1], 1)
+        # снятие ИП разрядников при навешивании разрядников ПУМ
+        if(num_arrester_IO_tower_sect[ind_sect[i] - 1] == 1 and
+           amount_money >= cost_arrester - cost_arrester_IO * comp_num_arrester_sect(sect_len_all[ind_sect[i] - 1], span_len_all[ind_sect[i] - 1], 1)):
+            num_arrester_IO_tower_sect[ind_sect[i] - 1] = 0
+            num_arrester_IO_return = comp_num_arrester_sect(sect_len_all[ind_sect[i] - 1], span_len_all[ind_sect[i] - 1], 1)
             amount_money += cost_arrester_IO * num_arrester_IO_return
             num_arrester_IO_all -= num_arrester_IO_return
-            print('C секции ' + str(ind_section[i]))
+            print('C секции ' + str(ind_sect[i]))
             print('Убрано разрядников от ИП ' + str(num_arrester_IO_return))
             print('Возвращено денег ' + str(cost_arrester_IO * num_arrester_IO_return) + '\n')
 
-        #навешивание разрядников
+        # навешивание разрядников
         if(amount_money >= cost_arrester):
-            num_arrester_DLS_tower_section[ind_section[i] - 1] += num_arrester_DLS
-            num_arrester_IO_tower_section[ind_section[i] - 1] = num_arrester_IO
+            num_arrester_DLS_tower_sect[ind_sect[i] - 1] += num_arrester_DLS
+            num_arrester_IO_tower_sect[ind_sect[i] - 1] = num_arrester_IO
             amount_money -= cost_arrester
-            print_placement(ind_section[i], ind_num_placement[i], num_flashovers_DLS_all[ind_section[i] - 1], 
-                            num_flashovers_IO_all[ind_section[i] - 1], section_length[ind_section[i] - 1], cost_arrester_DLS, cost_arrester_IO)
+            print_placement(ind_sect[i], ind_num_placement[i], num_flashovers_DLS_all[ind_sect[i] - 1], 
+                            num_flashovers_IO_all[ind_sect[i] - 1], sect_len_all[ind_sect[i] - 1], cost_arrester_DLS, cost_arrester_IO)
             print('Поставлено разрядников ' + str(new_arrester_DLS + new_arrester_IO))
             print('Потрачено денег ' + str(cost_arrester) + '\n')
         else: 
@@ -155,28 +194,35 @@ def optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
     print('Разрядников от ИП ' + str(num_arrester_IO_all))
     print('Осталось денег ' + str(amount_money))
 
-#входные данные
-#длины пролетов cекций(м)
-span_length = [200, 500, 400]
-#длина секций(км)
-section_length = [10, 10, 10]
-#количества отключений для секций на 100 км линии в год
-#от ПУМ для 0, 1, 2, 3 разрядников от ПУМ
-num_flashovers_DLS_1 = [12, 8, 2, 1]
-num_flashovers_DLS_2 = [8, 4, 1, 0.6]
-num_flashovers_DLS_3 = [10, 5, 2, 0.5]
-#от ИП для 0, 1 от ПУМ, 2 от ПУМ или 1 от ИП, 3 от ПУМ разрядников
-num_flashovers_IO_1 = [10, 2, 0.5, 0]
-num_flashovers_IO_2 = [20, 5, 2, 0]
-num_flashovers_IO_3 = [5, 1, 0.5, 0]
-#общий список
-num_flashovers_DLS_all = [num_flashovers_DLS_1, num_flashovers_DLS_2, num_flashovers_DLS_3]
-num_flashovers_IO_all = [num_flashovers_IO_1, num_flashovers_IO_2, num_flashovers_IO_3]
-#стоимость разрядников
-cost_arrester_DLS = 5
-cost_arrester_IO = 0.5
-#количество денег на разрядники
-amount_money = 337.5
+# Функция main()
+def main():
+    # Входные данные
+    # длины пролетов всех cекций(м)
+    span_len_all = [200, 500, 400]
+    # длина всех секций(км)
+    sect_len_all = [10, 10, 10]
+    # количества отключений для секций на 100 км линии в год
+    # от ПУМ для 0, 1, 2, 3 разрядников от ПУМ
+    num_flashovers_DLS_1 = [12, 8, 2, 1]
+    num_flashovers_DLS_2 = [8, 4, 1, 0.6]
+    num_flashovers_DLS_3 = [10, 5, 2, 0.5]
+    # от ИП для 0, 1 от ПУМ, 2 от ПУМ или 1 от ИП, 3 от ПУМ разрядников
+    num_flashovers_IO_1 = [10, 2, 0.5, 0]
+    num_flashovers_IO_2 = [20, 5, 2, 0]
+    num_flashovers_IO_3 = [5, 1, 0.5, 0]
+    # общий список отключений для линии
+    num_flashovers_DLS_all = [num_flashovers_DLS_1, num_flashovers_DLS_2, num_flashovers_DLS_3]
+    num_flashovers_IO_all = [num_flashovers_IO_1, num_flashovers_IO_2, num_flashovers_IO_3]
+    # стоимость одного разрядника
+    cost_arrester_DLS = 5
+    cost_arrester_IO = 0.5
+    # количество денег на разрядники
+    amount_money = 337.5
 
-#запуск 
-optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, span_length, section_length, cost_arrester_DLS, cost_arrester_IO)
+    # запуск функции оптимального распределния
+    optimal_schema(amount_money, num_flashovers_DLS_all, num_flashovers_IO_all, 
+                   span_len_all, sect_len_all, cost_arrester_DLS, cost_arrester_IO)
+
+# Запуск программы.
+if __name__ == "__main__":
+    main()
