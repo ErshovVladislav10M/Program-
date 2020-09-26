@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import sys
+import requests
+from bs4 import BeautifulSoup
+import sqlite3
+
+headers = {
+    'cache-control': 'max-age=0',
+    'upgrade-insecure-requests': '1',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36',
+    'sec-fetch-dest': 'document',
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'sec-fetch-site': 'same-origin',
+    'sec-fetch-mode': 'navigate',
+    'sec-fetch-user': '?1',
+    'accept-language': 'en-US,en;q=0.9',
+}
+
+session = requests.session()
+
+response = session.get("https://pikabu.ru/new", headers=headers)
+
+if response.status_code != 200:
+    print("Bad result")
+    sys.exit(0)
+
+soup = BeautifulSoup(response.text, "lxml")
+for element in soup.find_all('article', class_='story'):
+    title = element.find('h2', class_="story__title").text.strip()
+    link = element.find('a').get('href')
+    print (title)
+    print (link)
