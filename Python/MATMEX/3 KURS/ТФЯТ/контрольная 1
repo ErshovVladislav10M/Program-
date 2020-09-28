@@ -17,12 +17,12 @@ def word_definition(str1, i, num_str):
     return j
 
 def swertka(str1, num_str = 1):
-    i = -1
-    while (i < len(str1) - 1):
-        i += 1
+    i = 0
+    while (i < len(str1)):
         if(str1[i] == '\n'):
             num_str += 1
         if(Special_characters.count(str1[i]) != 0):
+            i += 1
             continue
         i = word_definition(str1, i, num_str)
     Words.sort()
