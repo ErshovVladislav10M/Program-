@@ -27,13 +27,18 @@ def swertka(str1, num_str = 1):
         i = word_definition(str1, i, num_str)
     Words.sort()
 
-#чтение текстового представления грамматики
-file = open(r'C:\Users\user\Desktop\file_read2.txt', 'r')
-str2 = file.read()
 
-#запуск
-swertka(str2)
+def main():
+    #чтение текстового представления грамматики
+    file = open(r'C:\Users\user\Desktop\file_read2.txt', 'r')
+    str2 = file.read()
 
-#вывод
-for i in range(len(Words)):
-    print(Words[i] + ':' + PlacementWords[Words[i]])
+    #запуск
+    swertka(str2)
+
+    #вывод
+    for i in range(len(Words)):
+        print(Words[i] + ':' + PlacementWords[Words[i]])
+
+if __name__ == '__main__':
+    main()
