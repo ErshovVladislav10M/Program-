@@ -145,7 +145,7 @@ def swertka(str1):
     Out.append(1000)
 
 #чтение текстового представления грамматики
-file = open(r'C:\Users\user\Desktop\file.txt', 'r')
+file = open(r'C:\Users\user\Desktop\file_read.txt', 'r')
 str2 = file.read()
 
 #запуск
