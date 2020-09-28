@@ -1,0 +1,39 @@
+Words = []
+PlacementWords = {}
+Special_characters = [':', ';', ')', '(', '.', '*', ',', '#', '[', ']', ' ', '\n']
+
+def word_definition(str1, i, num_str):
+    j = i
+    c = str1[j]
+    j += 1
+    while(j < len(str1) and Special_characters.count(str1[j]) == 0):
+        c += str1[j]
+        j += 1
+    if(Words.count(c) == 0):
+        Words.append(c)
+        PlacementWords[c] = ' ' + str(num_str)
+    else:
+        PlacementWords[c] += ' ' + str(num_str)
+    return j
+
+def swertka(str1, num_str = 1):
+    i = -1
+    while (i < len(str1) - 1):
+        i += 1
+        if(str1[i] == '\n'):
+            num_str += 1
+        if(Special_characters.count(str1[i]) != 0):
+            continue
+        i = word_definition(str1, i, num_str)
+    Words.sort()
+
+#чтение текстового представления грамматики
+file = open(r'C:\Users\user\Desktop\file_read2.txt', 'r')
+str2 = file.read()
+
+#запуск
+swertka(str2)
+
+#вывод
+for i in range(len(Words)):
+    print(Words[i] + ':' + PlacementWords[Words[i]])
