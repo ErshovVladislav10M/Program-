@@ -1,0 +1,88 @@
+import math
+
+# Исходная функция
+def initial_fun(x):
+	return math.exp(x) - x
+
+# Степенная функция
+def polynomial(x):
+	return x ** 4 - x ** 3 + x ** 2 - x + 1
+
+# Вывод значений таблицы и значений initial_fun от них
+def print_table(array_of_values, name_variable):
+    print('\n' + name_variable + '\t' + 'f(' + name_variable + ')')
+    for i in range(len(array_of_values)):
+        print(str(i + 1) + ')' + str(array_of_values[i]) + '\t' + str(initial_fun(array_of_values[i]))) 
+
+# Вычисление кэффициентов A_i многочлена Ньютона
+def compute_multiplier(X_value):
+    A_i = []
+    for i in range(len(X_value)):
+        new_A_i = initial_fun(X_value[i])
+        for j in range(i):
+            new_A_i -= A_i[j]
+            new_A_i /= X_value[i] - X_value[j]
+        A_i.append(new_A_i)
+    return A_i
+
+# Вычисление значения y от x способом интерполяции по Ньютону
+def compute_y(x, X_value):
+    A_i = compute_multiplier(X_value)
+    y = 0.0
+    for i in range(len(X_value)):
+        t = 1.0
+        for j in range(i):
+            t *= x - X_value[j]
+        y += A_i[i] * t
+    return y
+
+print('Задача алгеброического интерполирования')
+print('Вариант 3' + '\n')
+
+print('Введите начальные данные')
+print('Введите левый конец отрезка')
+a = float(input())
+print('Введите правый конец отрезка')
+b = float(input())
+print('Введите количество значений в таблице')
+m = int(input()) - 1
+print('Отрезок разбит на m = ' + str(m) + ' подотрезков')
+
+# список точек
+z_j = []
+step_x = (b - a) / m
+k = 0
+while (b >= a + step_x * k):
+    z_j.append(a + step_x * k)
+    k += 1
+# вывод значений
+print_table(z_j, 'z_j')
+
+while True:
+    print('\n' + 'Введите x - точку интерполирования')
+    x = float(input())
+    while True:
+        print('Введите n - степень интерполяционнго многочлена (0 <= n <= ' + str(m) + ')')
+        n = int(input())
+        if(n <= m and n >= 0):
+            break
+
+    x_j = []
+    dict1 = {}
+    for i in range(len(z_j)):
+        dict1[z_j[i]] = abs(z_j[i] - x)
+    list_dict1 = list(dict1.items())
+    list_dict1.sort(key = lambda i: i[1])
+    k = 0
+    for i in list_dict1:
+        x_j.append(i[0])
+        k += 1
+        if(k >= n + 1):
+            break
+    print_table(x_j, 'x_j')
+
+    print('Найденное значение по интерполяционному многочлену Ньютона: ' + str(compute_y(x, x_j)))
+    print('Абсолютная погрешность ' + str(abs(initial_fun(x) - compute_y(x, x_j))))
+    print('\n' + 'Ввести новые значения x и n? (да/нет)')
+    if(input() == 'нет'):
+        break
