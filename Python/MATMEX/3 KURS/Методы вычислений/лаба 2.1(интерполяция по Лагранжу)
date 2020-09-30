@@ -29,53 +29,57 @@ def compute_y(x, array_of_values):
         y += initial_fun(array_of_values[i]) * (y1 / y2)
     return y
 
-print('Задача алгеброического интерполирования')
-print('Вариант 3' + '\n')
+def main():
+    print('Задача алгеброического интерполирования')
+    print('Вариант 3' + '\n')
+    
+    print('Введите начальные данные')
+    print('Введите левый конец отрезка')
+    a = float(input())
+    print('Введите правый конец отрезка')
+    b = float(input())
+    print('Введите количество значений в таблице')
+    m = int(input()) - 1
+    print('Отрезок разбит на m = ' + str(m) + ' подотрезков')
 
-print('Введите начальные данные')
-print('Введите левый конец отрезка')
-a = float(input())
-print('Введите правый конец отрезка')
-b = float(input())
-print('Введите количество значений в таблице')
-m = int(input()) - 1
-print('Отрезок разбит на m = ' + str(m) + ' подотрезков')
-
-#список точек
-z_j = []
-step_x = (b - a) / m
-k = 0
-while (b >= a + step_x * k):
-    z_j.append(a + step_x * k)
-    k += 1
-#вывод значений
-print_table(z_j, 'z_j')
-
-while True:
-    print('\n' + 'Введите x - точку интерполирования')
-    x = float(input())
-    while True:
-        print('Введите n - степень интерполяционнго многочлена (0 <= n <= ' + str(m) + ')')
-        n = int(input())
-        if(n <= m and n >= 0):
-            break
-
-    x_j = []
-    dict1 = {}
-    for i in range(len(z_j)):
-        dict1[z_j[i]] = abs(z_j[i] - x)
-    list_dict1 = list(dict1.items())
-    list_dict1.sort(key = lambda i: i[1])
+    #список точек
+    z_j = []
+    step_x = (b - a) / m
     k = 0
-    for i in list_dict1:
-        x_j.append(i[0])
+    while (b >= a + step_x * k):
+        z_j.append(a + step_x * k)
         k += 1
-        if(k >= n + 1):
-            break
-    print_table(x_j, 'x_j')
+    #вывод значений
+    print_table(z_j, 'z_j')
 
-    print('Найденное значение по интерполяционному многочлену Лагранжа: ' + str(compute_y(x, x_j)))
-    print('Абсолютная погрешность ' + str(abs(initial_fun(x) - compute_y(x, x_j))))
-    print('\n' + 'Ввести новые значения x и n? (да/нет)')
-    if(input() == 'нет'):
-        break
+    while True:
+        print('\n' + 'Введите x - точку интерполирования')
+        x = float(input())
+        while True:
+            print('Введите n - степень интерполяционнго многочлена (0 <= n <= ' + str(m) + ')')
+            n = int(input())
+            if(n <= m and n >= 0):
+                break
+
+        x_j = []
+        dict1 = {}
+        for i in range(len(z_j)):
+            dict1[z_j[i]] = abs(z_j[i] - x)
+        list_dict1 = list(dict1.items())
+        list_dict1.sort(key = lambda i: i[1])
+        k = 0
+        for i in list_dict1:
+            x_j.append(i[0])
+            k += 1
+            if(k >= n + 1):
+                break
+        print_table(x_j, 'x_j')
+
+        print('Найденное значение по интерполяционному многочлену Лагранжа: ' + str(compute_y(x, x_j)))
+        print('Абсолютная погрешность ' + str(abs(initial_fun(x) - compute_y(x, x_j))))
+        print('\n' + 'Ввести новые значения x и n? (да/нет)')
+        if(input() == 'нет'):
+            break
+
+if __name__ == '__main__':
+    main()
