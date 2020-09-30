@@ -27,7 +27,7 @@ def compute_f2(x, m, h):
 # Вывод результата
 def print_answer(m, a, h):
     print('\n' + 'x' + '\t\t' + 'f(x)' + '\t\t\t' + "f'(x)" + '\t\t'
-          + "|f'(x) - f'(x)|" + '\t\t' + 'f"(x)' + '\t\t' + '|f"(x) - f"(x)|')
+          + "Модуль невязки для f'" + '\t\t' + 'f"(x)' + '\t\t' + 'Модуль невязки для f"')
     for i in range(m):
         x = a + i * h
         f1 = compute_f1(x, i, m, h)
@@ -52,7 +52,6 @@ while True:
     a = float(input())
     print('Введите шаг разбиения')
     h = float(input())
-    print('Отрезок разбит на m = ' + str(m) + ' подотрезков')
     
     print_answer(m, a, h)
 
