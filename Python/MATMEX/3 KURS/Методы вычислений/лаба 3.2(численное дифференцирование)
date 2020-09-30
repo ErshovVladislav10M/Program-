@@ -41,20 +41,23 @@ def print_answer(m, a, h):
               + str(f1) + '\t' + str(abs(f1 - init_f1(x))) 
               + '\t' + str(f2) + '\t' + str(abs_f2))
 
-print('Задача численного дифференцирования')
-print('Вариант 3' + '\n')
-
-while True:
-    print('Введите начальные данные')
-    print('Введите количество значений в таблице')
-    m = int(input()) - 1
-    print('Введите левый конец отрезка')
-    a = float(input())
-    print('Введите шаг разбиения')
-    h = float(input())
+def main():
+    print('Задача численного дифференцирования')
+    print('Вариант 3' + '\n')
+    while True:
+        print('Введите начальные данные')
+        print('Введите количество значений в таблице')
+        m = int(input()) - 1
+        print('Введите левый конец отрезка')
+        a = float(input())
+        print('Введите шаг разбиения')
+        h = float(input())
     
-    print_answer(m, a, h)
+        print_answer(m, a, h)
 
-    print('\n' + 'Ввести новые значения m, a и h? (да/нет)')
-    if(input() == 'нет'):
-        break
+        print('\n' + 'Ввести новые значения m, a и h? (да/нет)')
+        if(input() == 'нет'):
+            break
+
+if __name__ == '__main__':
+    main()
