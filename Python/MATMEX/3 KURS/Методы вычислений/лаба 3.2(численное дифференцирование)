@@ -1,0 +1,61 @@
+import math
+
+# Исходная функция
+def init_f(x):
+	return math.exp(6 * x)
+
+# Первая производная
+def init_f1(x):
+	return 6 * math.exp(6 * x)
+
+# Вторая производная
+def init_f2(x):
+	return 36 * math.exp(6 * x)
+
+# Вычисление первой производной
+def compute_f1(x, i, m, h):
+    if(i == 0):
+        return (-3 * init_f(x) + 4 * init_f(x + h) - init_f(x + 2 * h)) / (2 * h)
+    if(i == m):
+        return (3 * init_f(x) - 4 * init_f(x - h) + init_f(x - 2 * h)) / (2 * h)
+    return (init_f(x + h) - init_f(x - h)) / (2 * h)
+
+# Вычисление первой производной
+def compute_f2(x, m, h):
+    return (init_f(x + h) - 2 * init_f(x) + init_f(x - h)) / h ** 2
+
+# Вывод результата
+def print_answer(m, a, h):
+    print('\n' + 'x' + '\t\t' + 'f(x)' + '\t\t\t' + "f'(x)" + '\t\t'
+          + "|f'(x) - f'(x)|" + '\t\t' + 'f"(x)' + '\t\t' + '|f"(x) - f"(x)|')
+    for i in range(m):
+        x = a + i * h
+        f1 = compute_f1(x, i, m, h)
+        if(i == m - 1 or i == 0):
+            f2 = ''
+            abs_f2 = ''
+        else:
+            f2 = compute_f2(x, m, h)
+            abs_f2 = f2 - init_f2(x)
+        print(str(x) + '\t' + str(init_f(x)) + '\t' 
+              + str(f1) + '\t' + str(abs(f1 - init_f1(x))) 
+              + '\t' + str(f2) + '\t' + str(abs_f2))
+
+print('Задача численного дифференцирования')
+print('Вариант 3' + '\n')
+
+while True:
+    print('Введите начальные данные')
+    print('Введите количество значений в таблице')
+    m = int(input()) - 1
+    print('Введите левый конец отрезка')
+    a = float(input())
+    print('Введите шаг разбиения')
+    h = float(input())
+    print('Отрезок разбит на m = ' + str(m) + ' подотрезков')
+    
+    print_answer(m, a, h)
+
+    print('\n' + 'Ввести новые значения m, a и h? (да/нет)')
+    if(input() == 'нет'):
+        break
