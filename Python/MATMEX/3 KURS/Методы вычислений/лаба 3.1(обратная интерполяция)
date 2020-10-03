@@ -57,7 +57,7 @@ def bisection(epsilon, F, X_value):
     return (a + b) / 2
 
 def main():
-    print('Задача алгеброического интерполирования')
+    print('Задача обратного интерполирования')
     print('Вариант 3' + '\n')
     
     print('Введите начальные данные')
@@ -76,10 +76,10 @@ def main():
         z_j.append(a + step_x * k)
         k += 1
     # Вывод значений
-    #print_table(z_j, 'z_j')
+    print_table(z_j, 'z_j')
 
     while True:
-        print('\n' + 'Введите F - точку интерполирования')
+        print('\n' + 'Введите F - точку обратного интерполирования')
         F = float(input())
         while True:
             print('Введите n - степень интерполяционнго многочлена (0 <= n <= ' + str(m) + ')')
@@ -102,7 +102,7 @@ def main():
             k += 1
             if(k >= n + 1):
                 break
-        #print_table(x_j, 'x_j')
+        print_table(x_j, 'x_j')
 
         print('1 cпособ:')
         print('Найденное значение по интерполяционному многочлену Лагранжа: ' + str(compute_x(F, x_j)))
