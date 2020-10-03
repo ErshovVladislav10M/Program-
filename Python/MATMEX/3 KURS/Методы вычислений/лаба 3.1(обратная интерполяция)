@@ -10,9 +10,9 @@ def inv_f(y):
 
 # Вывод значений таблицы и значений init_f от них
 def print_table(X_value, name_variable):
-    print('\n' + name_variable + '\t' + 'f(' + name_variable + ')')
+    print('\n' + name_variable + '\t\t\t' + 'f(' + name_variable + ')')
     for i in range(len(X_value)):
-        print(str(i + 1) + ')' + str(X_value[i]) + '\t' + str(init_f(X_value[i]))) 
+        print(str(i + 1) + ')' + str(X_value[i]) + '\t\t\t' + str(init_f(X_value[i]))) 
 
 # Вычисление x по многочлену Лагранжа
 def compute_x(F, X_value):
