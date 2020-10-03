@@ -1,0 +1,121 @@
+import math
+
+# Исходная функция
+def init_f(x):
+	return math.exp(x)
+
+# Обратная функция\
+def inv_f(y):
+    return math.log(y)
+
+# Вывод значений таблицы и значений init_f от них
+def print_table(X_value, name_variable):
+    print('\n' + name_variable + '\t' + 'f(' + name_variable + ')')
+    for i in range(len(X_value)):
+        print(str(i + 1) + ')' + str(X_value[i]) + '\t' + str(init_f(X_value[i]))) 
+
+# Вычисление x по многочлену Лагранжа
+def compute_x(F, X_value):
+    x = 0.0
+    for i in range(len(X_value)):
+        x1 = 1.0
+        for j in range(len(X_value)):
+            if(j != i):
+                x1 *= F - init_f(X_value[j])
+        x2 = 1.0
+        for j in range(len(X_value)):
+            if(j != i):
+                x2 *= init_f(X_value[i]) - init_f(X_value[j])
+        x += X_value[i] * (x1 / x2)
+    return x
+
+# Вычисление y по многочлену Лагранжа
+def compute_y(x, X_value):
+    y = 0.0
+    for i in range(len(X_value)):
+        y1 = 1.0
+        for j in range(len(X_value)):
+            if(j != i):
+                y1 *= x - X_value[j]
+        y2 = 1.0
+        for j in range(len(X_value)):
+            if(j != i):
+                y2 *= X_value[i] - X_value[j]
+        y += init_f(X_value[i]) * (y1 / y2)
+    return y
+
+# Метод бисекции
+def bisection(epsilon, F, X_value):
+    a = min(X_value)
+    b = max(X_value)
+    while(b - a > 2 * epsilon):
+        c = (a + b) / 2
+        if((compute_y(a, X_value) - F) * (compute_y(c, X_value) - F) <= 0):
+            b = c
+        else:
+            a = c
+    return (a + b) / 2
+
+def main():
+    print('Задача алгеброического интерполирования')
+    print('Вариант 3' + '\n')
+    
+    print('Введите начальные данные')
+    print('Введите левый конец отрезка')
+    a = float(input())
+    print('Введите правый конец отрезка')
+    b = float(input())
+    print('Введите количество значений в таблице')
+    m = int(input()) - 1
+
+    # Список точек
+    z_j = []
+    step_x = (b - a) / m
+    k = 0
+    while (b >= a + step_x * k):
+        z_j.append(a + step_x * k)
+        k += 1
+    # Вывод значений
+    #print_table(z_j, 'z_j')
+
+    while True:
+        print('\n' + 'Введите F - точку интерполирования')
+        F = float(input())
+        while True:
+            print('Введите n - степень интерполяционнго многочлена (0 <= n <= ' + str(m) + ')')
+            n = int(input())
+            if(n <= m and n >= 0):
+                break
+        
+        if(n > 100):
+            n = 100
+
+        x_j = []
+        dict1 = {}
+        for i in range(len(z_j)):
+            dict1[z_j[i]] = abs(z_j[i] - inv_f(F))
+        list_dict1 = list(dict1.items())
+        list_dict1.sort(key = lambda i: i[1])
+        k = 0
+        for i in list_dict1:
+            x_j.append(i[0])
+            k += 1
+            if(k >= n + 1):
+                break
+        #print_table(x_j, 'x_j')
+
+        print('1 cпособ:')
+        print('Найденное значение по интерполяционному многочлену Лагранжа: ' + str(compute_x(F, x_j)))
+        print('Абсолютная погрешность ' + str(abs(inv_f(F) - compute_x(F, x_j))))
+
+        print('2 cпособ:')
+        epsilon = 0.00000001
+        print('Найденное значение по методу бисекции: ' + str(bisection(epsilon, F, x_j)))
+        print('Абсолютная погрешность ' + str(abs(inv_f(F) - bisection(epsilon, F, x_j))))
+
+        print('\n' + 'Ввести новые значения F и n? (да/нет)')
+        if(input() == 'нет'):
+            break
+
+if __name__ == '__main__':
+    main()
