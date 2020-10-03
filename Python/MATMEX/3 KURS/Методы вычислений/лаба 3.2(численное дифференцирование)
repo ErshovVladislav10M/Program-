@@ -26,7 +26,7 @@ def compute_f2(x, m, h):
 
 # Вывод результата
 def print_answer(m, a, h):
-    print('\n' + 'x' + '\t\t' + 'f(x)' + '\t\t\t' + "f'(x)" + '\t\t'
+    print('\n  ' + 'x' + '\t\t\t' + 'f(x)' + '\t\t\t' + "f'(x)" + '\t\t'
           + "Модуль невязки для f'" + '\t\t' + 'f"(x)' + '\t\t' + 'Модуль невязки для f"')
     for i in range(m):
         x = a + i * h
@@ -37,7 +37,7 @@ def print_answer(m, a, h):
         else:
             f2 = compute_f2(x, m, h)
             abs_f2 = f2 - init_f2(x)
-        print(str(x) + '\t' + str(init_f(x)) + '\t' 
+        print(str(i + 1) + ')' + str(x) + '\t\t' + str(init_f(x)) + '\t' 
               + str(f1) + '\t' + str(abs(f1 - init_f1(x))) 
               + '\t' + str(f2) + '\t' + str(abs_f2))
 
@@ -47,7 +47,7 @@ def main():
     while True:
         print('Введите начальные данные')
         print('Введите количество значений в таблице')
-        m = int(input()) - 1
+        m = int(input())
         print('Введите левый конец отрезка')
         a = float(input())
         print('Введите шаг разбиения')
