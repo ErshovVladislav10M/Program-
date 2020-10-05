@@ -83,7 +83,7 @@ def main():
         print('\n' + 'Введите F - точку обратного интерполирования')
         F = float(input())
         while True:
-            print('Введите n - степень интерполяционнго многочлена (0 <= n <= ' + str(m) + ')')
+            print('Введите n - степень интерполяционного многочлена (0 <= n <= ' + str(m) + ')')
             n = int(input())
             if(n <= m and n >= 0):
                 break
@@ -106,13 +106,13 @@ def main():
         print_table(x_j, 'x_j')
 
         print('1 cпособ:')
-        print('Найденное значение по интерполяционному многочлену Лагранжа: ' + str(compute_x(F, x_j)))
-        print('Абсолютная погрешность ' + str(abs(inv_f(F) - compute_x(F, x_j))))
+        print('Найденное значение: ' + str(compute_x(F, x_j)))
+        print('Модуль невязки ' + str(abs(F - init_f(compute_x(F, x_j)))))
 
         print('2 cпособ:')
-        epsilon = 0.00000001
-        print('Найденное значение по методу бисекции: ' + str(bisection(epsilon, F, x_j)))
-        print('Абсолютная погрешность ' + str(abs(inv_f(F) - bisection(epsilon, F, x_j))))
+        epsilon = 0.00000000001
+        print('Найденное значение: ' + str(bisection(epsilon, F, x_j)))
+        print('Модуль невязки ' + str(abs(F - init_f(bisection(epsilon, F, x_j)))))
 
         print('\n' + 'Ввести новые значения F и n? (да/нет)')
         if(input() == 'нет'):
