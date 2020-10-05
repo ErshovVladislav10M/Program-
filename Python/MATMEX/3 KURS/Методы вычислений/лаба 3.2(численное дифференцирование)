@@ -42,6 +42,7 @@ def print_answer(m, a, h):
               + '\t' + str(f2) + '\t' + str(abs_f2))
 
 def main():
+    print('Лабораторная работа 3.2')
     print('Задача численного дифференцирования')
     print('Вариант 3' + '\n')
     while True:
