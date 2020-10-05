@@ -1,0 +1,73 @@
+import random
+import math
+import numpy as np
+
+# ЛЭП
+class PowerLine:
+    # DLS - direct lightning strike 
+    arrester_DLS = []
+    # RO - reverse overlap
+    arrester_RO = []
+    def __init__(obj, num_tower):
+        obj.arrester_DLS = [0 for i in range(num_tower)]
+        obj.arrester_RO = [0 for i in range(num_tower)]
+
+# Медиана по силе тока
+CUR_STR_MEDIAN = 33.3
+# Средне квадртичное отклонение по силе тока
+CUR_STR_SIGMA = 0.605
+
+# Плотность логнормального распределения
+def p_lognorm(value, median, sigma):
+    a1 = 1 / (math.sqrt(2 * math.pi) * value * sigma)
+    a2 = math.exp(-(math.log(value) - math.log(median)) ** 2 / (2 * sigma ** 2)) 
+    return a1 * a2
+
+# Нахождение медианного значения
+def mod_p(median, sigma):
+    return math.exp(math.log(median) - sigma ** 2)
+
+# Максимум плотности для тока молнии
+def max_p_i():
+    return p_lognorm(mod_p(CUR_STR_MEDIAN, CUR_STR_SIGMA), CUR_STR_MEDIAN, CUR_STR_SIGMA)
+
+# Вычисление одного I_p
+def compute_I_p():
+    I_p = 1 + (200 - 1) * random.uniform(0, 1)
+    Z = random.uniform(0, 1)
+    while Z >= p_lognorm(I_p, CUR_STR_MEDIAN, CUR_STR_SIGMA) / max_p_i():
+        I_p = 1 + (200 - 1) * random.uniform(0, 1)
+        Z = random.uniform(0, 1)
+    return I_p
+
+# Создание череды из N_tot событий
+# (событие - удар молнии с определенной 
+# силой тока в определенный пролет)
+def create_event(N_tot=100):
+    I_p_n = []
+    ind_span = np.random.permutation(N_tot)
+    for i in range(N_tot):
+        I_p_n.append(compute_I_p())
+    return I_p_n, ind_span
+
+# Вычисление результата удара молнии
+def comp_lightn_strike(cur_str, num_span, power_line):
+    k = random.randit(0, 1)
+    if(k == 1):
+        comp_lightn_strike_span(cur_str, num_spa)
+
+# Вычисление результата череды событий
+def comp_ans(power_line, N_tot=100):
+    I_p_n, ind_span = create_event(N_tot)
+    for i in range(N_tot):
+        k = random.randint(0, 1)
+        if(k == 1):
+            comp_lightn_strike_span(power_line, I_p_n[i], ind_span[i])
+        else:
+            comp_lightn_strike_tower(power_line, I_p_n[i], ind_span[i])
+
+def main():
+    power_line = PowerLine(101)
+
+if __name__ == '__main__':
+    main()
