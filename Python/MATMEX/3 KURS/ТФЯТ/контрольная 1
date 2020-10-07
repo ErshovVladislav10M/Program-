@@ -30,7 +30,7 @@ def swertka(str1, num_str = 1):
 
 def main():
     #чтение текстового представления грамматики
-    file = open(r'C:\Users\user\Desktop\file_read2.txt', 'r')
+    file = open(r'C:\Users\ershov.e\Desktop\file_read2.txt', 'r')
     str2 = file.read()
 
     #запуск
