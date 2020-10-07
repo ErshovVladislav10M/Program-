@@ -6,7 +6,7 @@ Semantika = []
 semantika_index = 101
 Special_characters = [':', ';', ')', '(', '.', '*', ',', '#', '[', ']', ' ', '\n']
 
-#считывание и определение слов(t = 0, если терминал, и t = 1, если нетерминал)
+# Считывание и определение слов(t = 0, если терминал, и t = 1, если нетерминал)
 def read_word(str1, index, t = 0):
     c = str1[index]
     index += 1
@@ -22,7 +22,7 @@ def read_word(str1, index, t = 0):
         t = 1    
     return index, t, c
 
-#Определение нетерминалов
+# Определение нетерминалов
 def Neterminal_definition(str1):
     i = -1
     while (i < len(str1) - 9):
@@ -40,7 +40,7 @@ def Neterminal_definition(str1):
             Neterminal.append(c)
             t = 0
 
-#поиск индекса значения в списке
+# Поиск индекса значения в списке
 def find_index(list1, variable):
     for i in range(len(list1)):
         if(list1[i] == variable):
@@ -144,15 +144,15 @@ def swertka(str1):
     Out.append('\n')
     Out.append(1000)
 
-#чтение текстового представления грамматики
-file = open(r'C:\Users\user\Desktop\file_read.txt', 'r')
+# Чтение текстового представления грамматики
+file = open(r'C:\Users\ershov.e\Desktop\file_read1.txt', 'r')
 str2 = file.read()
 
-#запуск
+# Запуск
 Neterminal_definition(str2)
 swertka(str2)
 
-#вывод лексем в числовом виде
+# Вывод лексем в числовом виде
 i = 0
 while (i < len(Out)):
     print_line = []
