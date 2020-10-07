@@ -13,7 +13,7 @@ class PowerLine:
         obj.arrester_RO = [0 for i in range(num_tower)]
 
 # Медиана по силе тока
-CUR_STR_MEDIAN = 33.3
+CUR_STR_MEDIAN = 31
 # Средне квадртичное отклонение по силе тока
 CUR_STR_SIGMA = 0.605
 
@@ -31,26 +31,17 @@ def mod_p(median, sigma):
 def max_p_i():
     return p_lognorm(mod_p(CUR_STR_MEDIAN, CUR_STR_SIGMA), CUR_STR_MEDIAN, CUR_STR_SIGMA)
 
-# Вычисление одного I_p
-def compute_I_p():
-    I_p = 1 + (200 - 1) * random.uniform(0, 1)
-    Z = random.uniform(0, 1)
-    while Z >= p_lognorm(I_p, CUR_STR_MEDIAN, CUR_STR_SIGMA) / max_p_i():
+# Создание I_p_n (череды сил тока)
+def create_I_p_n(N_tot=100):
+    I_p_n = []
+    for i in range(N_tot):
         I_p = 1 + (200 - 1) * random.uniform(0, 1)
         Z = random.uniform(0, 1)
-    return I_p
-
-# Создание череды из N_tot событий
-# (событие - удар молнии с определенной 
-# силой тока в определенный пролет)
-def create_event(N_tot=100):
-    I_p_n = []
-    ind_span = np.random.permutation(N_tot)
-    for i in range(N_tot):
-        I_p_n.append(compute_I_p())
-    #print(I_p_n)
-    #print(ind_span)
-    return I_p_n, ind_span
+        while Z >= p_lognorm(I_p, CUR_STR_MEDIAN, CUR_STR_SIGMA) / max_p_i():
+            I_p = 1 + (200 - 1) * random.uniform(0, 1)
+            Z = random.uniform(0, 1)
+        I_p_n.append(I_p)
+    return I_p_n
 
 # Проверка на перегрузку DLS разрядников при ударе в опору 
 def check_tower_DLS(cur_str, ind_tower):
@@ -151,7 +142,8 @@ def comp_lightn_strike_tower(power_line, cur_str, num_span):
 
 # Вычисление результата череды событий
 def comp_ans(power_line, N_tot=100):
-    I_p_n, ind_span = create_event(N_tot)
+    I_p_n = create_I_p_n(N_tot)
+    ind_span = np.random.permutation(N_tot)
     for i in range(N_tot):
         k = random.randint(0, 1)
         if(k == 1):
@@ -169,14 +161,15 @@ def print_ans(power_line):
         if(power_line.arrester_DLS[i] == int(power_line.arrester_DLS[i])):
             tot_flashovers += int(power_line.arrester_DLS[i]) 
             - (power_line.arrester_DLS[i] - int(power_line.arrester_DLS[i])) * 10
-    print(tot_posit)
-    print(tot_flashovers)
+    
+    print('Количество срабатываний разрядников ' + str(tot_posit))
+    print('Количество негашений ' + str(tot_flashovers))
 
 def main():
     power_line = PowerLine(101)
     print_ans(power_line)
-    #print(power_line.arrester_DLS)
-    #print(power_line.arrester_RO)
+    print(power_line.arrester_DLS)
+    print(power_line.arrester_RO)
 
 if __name__ == '__main__':
     main()
