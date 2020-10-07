@@ -25,7 +25,7 @@ def p_lognorm(value, median, sigma):
     a2 = math.exp(-(math.log(value) - math.log(median)) ** 2 / (2 * sigma ** 2)) 
     return a1 * a2
 
-# Нахождение медианного значения
+# Нахождение медианного     значения
 def mod_p(median, sigma):
     return math.exp(math.log(median) - sigma ** 2)
 
@@ -190,8 +190,8 @@ def main():
         tot_actuation_DLS += actuation_DLS
         tot_actuation_RO += actuation_RO
         tot_flashovers += flashovers
-    print('Среднее количество срабатываний разрядников DLS ' + str(tot_actuation_DLS / 1000))
-    print('Среднее количество срабатываний разрядников RO ' + str(tot_actuation_RO / 1000))
+    print('Среднее количество срабатываний разрядников DLS: ' + str(tot_actuation_DLS / 1000))
+    print('Среднее количество срабатываний разрядников RO: ' + str(tot_actuation_RO / 1000))
     print('Среднее количество негашений ' + str(tot_flashovers / 1000))
 
 if __name__ == '__main__':
