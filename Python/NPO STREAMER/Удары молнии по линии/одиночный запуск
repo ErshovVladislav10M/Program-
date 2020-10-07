@@ -150,8 +150,8 @@ def lightn_strike_span_RO(power_line, cur_str, ind_span):
             if(comp_span_RO(cur_str, abs(i)) >= 20):
                 power_line.arrester_RO[ind_span + i] += power_line.arrester_RO[ind_span + i] / 10
 
-# Вычисление результата ударов молний
-def comp_lightn_strike(power_line):
+# Удары молний по линии
+def lightn_strike(power_line):
     I_p_n = create_I_p_n(power_line.len)
     ind_span = np.random.permutation(power_line.len)
     for i in range(power_line.len):
@@ -163,25 +163,30 @@ def comp_lightn_strike(power_line):
             lightn_strike_tower_DLS(power_line, I_p_n[i], ind_span[i])
             lightn_strike_tower_RO(power_line, I_p_n[i], ind_span[i])
 
-# Вывод результата ударов молний
-def print_ans(power_line):
-    comp_lightn_strike(power_line)
-    tot_posit = 0
-    tot_flashovers = 0
+# Вычисление числа срабатываний и негашений разрядников
+def comp_actuation_flashovers(power_line):
+    lightn_strike(power_line)
+    actuation_DLS = 0
+    actuation_RO = 0
+    flashovers = 0
     for i in range(power_line.len):
-        tot_posit += int(power_line.arrester_DLS[i])
+        actuation_DLS += int(power_line.arrester_DLS[i])
+        actuation_RO += int(power_line.arrester_RO[i])
         if(power_line.arrester_DLS[i] != int(power_line.arrester_DLS[i])):
-            tot_flashovers += int(power_line.arrester_DLS[i]) 
+            flashovers += int(power_line.arrester_DLS[i]) 
             - (power_line.arrester_DLS[i] - int(power_line.arrester_DLS[i])) * 10
-    
-    print('Количество срабатываний разрядников ' + str(tot_posit))
-    print('Количество негашений ' + str(tot_flashovers))
+        if(power_line.arrester_RO[i] != int(power_line.arrester_RO[i])):
+            flashovers += int(power_line.arrester_RO[i]) 
+            - (power_line.arrester_RO[i] - int(power_line.arrester_RO[i])) * 10
+    return actuation_DLS, actuation_RO, flashovers
 
 def main():
     power_line = PowerLine(101)
-    print_ans(power_line)
-    print(power_line.arrester_DLS)
-    print(power_line.arrester_RO)
+    actuation_DLS, actuation_RO, flashovers = comp_actuation_flashovers(power_line)
+    print('Количество срабатываний разрядников DLS: ' + str(actuation_DLS))
+    print('Количество срабатываний разрядников RO: ' + str(actuation_RO))
+    print('Количество негашений ' + str(flashovers))
+
 
 if __name__ == '__main__':
     main()
