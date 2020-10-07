@@ -158,7 +158,7 @@ def print_ans(power_line):
     tot_flashovers = 0
     for i in range(len(power_line.arrester_DLS)):
         tot_posit += int(power_line.arrester_DLS[i])
-        if(power_line.arrester_DLS[i] == int(power_line.arrester_DLS[i])):
+        if(power_line.arrester_DLS[i] != int(power_line.arrester_DLS[i])):
             tot_flashovers += int(power_line.arrester_DLS[i]) 
             - (power_line.arrester_DLS[i] - int(power_line.arrester_DLS[i])) * 10
     
