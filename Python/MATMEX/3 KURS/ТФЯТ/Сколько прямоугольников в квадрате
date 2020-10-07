@@ -1,15 +1,15 @@
-def comp_num_rectangle(n, m):
+def comp_num_rectangle(n):
     ans = 0
     for i in range(n + 1):
-        for j in range(m + 1):
-            ans += i * j
+        for j in range(n + 1):
+            ans += (n - i) * (n - j)
     return ans
 
 def main():
     print('Введите длину стороны квадрата:')
     n = int(input())
     print('Количество прямоугольников:')
-    print(comp_num_rectangle(n, n))
+    print(comp_num_rectangle(n))
 
 if __name__ == '__main__':
     main()
