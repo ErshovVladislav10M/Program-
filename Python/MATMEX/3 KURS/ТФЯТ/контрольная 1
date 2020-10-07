@@ -29,14 +29,14 @@ def swertka(str1, num_str = 1):
 
 
 def main():
-    #чтение текстового представления грамматики
+    # чтение текстового представления грамматики
     file = open(r'C:\Users\ershov.e\Desktop\file_read2.txt', 'r')
     str2 = file.read()
 
-    #запуск
+    # запуск
     swertka(str2)
 
-    #вывод
+    # вывод
     for i in range(len(Words)):
         print(Words[i] + ':' + PlacementWords[Words[i]])
 
