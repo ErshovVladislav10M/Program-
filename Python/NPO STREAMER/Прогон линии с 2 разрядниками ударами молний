@@ -31,8 +31,8 @@ def mod_p(median, sigma):
 def max_p_i():
     return p_lognorm(mod_p(CUR_STR_MEDIAN, CUR_STR_SIGMA), CUR_STR_MEDIAN, CUR_STR_SIGMA)
 
-# Создание I_p_n (череды сил тока)
-def create_I_p_n(N_tot=100):
+# Создание I_p_n
+def create_I_p_n(N_tot):
     I_p_n = []
     for i in range(N_tot):
         I_p = 1 + (200 - 1) * random.uniform(0, 1)
@@ -43,8 +43,8 @@ def create_I_p_n(N_tot=100):
         I_p_n.append(I_p)
     return I_p_n
 
-# Проверка на перегрузку DLS разрядников при ударе в опору 
-def check_tower_DLS(cur_str, ind_tower):
+# Вычисление силы тока для DLS разрядников при ударе в опору 
+def comp_tower_DLS(cur_str, ind_tower):
     if(ind_tower == 0):
         if(cur_str < 40): return cur_str * 0.68
         else: return cur_str * 0.8
@@ -54,8 +54,8 @@ def check_tower_DLS(cur_str, ind_tower):
     if(ind_tower == 2):
         return cur_str * 0.05
 
-# Проверка на перегрузку RO разрядников при ударе в опору 
-def check_tower_RO(cur_str, ind_tower):
+# Вычисление силы тока для RO разрядников при ударе в опору 
+def comp_tower_RO(cur_str, ind_tower):
     if(ind_tower == 0):
         if(cur_str < 50): return cur_str * 0.2
         else: return cur_str * 0.25
@@ -64,9 +64,9 @@ def check_tower_RO(cur_str, ind_tower):
     if(ind_tower == 2):
         return cur_str * 0.05
 
-# Проверка на перегрузку DLS разрядников 
+# Вычисление силы тока для DLS разрядников 
 # при ударе в середину пролета 
-def check_span_DLS(cur_str, ind_tower):
+def comp_span_DLS(cur_str, ind_tower):
     if(ind_tower == 1):
         if(cur_str < 40): return cur_str * 0.44
         else: return cur_str * 0.4
@@ -76,9 +76,9 @@ def check_span_DLS(cur_str, ind_tower):
     if(ind_tower == 3):
         return cur_str * 0.05
 
-# Проверка на перегрузку RO разрядников 
+# Вычисление силы тока для RO разрядников 
 # при ударе в середину пролета 
-def check_span_RO(cur_str, ind_tower):
+def comp_span_RO(cur_str, ind_tower):
     if(ind_tower == 1):
         return cur_str * 0.09
     if(ind_tower == 2):
@@ -86,65 +86,73 @@ def check_span_RO(cur_str, ind_tower):
     if(ind_tower == 3):
         return cur_str * 0.04
 
+# Проверка на превышение тока в DLS разрядниках на 20кА
+def check_tower_DLS(cur_str, ind_span):
+    if()
+
 # Вычисление результата удара молнии в середину пролета
-def comp_lightn_strike_span(power_line, cur_str, num_span):
+def comp_lightn_strike_span(power_line, cur_str, ind_span):
     for i in range(3):
-        if(num_span - 3 + i >= 0):
-            power_line.arrester_DLS[num_span - 3 + i] += 1
-            power_line.arrester_RO[num_span - 3 + i] += 1
-            if(power_line.arrester_DLS[num_span - 3 + i] != int(power_line.arrester_DLS[num_span - 3 + i])):
+        if(ind_span - 3 + i >= 0):
+            power_line.arrester_DLS[ind_span - 3 + i] += 1
+            if(power_line.arrester_DLS[ind_span - 3 + i] != int(power_line.arrester_DLS[ind_span - 3 + i])):
                 continue
-            if(power_line.arrester_RO[num_span - 3 + i] != int(power_line.arrester_RO[num_span - 3 + i])):
-                continue
-            if(check_span_DLS(cur_str, 3 - i) >= 20):
-                power_line.arrester_DLS[num_span - 3 + i] += power_line.arrester_DLS[num_span - 3 + i] / 10
-            if(check_span_RO(cur_str, 3 - i) >= 20):
-                power_line.arrester_RO[num_span - 3 + i] += power_line.arrester_RO[num_span - 3 + i] / 10
+            if(comp_span_DLS(cur_str, 3 - i) >= 20):
+                power_line.arrester_DLS[ind_span - 3 + i] += power_line.arrester_DLS[ind_span - 3 + i] / 10
     for i in range(3):
-        if(num_span + i < len(power_line.arrester_DLS)):
-            power_line.arrester_DLS[num_span + i] += 1
-            power_line.arrester_RO[num_span + i] += 1
-            if(power_line.arrester_DLS[num_span + i] != int(power_line.arrester_DLS[num_span + i])):
+        if(ind_span - 3 + i >= 0):
+            power_line.arrester_RO[ind_span - 3 + i] += 1
+            if(power_line.arrester_RO[ind_span - 3 + i] != int(power_line.arrester_RO[ind_span - 3 + i])):
                 continue
-            if(power_line.arrester_RO[num_span + i] != int(power_line.arrester_RO[num_span + i])):
+            if(comp_span_RO(cur_str, 3 - i) >= 20):
+                power_line.arrester_RO[ind_span - 3 + i] += power_line.arrester_RO[ind_span - 3 + i] / 10
+    for i in range(3):
+        if(ind_span + i < len(power_line.arrester_DLS)):
+            power_line.arrester_DLS[ind_span + i] += 1
+            if(power_line.arrester_DLS[ind_span + i] != int(power_line.arrester_DLS[ind_span + i])):
                 continue
-            if(check_span_DLS(cur_str, i + 1) >= 20):
-                power_line.arrester_DLS[num_span + i] += power_line.arrester_DLS[num_span + i] / 10
-            if(check_span_RO(cur_str, i + 1) >= 20):
-                power_line.arrester_RO[num_span + i] += power_line.arrester_RO[num_span + i] / 10
+            if(comp_span_DLS(cur_str, i + 1) >= 20):
+                power_line.arrester_DLS[ind_span + i] += power_line.arrester_DLS[ind_span + i] / 10
+    for i in range(3):
+        if(ind_span + i < len(power_line.arrester_DLS)):
+            power_line.arrester_RO[ind_span + i] += 1
+            if(power_line.arrester_RO[ind_span + i] != int(power_line.arrester_RO[ind_span + i])):
+                continue
+            if(comp_span_RO(cur_str, i + 1) >= 20):
+                power_line.arrester_RO[ind_span + i] += power_line.arrester_RO[ind_span + i] / 10
 
 # Вычисление результата удара молнии в опору
-def comp_lightn_strike_tower(power_line, cur_str, num_span):
+def comp_lightn_strike_tower(power_line, cur_str, ind_span):
     for i in range(2):
-        if(num_span - 2 + i >= 0):
-            power_line.arrester_DLS[num_span - 2 + i] += 1
-            power_line.arrester_RO[num_span - 2 + i] += 1
-            if(power_line.arrester_DLS[num_span - 2 + i] != int(power_line.arrester_DLS[num_span - 2 + i])):
+        if(ind_span - 2 + i >= 0):
+            power_line.arrester_DLS[ind_span - 2 + i] += 1
+            power_line.arrester_RO[ind_span - 2 + i] += 1
+            if(power_line.arrester_DLS[ind_span - 2 + i] != int(power_line.arrester_DLS[ind_span - 2 + i])):
                 continue
-            if(power_line.arrester_RO[num_span - 2 + i] != int(power_line.arrester_RO[num_span - 2 + i])):
+            if(power_line.arrester_RO[ind_span - 2 + i] != int(power_line.arrester_RO[ind_span - 2 + i])):
                 continue
-            if(check_tower_DLS(cur_str, 2 - i) >= 20):
-                power_line.arrester_DLS[num_span - 2 + i] += power_line.arrester_DLS[num_span - 2 + i] / 10
-            if(check_tower_RO(cur_str, 2 - i) >= 20):
-                power_line.arrester_RO[num_span - 2 + i] += power_line.arrester_RO[num_span - 2 + i] / 10
+            if(comp_tower_DLS(cur_str, 2 - i) >= 20):
+                power_line.arrester_DLS[ind_span - 2 + i] += power_line.arrester_DLS[ind_span - 2 + i] / 10
+            if(comp_tower_RO(cur_str, 2 - i) >= 20):
+                power_line.arrester_RO[ind_span - 2 + i] += power_line.arrester_RO[ind_span - 2 + i] / 10
     for i in range(3):
-        if(num_span + i < len(power_line.arrester_DLS)):
-            power_line.arrester_DLS[num_span + i] += 1
-            power_line.arrester_RO[num_span + i] += 1
-            if(power_line.arrester_DLS[num_span + i] != int(power_line.arrester_DLS[num_span + i])):
+        if(ind_span + i < len(power_line.arrester_DLS)):
+            power_line.arrester_DLS[ind_span + i] += 1
+            power_line.arrester_RO[ind_span + i] += 1
+            if(power_line.arrester_DLS[ind_span + i] != int(power_line.arrester_DLS[ind_span + i])):
                 continue
-            if(power_line.arrester_RO[num_span + i] != int(power_line.arrester_RO[num_span + i])):
+            if(power_line.arrester_RO[ind_span + i] != int(power_line.arrester_RO[ind_span + i])):
                 continue
-            if(check_tower_DLS(cur_str, i) >= 20):
-                power_line.arrester_DLS[num_span + i] += power_line.arrester_DLS[num_span + i] / 10
-            if(check_tower_RO(cur_str, i) >= 20):
-                power_line.arrester_RO[num_span + i] += power_line.arrester_RO[num_span + i] / 10
+            if(comp_tower_DLS(cur_str, i) >= 20):
+                power_line.arrester_DLS[ind_span + i] += power_line.arrester_DLS[ind_span + i] / 10
+            if(comp_tower_RO(cur_str, i) >= 20):
+                power_line.arrester_RO[ind_span + i] += power_line.arrester_RO[ind_span + i] / 10
 
-# Вычисление результата череды событий
-def comp_ans(power_line, N_tot=100):
-    I_p_n = create_I_p_n(N_tot)
-    ind_span = np.random.permutation(N_tot)
-    for i in range(N_tot):
+# Вычисление результата ударов молний
+def comp_lightn_strike(power_line):
+    I_p_n = create_I_p_n(len(power_line.arrester_DLS))
+    ind_span = np.random.permutation(len(power_line.arrester_DLS))
+    for i in range(len(power_line.arrester_DLS)):
         k = random.randint(0, 1)
         if(k == 1):
             comp_lightn_strike_span(power_line, I_p_n[i], ind_span[i])
@@ -153,7 +161,7 @@ def comp_ans(power_line, N_tot=100):
 
 # Вывод результата череды событий
 def print_ans(power_line):
-    comp_ans(power_line)
+    comp_lightn_strike(power_line)
     tot_posit = 0
     tot_flashovers = 0
     for i in range(len(power_line.arrester_DLS)):
