@@ -1,0 +1,53 @@
+import random
+
+# Поиск индексов по значению
+def find_index(list_value, value):
+    index = []
+    for i in range(len(list_value)):
+        if list_value[i] == value:
+            index.append(i)
+    return index
+
+# Создание случайного графа
+def create_graph(n, m):
+    top = [0 for i in range(n)]
+    edge_beg = [i for i in range(n - 1)]
+    edge_end = [i for i in range(1, n)]
+
+    i = 0
+    while m + 1 - n - i > 0:
+        while True:
+            new_edge_beg = random.randint(0, n - 1)
+            new_edge_end = random.randint(0, n - 1)
+            if new_edge_beg == new_edge_end:
+                continue
+            if new_edge_beg > new_edge_end:
+                new_edge_beg, new_edge_end = new_edge_end, new_edge_beg
+            index_beg = find_index(edge_beg, new_edge_beg)
+            index_end = find_index(edge_end, new_edge_end)
+            marker2 = 0
+            for j in range(len(index_beg)):
+                if index_end.count(index_beg[j]):
+                    marker2 = 1
+            if marker2 == 0:
+                break
+        edge_beg.append(new_edge_beg)
+        edge_end.append(new_edge_end)
+        top[new_edge_beg] += 1
+        top[new_edge_end] += 1
+        i += 1
+
+    print(top)
+    print(edge_beg)
+    print(edge_end)
+
+def main():
+    print('Введите количество агентов:')
+    n = int(input())
+    print('Введите количество связей(' + str(n - 1) + ' <= m <= ' + str(n * (n - 1) / 2) + ') :')
+    m = int(input())
+
+    create_graph(n, m)
+
+if __name__ == '__main__':
+    main()
