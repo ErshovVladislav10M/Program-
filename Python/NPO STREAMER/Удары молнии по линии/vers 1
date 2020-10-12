@@ -175,7 +175,7 @@ def lightn_strike_span_RO(power_line, cur_str, ind_span):
             if(i >= 0):
                 if(comp_span_RO(cur_str, abs(i + 1)) >= CRASH_CUR):
                     power_line.crash_RO[ind_span + i] = 1 
-                if(comp_span_RO(cur_str, abs(i + 1)) >= CRIT_CUR):
+                elif(comp_span_RO(cur_str, abs(i + 1)) >= CRIT_CUR):
                     power_line.crash_RO[ind_span + i] = 0.5
                     power_line.count_RO[ind_span + i] -= 0.1      
             else:
