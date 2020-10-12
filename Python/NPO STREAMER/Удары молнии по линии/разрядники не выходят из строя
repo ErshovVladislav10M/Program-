@@ -166,41 +166,41 @@ def lightn_strike(power_line):
             lightn_strike_tower_RO(power_line, I_p_n[i], ind_span[i])
 
 # Вычисление числа срабатываний и негашений разрядников
-def comp_actuation_flashovers_failed(power_line):
+def comp_actuation_non_quenchings_failed(power_line):
     lightn_strike(power_line)
     actuation_DLS = 0
     actuation_RO = 0
-    flashovers = 0
+    non_quenchings = 0
+    failed_arresters = 0
     
     for i in range(power_line.len):
         actuation_DLS += int(power_line.count_DLS[i])
         actuation_RO += int(power_line.count_RO[i])
-        if(power_line.count_DLS[i] != int(power_line.count_DLS[i])):
-            flashovers += (power_line.count_DLS[i] - int(power_line.count_DLS[i])) * 10
-        if(power_line.count_RO[i] != int(power_line.count_RO[i])):
-            flashovers += (power_line.count_RO[i] - int(power_line.count_RO[i])) * 10
+        non_quenchings += (power_line.count_DLS[i] - int(power_line.count_DLS[i])) * 10
+        non_quenchings += (power_line.count_RO[i] - int(power_line.count_RO[i])) * 10
 
-    return actuation_DLS, actuation_RO, flashovers
+    return actuation_DLS, actuation_RO, non_quenchings
 
 def main():
     tot_actuation_DLS = 0
     tot_actuation_RO = 0
-    tot_flashovers = 0
+    tot_non_quenchings = 0
     
     num_launch = 1
     num_tower = 101
     for i in range(num_launch):
         power_line = PowerLine(num_tower)
-        actuation_DLS, actuation_RO, flashovers = comp_actuation_flashovers_failed(power_line)
+        actuation_DLS, actuation_RO, non_quenchings = comp_actuation_non_quenchings_failed(power_line)
         tot_actuation_DLS += actuation_DLS
         tot_actuation_RO += actuation_RO
-        tot_flashovers += flashovers
+        tot_non_quenchings += non_quenchings
         #print(power_line.count_DLS)
         #print(power_line.count_RO)
 
     print('Среднее количество срабатываний разрядника DLS: ' + str(tot_actuation_DLS / num_launch / num_tower))
     print('Среднее количество срабатываний разрядника RO: ' + str(tot_actuation_RO / num_launch / num_tower))
-    print('Среднее количество негашений ' + str(tot_flashovers / num_launch))
+    print('Среднее количество негашений ' + str(tot_non_quenchings / num_launch))
+
 
 if __name__ == '__main__':
     main()
