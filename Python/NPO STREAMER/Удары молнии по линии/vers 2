@@ -1,3 +1,7 @@
+# vers 2
+# Разрядники разрушаются если через них 
+# проходит ток свыше 30 кА и больше не смогут гасить.
+
 import random
 import math
 import numpy as np
@@ -8,18 +12,22 @@ class PowerLine:
     count_DLS = []
     # RO - reverse overlap
     count_RO = []
+    crash_DLS = []
+    crash_RO = []
     len = 0
     def __init__(obj, num_tower):
         obj.count_DLS = [0 for i in range(num_tower)]
         obj.count_RO = [0 for i in range(num_tower)]
+        obj.crash_DLS = [0 for i in range(num_tower)]
+        obj.crash_RO = [0 for i in range(num_tower)]
         obj.len = num_tower
 
 # Медиана по силе тока
 CUR_STR_MEDIAN = 31
 # Средне квадртичное отклонение по силе тока
 CUR_STR_SIGMA = 0.605
-# Критический ток негашения
-CRIT_CUR = 20
+# Ток разрушения разрядника
+CRASH_CUR = 30
 
 # Плотность логнормального распределения
 def p_lognorm(value, median, sigma):
@@ -99,8 +107,10 @@ def lightn_strike_tower_DLS(power_line, cur_str, ind_span):
     for i in range(-j, j + 1):
         if(ind_span + i >= 0 and ind_span + i < power_line.len):
             power_line.count_DLS[ind_span + i] += 1
-            if(comp_tower_DLS(cur_str, abs(i)) >= CRIT_CUR):
-                power_line.count_DLS[ind_span + i] += 0.1
+            if(comp_tower_DLS(cur_str, abs(i)) >= CRASH_CUR):
+                power_line.crash_DLS[ind_span + i] = 1
+            if(power_line.crash_DLS[ind_span + i] != 0):
+                power_line.count_DLS[ind_span + i] += 0.1               
 
 # Удар молнии в опору для RO разрядников
 def lightn_strike_tower_RO(power_line, cur_str, ind_span):
@@ -113,7 +123,9 @@ def lightn_strike_tower_RO(power_line, cur_str, ind_span):
     for i in range(-j, j + 1):
         if(ind_span + i >= 0 and ind_span + i < power_line.len):
             power_line.count_RO[ind_span + i] += 1
-            if(comp_tower_RO(cur_str, abs(i)) >= CRIT_CUR):
+            if(comp_tower_RO(cur_str, abs(i)) >= CRASH_CUR):
+                power_line.crash_RO[ind_span + i] = 1 
+            if(power_line.crash_RO[ind_span + i] != 0):
                 power_line.count_RO[ind_span + i] += 0.1
 
 # Удар молнии в span для DLS разрядников
@@ -126,12 +138,13 @@ def lightn_strike_span_DLS(power_line, cur_str, ind_span):
         if(ind_span + i >= 0 and ind_span + i < power_line.len):
             power_line.count_DLS[ind_span + i] += 1
             if(i >= 0):
-                if(comp_span_DLS(cur_str, abs(i + 1)) >= CRIT_CUR):
-                    power_line.count_DLS[ind_span + i] += 0.1
+                if(comp_span_DLS(cur_str, abs(i + 1)) >= CRASH_CUR):
+                    power_line.crash_DLS[ind_span + i] = 1
             else:
-                if(comp_span_DLS(cur_str, abs(i)) >= CRIT_CUR):
-                    power_line.count_DLS[ind_span + i] += 0.1
-
+                if(comp_span_DLS(cur_str, abs(i)) >= CRASH_CUR):
+                    power_line.crash_DLS[ind_span + i] = 1 
+            if(power_line.crash_DLS[ind_span + i] != 0):
+                power_line.count_DLS[ind_span + i] += 0.1
 
 # Удар молнии в span для RO разрядников
 def lightn_strike_span_RO(power_line, cur_str, ind_span):
@@ -145,11 +158,13 @@ def lightn_strike_span_RO(power_line, cur_str, ind_span):
         if(ind_span + i >= 0 and ind_span + i < power_line.len):
             power_line.count_RO[ind_span + i] += 1
             if(i >= 0):
-                if(comp_span_RO(cur_str, abs(i + 1)) >= CRIT_CUR):
-                    power_line.count_DLS[ind_span + i] += 0.1
+                if(comp_span_RO(cur_str, abs(i + 1)) >= CRASH_CUR):
+                    power_line.crash_RO[ind_span + i] = 1   
             else:
-                if(comp_span_RO(cur_str, abs(i)) >= CRIT_CUR):
-                    power_line.count_DLS[ind_span + i] += 0.1
+                if(comp_span_RO(cur_str, abs(i)) >= CRASH_CUR):
+                    power_line.crash_RO[ind_span + i] = 1 
+            if(power_line.crash_RO[ind_span + i] != 0):
+                power_line.count_RO[ind_span + i] += 0.1      
 
 # Удары молний по линии
 def lightn_strike(power_line):
@@ -178,28 +193,37 @@ def comp_actuation_non_quenchings_failed(power_line):
         actuation_RO += int(power_line.count_RO[i])
         non_quenchings += (power_line.count_DLS[i] - int(power_line.count_DLS[i])) * 10
         non_quenchings += (power_line.count_RO[i] - int(power_line.count_RO[i])) * 10
+        if(power_line.crash_DLS[i] == 1):
+            failed_arresters += 1
+        if(power_line.crash_RO[i] == 1):
+            failed_arresters += 1
 
-    return actuation_DLS, actuation_RO, non_quenchings
+    return actuation_DLS, actuation_RO, non_quenchings, failed_arresters
 
 def main():
     tot_actuation_DLS = 0
     tot_actuation_RO = 0
     tot_non_quenchings = 0
+    tot_failed_arresters = 0
     
     num_launch = 1
     num_tower = 101
     for i in range(num_launch):
         power_line = PowerLine(num_tower)
-        actuation_DLS, actuation_RO, non_quenchings = comp_actuation_non_quenchings_failed(power_line)
+        actuation_DLS, actuation_RO, non_quenchings, failed_arresters = comp_actuation_non_quenchings_failed(power_line)
         tot_actuation_DLS += actuation_DLS
         tot_actuation_RO += actuation_RO
         tot_non_quenchings += non_quenchings
+        tot_failed_arresters += failed_arresters
         #print(power_line.count_DLS)
         #print(power_line.count_RO)
+        #print(power_line.crash_DLS)
+        #print(power_line.crash_RO)
 
     print('Среднее количество срабатываний разрядника DLS: ' + str(tot_actuation_DLS / num_launch / num_tower))
     print('Среднее количество срабатываний разрядника RO: ' + str(tot_actuation_RO / num_launch / num_tower))
     print('Среднее количество негашений ' + str(tot_non_quenchings / num_launch))
+    print('Среднее количество разрушенных разрядников ' + str(tot_failed_arresters / num_launch))
 
 
 if __name__ == '__main__':
