@@ -240,10 +240,27 @@ def main():
         #print(power_line.crash_DLS)
         #print(power_line.crash_RO)
 
-    print('Среднее количество срабатываний разрядника DLS: ' + str(tot_actuation_DLS / num_launch / num_tower))
-    print('Среднее количество срабатываний разрядника RO: ' + str(tot_actuation_RO / num_launch / num_tower))
-    print('Среднее количество негашений ' + str(tot_non_quenchings / num_launch))
-    print('Среднее количество разрушенных разрядников ' + str(tot_failed_arresters / num_launch))
+    aver_tot_actuation_DLS = round(tot_actuation_DLS / num_launch / num_tower, 1)
+    tot_actuation_DLS_100 = round(tot_actuation_DLS / num_launch / num_tower * 100)
+    aver_tot_actuation_RO = round(tot_actuation_RO / num_launch / num_tower, 1)
+    tot_actuation_RO_100 = round(tot_actuation_RO / num_launch / num_tower * 100)
+    aver_tot_non_quenchings = round(tot_non_quenchings / num_launch / num_tower * 100, 1)
+    aver_tot_failed_arresters = round(tot_failed_arresters / num_launch / num_tower * 100, 1)
+    non_quenchings_percent = round(aver_tot_non_quenchings / (tot_actuation_DLS_100 + tot_actuation_RO_100) * 100, 1)
+
+    print(f'Показатели для разрядника, который гасит всё до {CRIT_TOP_CUR} кА\n')
+
+    print(f'Общее число срабатываний 100 разрядников от ПУМ за 30 лет: {tot_actuation_DLS_100}')
+    print(f'Общее число срабатываний 100 разрядников от ОП за 30 лет: {tot_actuation_RO_100}')
+    print(f'Итого: {tot_actuation_DLS_100 + tot_actuation_RO_100}\n')
+
+    print(f'Среднее количество срабатываний одного разрядника ПУМ: {aver_tot_actuation_DLS}')
+    print(f'Среднее количество срабатываний одного разрядника ОП: {aver_tot_actuation_RO}\n')
+
+    print(f'Среднее количество негашений на 100 разрядников за 30 лет: {aver_tot_non_quenchings}')
+    print(f'Процент негашений: {non_quenchings_percent}%\n')
+
+    print(f'Среднее количество разрушенных разрядников на 100 штук за 30 лет: {aver_tot_failed_arresters}')
 
 
 if __name__ == '__main__':
