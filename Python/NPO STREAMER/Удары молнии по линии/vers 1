@@ -154,6 +154,7 @@ def reg_non_quenchings_DLS(power_line, cur_str, ind_span, ind_slip, type_strike)
             power_line.crash_DLS[ind_span + ind_slip] = 0.75
         elif(comp_cur_DLS(cur_str, abs(ind_slip), type_strike) >= CUR_ALWAYS):
             if(random.random() > PROB_LOW_VOLT):
+                power_line.count_DLS[ind_span + ind_slip] += 0.1
                 power_line.crash_DLS[ind_span + ind_slip] = 0.75
 
 # Изменение состояния разрядников DLS
@@ -181,6 +182,7 @@ def reg_non_quenchings_RO(power_line, cur_str, ind_span, ind_slip, type_strike):
             power_line.crash_RO[ind_span + ind_slip] = 0.75
         elif(comp_cur_RO(cur_str, abs(ind_slip), type_strike) >= CUR_ALWAYS):
             if(random.random() > PROB_LOW_VOLT):
+                power_line.count_RO[ind_span + ind_slip] += 0.1
                 power_line.crash_RO[ind_span + ind_slip] = 0.75
 
 # Удар молнии в опору для DLS разрядников
@@ -283,7 +285,7 @@ def main():
     tot_non_quenchings = 0
     tot_failed_arresters = 0
     
-    num_launch = 1
+    num_launch = 100
     num_tower = 100
     for i in range(num_launch):
         power_line = PowerLine(num_tower)
