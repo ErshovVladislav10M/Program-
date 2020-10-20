@@ -1,0 +1,339 @@
+# vers 1
+# Если ток был до CRIT_BOT_CUR = 25, то он 
+# гасится в любых последовательностях, как 
+# только ток протек в диапазоне от CRIT_BOT_CUR = 25 
+# до CRIT_TOP_CUR = 35, то он в этот раз гасится, 
+# но переходит в стадию "условно рабочий", это значит, 
+# что он продолжает гасить ток до CUR_ALWAYS = 3, 
+# но если ток был в диапазоне от CUR_ALWAYS = 3 
+# до CRIT_BOT_CUR = 25. При этом предварительно есть 
+# некая вероятность, которая связана с напряжением  
+# PROB_LOW_VOLT = 62%, когда не происходит перехода на 
+# следующий режим "условно нерабочий". То есть в 62% 
+# случаях ток из диапазона от 3 до 25 кА погасится
+# и разрядник остается в таком же режиме, 
+# но в 38% он гасит этот ток, 
+# но переходит в режим "условно нерабочий".
+# Если ток был в диапазоне от CRIT_TOP_CUR = 35 
+# до CRASH_CUR = 50, то происходит негашение, 
+# и он переходит на стадию "условно нерабочий". 
+# Если ток был свыше CUR_ALWAYS = 50, то тут 
+# разрядник разрушается и ничего не гасит больше.
+# Режим "условно нерабочий" - ток до 3 кА гасится всегда, 
+# но добавляется диапазон от 3 до 10 кА, когда с вероятностью 62% 
+# разрядник гасит, а в 38% случаев не гасит. Выше 10 не гасит вообще.
+
+import random
+import math
+import numpy as np
+
+# ЛЭП
+class PowerLine:
+    # DLS - direct lightning strike
+    # RO - reverse overlap 
+    count_DLS = []
+    count_RO = []
+    # Условно рабочий == 0.5
+    # Условно нерабочий == 0.75
+    # Сломался == 1
+    crash_DLS = []
+    crash_RO = []
+    len = 0
+    def __init__(obj, num_tower):
+        obj.count_DLS = [0 for i in range(num_tower)]
+        obj.count_RO = [0 for i in range(num_tower)]
+        obj.crash_DLS = [0 for i in range(num_tower)]
+        obj.crash_RO = [0 for i in range(num_tower)]
+        obj.len = num_tower
+
+# Удар тока в разрядник
+class Strike:
+    cur = 0
+    location = 0
+    slip = 0
+    type = ''
+    def __init__(obj, cur=0, location=0, slip=0, type=''):
+        obj.cur = cur
+        obj.location = location
+        obj.slip = slip
+        obj.type = type
+
+# Медиана по силе тока
+CUR_STR_MEDIAN = 31
+# Средне квадртичное отклонение по силе тока
+CUR_STR_SIGMA = 0.605
+# Ток разрушения разрядника
+CRASH_CUR = 50
+# Верхний критический ток
+CRIT_TOP_CUR = 35
+# Нижний критический ток
+CRIT_BOT_CUR = 25
+# Средний критический ток
+CRIT_MID_CUR = 10
+# Ток, который всегда гасится, пока работает разрядник
+CUR_ALWAYS = 3
+
+# Вероятность гашения в режиме "Условно рабочий"
+PROB_LOW_VOLT = 0.62
+
+# Плотность логнормального распределения
+def p_lognorm(value, median, sigma):
+    a1 = 1 / (math.sqrt(2 * math.pi) * value * sigma)
+    a2 = math.exp(-(math.log(value) - math.log(median)) ** 2 / (2 * sigma ** 2)) 
+    return a1 * a2
+
+# Нахождение медианного значения
+def mod_p(median, sigma):
+    return math.exp(math.log(median) - sigma ** 2)
+
+# Максимум плотности для тока молнии
+def max_p_i():
+    return p_lognorm(mod_p(CUR_STR_MEDIAN, CUR_STR_SIGMA), CUR_STR_MEDIAN, CUR_STR_SIGMA)
+
+# Создание I_p_n
+def create_I_p_n(N_tot):
+    I_p_n = []
+    for i in range(N_tot):
+        I_p = 1 + (200 - 1) * random.uniform(0, 1)
+        Z = random.uniform(0, 1)
+        while Z >= p_lognorm(I_p, CUR_STR_MEDIAN, CUR_STR_SIGMA) / max_p_i():
+            I_p = 1 + (200 - 1) * random.uniform(0, 1)
+            Z = random.uniform(0, 1)
+        I_p_n.append(I_p)
+    return I_p_n
+
+# Вычисление силы тока для DLS разрядников при ударе
+def comp_cur_DLS(strike):
+    if(strike.type == 'tower'):
+        if(strike.slip == 0):
+            if(strike.cur < 40): return strike.cur * 0.68
+            else: return strike.cur * 0.8
+        if(strike.slip == 1 or strike.slip == -1):
+            if(strike.cur < 30): return strike.cur * 0.22
+            else: return strike.cur * 0.13
+        if(strike.slip == 2 or strike.slip == -2):
+            return strike.cur * 0.05
+    if(strike.type == 'span'):
+        if(strike.slip == 1 or strike.slip == -1):
+            if(strike.cur < 40): return strike.cur * 0.44
+            else: return strike.cur * 0.4
+        if(strike.slip == 2 or strike.slip == -2):
+            if(strike.cur < 30): return strike.cur * 0.17
+            else: return strike.cur * 0.11
+        if(strike.slip == 3 or strike.slip == -3):
+            return strike.cur * 0.05
+
+# Вычисление силы тока для RO разрядников при ударе
+def comp_cur_RO(strike):
+    if(strike.type == 'tower'):
+        if(strike.slip == 0):
+            if(strike.cur < 50): return strike.cur * 0.2
+            else: return strike.cur * 0.25
+        if(strike.slip == 1 or strike.slip == -1):
+            return strike.cur * 0.06
+        if(strike.slip == 2 or strike.slip == -2):
+            return strike.cur * 0.05
+    if(strike.type == 'span'):
+        if(strike.slip == 1 or strike.slip == -1):
+            return strike.cur * 0.09
+        if(strike.slip == 2 or strike.slip == -2):
+            return strike.cur * 0.05
+        if(strike.slip == 3 or strike.slip == -3):
+            return strike.cur * 0.04
+
+# Изменение состояния разрядников DLS
+def change_arrester_DLS(power_line, strike):
+    if(comp_cur_DLS(strike) >= CRASH_CUR):
+        power_line.crash_DLS[strike.location + strike.slip] = 1
+    elif(comp_cur_DLS(strike) >= CRIT_TOP_CUR):
+        power_line.crash_DLS[strike.location + strike.slip] = 0.75
+    elif(comp_cur_DLS(strike) >= CRIT_BOT_CUR):
+        power_line.crash_DLS[strike.location + strike.slip] = 0.5
+
+# Регистрация негашений для DLS
+def reg_non_quenchings_DLS(power_line, strike):
+    if(power_line.crash_DLS[strike.location + strike.slip] == 1):
+        power_line.count_DLS[strike.location + strike.slip] += 0.1
+    elif(power_line.crash_DLS[strike.location + strike.slip] == 0.75):
+        if(comp_cur_DLS(strike) >= CRIT_MID_CUR):
+            power_line.count_DLS[strike.location + strike.slip] += 0.1
+        elif(comp_cur_DLS(strike) >= CUR_ALWAYS):
+            if(random.random() > PROB_LOW_VOLT):
+                power_line.count_DLS[strike.location + strike.slip] += 0.1
+    elif(power_line.crash_DLS[strike.location + strike.slip] == 0.5):
+        if(comp_cur_DLS(strike) >= CRIT_BOT_CUR):
+            power_line.count_DLS[strike.location + strike.slip] += 0.1
+            power_line.crash_DLS[strike.location + strike.slip] = 0.75
+        elif(comp_cur_DLS(strike) >= CUR_ALWAYS):
+            if(random.random() > PROB_LOW_VOLT):
+                power_line.count_DLS[strike.location + strike.slip] += 0.1
+                power_line.crash_DLS[strike.location + strike.slip] = 0.75
+
+# Изменение состояния разрядников DLS
+def change_arrester_RO(power_line, strike):
+    if(comp_cur_RO(strike) >= CRASH_CUR):
+        power_line.crash_RO[strike.location + strike.slip] = 1
+    elif(comp_cur_RO(strike) >= CRIT_TOP_CUR):
+        power_line.crash_RO[strike.location + strike.slip] = 0.75
+    elif(comp_cur_RO(strike) >= CRIT_BOT_CUR):
+        power_line.crash_RO[strike.location + strike.slip] = 0.5
+
+# Регистрация негашений для RO
+def reg_non_quenchings_RO(power_line, strike):
+    if(power_line.crash_RO[strike.location + strike.slip] == 1):
+        power_line.count_RO[strike.location + strike.slip] += 0.1
+    elif(power_line.crash_RO[strike.location + strike.slip] == 0.75):
+        if(comp_cur_RO(strike) >= CRIT_MID_CUR):
+            power_line.count_RO[strike.location + strike.slip] += 0.1
+        elif(comp_cur_RO(strike) >= CUR_ALWAYS):
+            if(random.random() > PROB_LOW_VOLT):
+                power_line.count_RO[strike.location + strike.slip] += 0.1
+    elif(power_line.crash_RO[strike.location + strike.slip] == 0.5):
+        if(comp_cur_RO(strike) >= CRIT_BOT_CUR):
+            power_line.count_RO[strike.location + strike.slip] += 0.1
+            power_line.crash_RO[strike.location + strike.slip] = 0.75
+        elif(comp_cur_RO(strike) >= CUR_ALWAYS):
+            if(random.random() > PROB_LOW_VOLT):
+                power_line.count_RO[strike.location + strike.slip] += 0.1
+                power_line.crash_RO[strike.location + strike.slip] = 0.75
+
+# Удар молнии в опору для DLS разрядников
+def lightn_strike_tower_DLS(power_line, strike):
+    if(strike.cur < 30):
+        j = 1
+    else:
+        j = 2
+    for i in range(-j, j + 1):
+        if(strike.location + i >= 0 and strike.location + i < power_line.len):
+            power_line.count_DLS[strike.location + i] += 1
+            change_arrester_DLS(power_line, Strike(strike.cur, strike.location, i, 'tower'))
+            reg_non_quenchings_DLS(power_line, Strike(strike.cur, strike.location, i, 'tower'))
+
+# Удар молнии в опору для RO разрядников
+def lightn_strike_tower_RO(power_line, strike):
+    if(strike.cur < 20):
+        return
+    elif(strike.cur < 35):
+        j = 1
+    else:
+        j = 2
+    for i in range(-j, j + 1):
+        if(strike.location + i >= 0 and strike.location + i < power_line.len):
+            power_line.count_RO[strike.location + i] += 1
+            change_arrester_RO(power_line, Strike(strike.cur, strike.location, i, 'tower'))
+            reg_non_quenchings_RO(power_line, Strike(strike.cur, strike.location, i, 'tower'))
+
+# Удар молнии в span для DLS разрядников
+def lightn_strike_span_DLS(power_line, strike):
+    if(strike.cur < 30):
+        j = 2
+    else:
+        j = 3
+    for i in range(-j, j):
+        if(strike.location + i >= 0 and strike.location + i < power_line.len):
+            power_line.count_DLS[strike.location + i] += 1
+            if(i >= 0):
+                change_arrester_DLS(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
+                reg_non_quenchings_DLS(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
+            else:
+                change_arrester_DLS(power_line, Strike(strike.cur, strike.location, i, 'span'))
+                reg_non_quenchings_DLS(power_line, Strike(strike.cur, strike.location, i, 'span'))
+
+# Удар молнии в span для RO разрядников
+def lightn_strike_span_RO(power_line, strike):
+    if(strike.cur < 30):
+        return
+    elif(strike.cur < 50):
+        j = 2
+    else:
+        j = 3
+    for i in range(-j, j):
+        if(strike.location + i >= 0 and strike.location + i < power_line.len):
+            power_line.count_RO[strike.location + i] += 1
+            if(i >= 0):
+                change_arrester_RO(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
+                reg_non_quenchings_RO(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
+            else:
+                change_arrester_RO(power_line, Strike(strike.cur, strike.location, i, 'span'))
+                reg_non_quenchings_RO(power_line, Strike(strike.cur, strike.location, i, 'span'))
+
+# Удары молний по линии
+def lightn_strike(power_line):
+    I_p_n = create_I_p_n(power_line.len)
+    ind_span = np.random.permutation(power_line.len)
+    
+    for i in range(power_line.len):
+        k = random.randint(0, 1)
+        strike = Strike(I_p_n[i], ind_span[i])
+        if(k == 1):
+            lightn_strike_span_DLS(power_line, strike)
+            lightn_strike_span_RO(power_line, strike)
+        else:
+            lightn_strike_tower_DLS(power_line, strike)
+            lightn_strike_tower_RO(power_line, strike)
+
+# Вычисление числа срабатываний и негашений разрядников
+def comp_actuation_non_quenchings_failed(power_line):
+    lightn_strike(power_line)
+    actuation_DLS = 0
+    actuation_RO = 0
+    non_quenchings = 0
+    failed_arresters = 0
+    
+    for i in range(power_line.len):
+        actuation_DLS += int(power_line.count_DLS[i])
+        actuation_RO += int(power_line.count_RO[i])
+        non_quenchings += (power_line.count_DLS[i] - int(power_line.count_DLS[i])) * 10
+        non_quenchings += (power_line.count_RO[i] - int(power_line.count_RO[i])) * 10
+        if(power_line.crash_DLS[i] == 1):
+            failed_arresters += 1
+        if(power_line.crash_RO[i] == 1):
+            failed_arresters += 1
+
+    return actuation_DLS, actuation_RO, non_quenchings, failed_arresters
+
+def main():
+    tot_actuation_DLS = 0
+    tot_actuation_RO = 0
+    tot_non_quenchings = 0
+    tot_failed_arresters = 0
+    
+    num_launch = 100
+    num_tower = 100
+    for i in range(num_launch):
+        power_line = PowerLine(num_tower)
+        actuation_DLS, actuation_RO, non_quenchings, failed_arresters = comp_actuation_non_quenchings_failed(power_line)
+        tot_actuation_DLS += actuation_DLS
+        tot_actuation_RO += actuation_RO
+        tot_non_quenchings += non_quenchings
+        tot_failed_arresters += failed_arresters
+        # print(power_line.count_DLS)
+        # print(power_line.count_RO)
+        # print(power_line.crash_DLS)
+        # print(power_line.crash_RO)
+
+    aver_tot_actuation_DLS = round(tot_actuation_DLS / num_launch / num_tower, 1)
+    tot_actuation_DLS_100 = round(tot_actuation_DLS / num_launch / num_tower * 100)
+    aver_tot_actuation_RO = round(tot_actuation_RO / num_launch / num_tower, 1)
+    tot_actuation_RO_100 = round(tot_actuation_RO / num_launch / num_tower * 100)
+    aver_tot_non_quenchings = round(tot_non_quenchings / num_launch / num_tower * 100, 1)
+    aver_tot_failed_arresters = round(tot_failed_arresters / num_launch / num_tower * 100, 1)
+    non_quenchings_percent = round(aver_tot_non_quenchings / (tot_actuation_DLS_100 + tot_actuation_RO_100) * 100, 1)
+
+    print(f'Показатели для разрядника, который гасит всё до {CRIT_TOP_CUR} кА\n')
+
+    print(f'Общее число срабатываний 100 разрядников от ПУМ за 30 лет: {tot_actuation_DLS_100}')
+    print(f'Общее число срабатываний 100 разрядников от ОП за 30 лет: {tot_actuation_RO_100}')
+    print(f'Итого: {tot_actuation_DLS_100 + tot_actuation_RO_100}\n')
+
+    print(f'Среднее количество срабатываний одного разрядника ПУМ: {aver_tot_actuation_DLS}')
+    print(f'Среднее количество срабатываний одного разрядника ОП: {aver_tot_actuation_RO}\n')
+
+    print(f'Среднее количество негашений на 100 разрядников за 30 лет: {aver_tot_non_quenchings}')
+    print(f'Процент негашений: {non_quenchings_percent}%\n')
+
+    print(f'Среднее количество разрушенных разрядников на 100 штук за 30 лет: {aver_tot_failed_arresters}')
+
+
+if __name__ == '__main__':
+    main()
