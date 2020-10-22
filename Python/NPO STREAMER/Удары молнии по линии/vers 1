@@ -259,10 +259,10 @@ def lightn_strike_span_RO(power_line, strike):
 
 # Удары молний по линии
 def lightn_strike(power_line, num_strike_span=1):
-    I_p_n = create_I_p_n(power_line.len)
-    ind_span = np.random.permutation(power_line.len)
-    
     for j in range(num_strike_span):
+        I_p_n = create_I_p_n(power_line.len)
+        ind_span = np.random.permutation(power_line.len)
+        
         for i in range(power_line.len):
             k = random.randint(0, 1)
             strike = Strike(I_p_n[i], ind_span[i])
@@ -299,7 +299,7 @@ def main():
     tot_non_quenchings = 0
     tot_failed_arresters = 0
     
-    num_launch = 1
+    num_launch = 1000
     num_tower = 100
     # Количество ударов молнии в пролет
     num_strike_span = 1
