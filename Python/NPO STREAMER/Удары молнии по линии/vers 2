@@ -1,9 +1,11 @@
 # vers 2
 # Если ток был до CRIT_TOP_CUR = 35, 
-# то было гашение в любых последовательностях, 
-# если ток от CRIT_TOP_CUR = 35 до CRASH_CUR = 50, 
-# то было негашение, если свыше CRASH_CUR = 50, 
-# то разрушение.
+# то было гашение в любых последовательностях. 
+
+# Если ток от CRIT_TOP_CUR = 35 до CRASH_CUR = 50, 
+# то было негашение. 
+
+# Если свыше CRASH_CUR = 50, то разрушение.
 
 import random
 import math
@@ -112,24 +114,20 @@ def comp_cur_RO(strike):
         if(strike.slip == 3 or strike.slip == -3):
             return strike.cur * 0.04
 
-# Изменение состояния разрядников DLS
-def change_arrester_DLS(power_line, strike):
+# Регистрация изменений для DLS
+def reg_change_DLS(power_line, strike):
     if(comp_cur_DLS(strike) >= CRASH_CUR):
         power_line.crash_DLS[strike.location + strike.slip] = 1
-
-# Регистрация негашений для DLS
-def reg_non_quenchings_DLS(power_line, strike):
-    if(power_line.crash_DLS[strike.location + strike.slip] == 1 or comp_cur_DLS(strike) >= CRIT_TOP_CUR):
+        power_line.count_DLS[strike.location + strike.slip] += 0.01
+    elif(power_line.crash_DLS[strike.location + strike.slip] == 1 or comp_cur_DLS(strike) >= CRIT_TOP_CUR):
         power_line.count_DLS[strike.location + strike.slip] += 0.01
 
-# Изменение состояния разрядников DLS
-def change_arrester_RO(power_line, strike):
+# Регистрация изменений для RO
+def reg_change_RO(power_line, strike):
     if(comp_cur_RO(strike) >= CRASH_CUR):
         power_line.crash_RO[strike.location + strike.slip] = 1
-
-# Регистрация негашений для RO
-def reg_non_quenchings_RO(power_line, strike):
-    if(power_line.crash_RO[strike.location + strike.slip] == 1 or comp_cur_RO(strike) >= CRIT_TOP_CUR):
+        power_line.count_RO[strike.location + strike.slip] += 0.01
+    elif(power_line.crash_RO[strike.location + strike.slip] == 1 or comp_cur_RO(strike) >= CRIT_TOP_CUR):
         power_line.count_RO[strike.location + strike.slip] += 0.01
 
 # Удар молнии в опору для DLS разрядников
@@ -141,8 +139,7 @@ def lightn_strike_tower_DLS(power_line, strike):
     for i in range(-j, j + 1):
         if(strike.location + i >= 0 and strike.location + i < power_line.len):
             power_line.count_DLS[strike.location + i] += 1
-            change_arrester_DLS(power_line, Strike(strike.cur, strike.location, i, 'tower'))
-            reg_non_quenchings_DLS(power_line, Strike(strike.cur, strike.location, i, 'tower'))
+            reg_change_DLS(power_line, Strike(strike.cur, strike.location, i, 'tower'))
 
 # Удар молнии в опору для RO разрядников
 def lightn_strike_tower_RO(power_line, strike):
@@ -155,8 +152,7 @@ def lightn_strike_tower_RO(power_line, strike):
     for i in range(-j, j + 1):
         if(strike.location + i >= 0 and strike.location + i < power_line.len):
             power_line.count_RO[strike.location + i] += 1
-            change_arrester_RO(power_line, Strike(strike.cur, strike.location, i, 'tower'))
-            reg_non_quenchings_RO(power_line, Strike(strike.cur, strike.location, i, 'tower'))
+            reg_change_RO(power_line, Strike(strike.cur, strike.location, i, 'tower'))
 
 # Удар молнии в span для DLS разрядников
 def lightn_strike_span_DLS(power_line, strike):
@@ -168,11 +164,9 @@ def lightn_strike_span_DLS(power_line, strike):
         if(strike.location + i >= 0 and strike.location + i < power_line.len):
             power_line.count_DLS[strike.location + i] += 1
             if(i >= 0):
-                change_arrester_DLS(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
-                reg_non_quenchings_DLS(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
+                reg_change_DLS(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
             else:
-                change_arrester_DLS(power_line, Strike(strike.cur, strike.location, i, 'span'))
-                reg_non_quenchings_DLS(power_line, Strike(strike.cur, strike.location, i, 'span'))
+                reg_change_DLS(power_line, Strike(strike.cur, strike.location, i, 'span'))
 
 # Удар молнии в span для RO разрядников
 def lightn_strike_span_RO(power_line, strike):
@@ -186,27 +180,24 @@ def lightn_strike_span_RO(power_line, strike):
         if(strike.location + i >= 0 and strike.location + i < power_line.len):
             power_line.count_RO[strike.location + i] += 1
             if(i >= 0):
-                change_arrester_RO(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
-                reg_non_quenchings_RO(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
+                reg_change_RO(power_line, Strike(strike.cur, strike.location - 1, i + 1, 'span'))
             else:
-                change_arrester_RO(power_line, Strike(strike.cur, strike.location, i, 'span'))
-                reg_non_quenchings_RO(power_line, Strike(strike.cur, strike.location, i, 'span'))
+                reg_change_RO(power_line, Strike(strike.cur, strike.location, i, 'span'))
 
 # Удары молний по линии
 def lightn_strike(power_line, num_strike_span=1):    
-    for j in range(num_strike_span):
-        I_p_n = create_I_p_n(power_line.len)
-        ind_span = np.random.permutation(power_line.len)
+    I_p_n = create_I_p_n(num_strike_span * power_line.len)
+    ind_span = np.random.permutation(num_strike_span * power_line.len)
 
-        for i in range(power_line.len):
-            k = random.randint(0, 1)
-            strike = Strike(I_p_n[i], ind_span[i])
-            if(k == 1):
-                lightn_strike_span_DLS(power_line, strike)
-                lightn_strike_span_RO(power_line, strike)
-            else:
-                lightn_strike_tower_DLS(power_line, strike)
-                lightn_strike_tower_RO(power_line, strike)
+    for i in range(num_strike_span * power_line.len):
+        k = random.randint(0, 1)
+        strike = Strike(I_p_n[i], ind_span[i] % power_line.len)
+        if(k == 1):
+            lightn_strike_span_DLS(power_line, strike)
+            lightn_strike_span_RO(power_line, strike)
+        else:
+            lightn_strike_tower_DLS(power_line, strike)
+            lightn_strike_tower_RO(power_line, strike)
 
 # Вычисление числа срабатываний и негашений разрядников
 def comp_actuation_non_quenchings_failed(power_line, num_strike_span=1):
@@ -234,10 +225,10 @@ def main():
     tot_non_quenchings = 0
     tot_failed_arresters = 0
     
-    num_launch = 1000
+    num_launch = 100
     num_tower = 100
     # Количество ударов молнии в пролет
-    num_strike_span = 1
+    num_strike_span = 2
     for i in range(num_launch):
         power_line = PowerLine(num_tower)
         actuation_DLS, actuation_RO, non_quenchings, failed_arresters = comp_actuation_non_quenchings_failed(power_line, num_strike_span)
