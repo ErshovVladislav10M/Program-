@@ -240,19 +240,18 @@ def lightn_strike_span_RO(power_line, strike):
 
 # Удары молний по линии
 def lightn_strike(power_line, num_strike_span=1):
-    for j in range(num_strike_span):
-        I_p_n = create_I_p_n(power_line.len)
-        ind_span = np.random.permutation(power_line.len)
+    I_p_n = create_I_p_n(num_strike_span * power_line.len)
+    ind_span = np.random.permutation(num_strike_span * power_line.len)
         
-        for i in range(power_line.len):
-            k = random.randint(0, 1)
-            strike = Strike(I_p_n[i], ind_span[i])
-            if(k == 1):
-                lightn_strike_span_DLS(power_line, strike)
-                lightn_strike_span_RO(power_line, strike)
-            else:
-                lightn_strike_tower_DLS(power_line, strike)
-                lightn_strike_tower_RO(power_line, strike)
+    for i in range(num_strike_span * power_line.len):
+        k = random.randint(0, 1)
+        strike = Strike(I_p_n[i], ind_span[i] % power_line.len)
+        if(k == 1):
+            lightn_strike_span_DLS(power_line, strike)
+            lightn_strike_span_RO(power_line, strike)
+        else:
+            lightn_strike_tower_DLS(power_line, strike)
+            lightn_strike_tower_RO(power_line, strike)
 
 # Вычисление числа срабатываний и негашений разрядников
 def comp_actuation_non_quenchings_failed(power_line, num_strike_span=1):
@@ -283,7 +282,7 @@ def main():
     num_launch = 1000
     num_tower = 100
     # Количество ударов молнии в пролет
-    num_strike_span = 1
+    num_strike_span = 2
     for i in range(num_launch):
         power_line = PowerLine(num_tower)
         actuation_DLS, actuation_RO, non_quenchings, failed_arresters = comp_actuation_non_quenchings_failed(power_line, num_strike_span)
@@ -296,12 +295,12 @@ def main():
         # print(power_line.crash_DLS)
         # print(power_line.crash_RO)
 
-    aver_tot_actuation_DLS = round(tot_actuation_DLS / num_launch / num_tower, 1)
+    aver_tot_actuation_DLS = round(tot_actuation_DLS / num_launch / num_tower / num_strike_span, 1)
     tot_actuation_DLS_100 = round(tot_actuation_DLS / num_launch / num_tower * 100)
-    aver_tot_actuation_RO = round(tot_actuation_RO / num_launch / num_tower, 1)
+    aver_tot_actuation_RO = round(tot_actuation_RO / num_launch / num_tower / num_strike_span, 1)
     tot_actuation_RO_100 = round(tot_actuation_RO / num_launch / num_tower * 100)
-    aver_tot_non_quenchings = round(tot_non_quenchings / num_launch / num_tower * 100, 1)
-    aver_tot_failed_arresters = round(tot_failed_arresters / num_launch / num_tower * 100, 1)
+    aver_tot_non_quenchings = round(tot_non_quenchings / num_launch / num_tower / num_strike_span * 100, 1)
+    aver_tot_failed_arresters = round(tot_failed_arresters / num_launch / num_tower / num_strike_span * 100, 1)
     non_quenchings_percent = round(aver_tot_non_quenchings / (tot_actuation_DLS_100 + tot_actuation_RO_100) * 100, 1)
 
     print(f'Показатели для разрядника, который гасит всё до {CRIT_TOP_CUR} кА\n')
