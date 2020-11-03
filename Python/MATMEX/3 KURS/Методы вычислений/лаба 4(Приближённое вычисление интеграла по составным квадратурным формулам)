@@ -1,0 +1,89 @@
+import math
+
+# Многочлен нулевой степени
+def polynomial0():
+    return 4
+
+# Многочлен первой степени
+def polynomial1(value):
+    return 3 * value + 4
+
+# Многочлен третьей степени
+def polynomial3(value):
+    return 6 * value ** 3 + 2 * value + 4
+
+# Произвольная функция
+def fun(value):
+    return math.sin(value) + math.exp(value)
+
+# Первообразная функция
+def antiderivative(value):
+    return -math.cos(value) + math.exp(value)
+
+# Метод левых прямоугольников
+def comp_int1(A, B, h):
+    sum = 0
+    k = 0
+    while(A + k * h < B):
+        sum += h * fun(A + k * h)
+        k += 1
+    return sum
+
+# Метод правых прямоугольников
+def comp_int2(A, B, h):
+    sum = 0
+    k = 0
+    while(A + k * h < B):
+        sum += h * fun(A + (k + 1) * h)
+        k += 1
+    return sum
+
+# Метод средних прямоугольников
+def comp_int3(A, B, h):
+    sum = 0
+    k = 0
+    while(A + k * h < B):
+        sum += h * fun(A + (k + 0.5) * h)
+        k += 1
+    return sum
+
+# Метод трапеций
+def comp_int4(A, B, h):
+    sum = 0
+    k = 0
+    while(A + k * h < B):
+        sum += 0.5 * h * (fun(A + k * h) + fun(A + (k + 1) * h))
+        k += 1
+    return sum
+
+# Метод Симпсона
+def comp_int5(A, B, h):
+    sum = 0
+    k = 0
+    while(A + k * h < B):
+        sum += h * (fun(A + k * h) + 4 * fun(A + (k + 0.5) * h) + fun(A + (k + 1) * h)) / 6
+        k += 1
+    return sum
+
+def main():
+    print('Лабораторная номер 4')
+    print('Приближённое вычисление интеграла по составным квадратурным формулам')
+    print('Введите нижний предел A = ')
+    A = int(input())
+    print('Введите верхний предел B = ')
+    B = int(input())
+    print('Введите число разбиений m = ')
+    m = int(input())
+    h = (B - A) / m
+    print('h = ' + str(h))
+    print('f(x) = sin(x) + e^x')
+    print('J = ' + str(antiderivative(B) - antiderivative(A)))
+    print('J(h) = ' + str(comp_int1(A, B, h)))
+    print('J(h) = ' + str(comp_int2(A, B, h)))
+    print('J(h) = ' + str(comp_int3(A, B, h)))
+    print('J(h) = ' + str(comp_int4(A, B, h)))
+    print('J(h) = ' + str(comp_int5(A, B, h)))
+
+
+if __name__ == '__main__':
+    main()
