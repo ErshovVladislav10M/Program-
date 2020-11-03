@@ -1,4 +1,5 @@
 import math
+import sympy
 
 # Многочлен нулевой степени
 def polynomial0():
@@ -21,49 +22,48 @@ def antiderivative(value):
     return -math.cos(value) + math.exp(value)
 
 # Метод левых прямоугольников
-def comp_int1(A, B, h):
+def comp_int1(A, m, h):
     sum = 0
     k = 0
-    while(A + k * h < B):
+    for k in range(m):
         sum += h * fun(A + k * h)
-        k += 1
     return sum
 
 # Метод правых прямоугольников
-def comp_int2(A, B, h):
+def comp_int2(A, m, h):
     sum = 0
     k = 0
-    while(A + k * h < B):
+    for k in range(m):
         sum += h * fun(A + (k + 1) * h)
-        k += 1
     return sum
 
 # Метод средних прямоугольников
-def comp_int3(A, B, h):
+def comp_int3(A, m, h):
     sum = 0
     k = 0
-    while(A + k * h < B):
+    for k in range(m):
         sum += h * fun(A + (k + 0.5) * h)
-        k += 1
     return sum
 
 # Метод трапеций
-def comp_int4(A, B, h):
+def comp_int4(A, m, h):
     sum = 0
     k = 0
-    while(A + k * h < B):
+    for k in range(m):
         sum += 0.5 * h * (fun(A + k * h) + fun(A + (k + 1) * h))
-        k += 1
     return sum
 
 # Метод Симпсона
-def comp_int5(A, B, h):
+def comp_int5(A, m, h):
     sum = 0
     k = 0
-    while(A + k * h < B):
+    for k in range(m):
         sum += h * (fun(A + k * h) + 4 * fun(A + (k + 0.5) * h) + fun(A + (k + 1) * h)) / 6
-        k += 1
     return sum
+
+# Вычисление коэффициента M
+def comp_M(A, B, d):
+    return 1
 
 def main():
     print('Лабораторная номер 4')
@@ -75,15 +75,35 @@ def main():
     print('Введите число разбиений m = ')
     m = int(input())
     h = (B - A) / m
+
+    J = antiderivative(B) - antiderivative(A)
+    print('A = ' + str(A))
+    print('B = ' + str(B))
+    print('m = ' + str(m))
     print('h = ' + str(h))
     print('f(x) = sin(x) + e^x')
-    print('J = ' + str(antiderivative(B) - antiderivative(A)))
-    print('J(h) = ' + str(comp_int1(A, B, h)))
-    print('J(h) = ' + str(comp_int2(A, B, h)))
-    print('J(h) = ' + str(comp_int3(A, B, h)))
-    print('J(h) = ' + str(comp_int4(A, B, h)))
-    print('J(h) = ' + str(comp_int5(A, B, h)))
+    print('J = ' + str(J))
 
+    print(str('\n') + 'Метод левых прямоугольников')
+    print('J(h) = ' + str(comp_int1(A, m, h)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int1(A, m, h))))
+    print('Теоритическая погрешность ' + str(comp_M(A, B, 0) * (B - A) * h / 2))
+
+    print(str('\n') + 'Метод правых прямоугольников')
+    print('J(h) = ' + str(comp_int2(A, m, h)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int2(A, m, h))))
+
+    print(str('\n') + 'Метод средних прямоугольников')
+    print('J(h) = ' + str(comp_int3(A, m, h)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int3(A, m, h))))
+
+    print(str('\n') + 'Метод трапеций')
+    print('J(h) = ' + str(comp_int4(A, m, h)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int4(A, m, h))))
+
+    print(str('\n') + 'Метод Симпсона')
+    print('J(h) = ' + str(comp_int5(A, m, h)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int5(A, m, h))))
 
 if __name__ == '__main__':
     main()
