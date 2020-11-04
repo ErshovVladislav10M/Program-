@@ -62,8 +62,15 @@ def comp_int5(A, m, h):
     return sum
 
 # Вычисление коэффициента M
-def comp_M(A, B, d):
-    return 1
+def comp_M(A, d, m, h):
+    x = sympy.Symbol('x')
+    f = sympy.sin(x) + sympy.exp(x)
+    for i in range(d + 2):
+        f = f.diff(x)
+    values = []
+    for i in range(m):
+        values.append(f.subs(x, A + i * h).evalf())
+    return max(values)
 
 def main():
     print('Лабораторная номер 4')
@@ -87,23 +94,27 @@ def main():
     print(str('\n') + 'Метод левых прямоугольников')
     print('J(h) = ' + str(comp_int1(A, m, h)))
     print('Абсолютная погрешность ' + str(abs(J - comp_int1(A, m, h))))
-    print('Теоритическая погрешность ' + str(comp_M(A, B, 0) * (B - A) * h / 2))
+    print('Теоритическая погрешность ' + str(comp_M(A, 0, m, h) * (B - A) * h / 2))
 
     print(str('\n') + 'Метод правых прямоугольников')
     print('J(h) = ' + str(comp_int2(A, m, h)))
     print('Абсолютная погрешность ' + str(abs(J - comp_int2(A, m, h))))
+    print('Теоритическая погрешность ' + str(comp_M(A, 0, m, h) * (B - A) * h / 2))
 
     print(str('\n') + 'Метод средних прямоугольников')
     print('J(h) = ' + str(comp_int3(A, m, h)))
     print('Абсолютная погрешность ' + str(abs(J - comp_int3(A, m, h))))
+    print('Теоритическая погрешность ' + str(comp_M(A, 1, m, h) * (B - A) * h / 24))
 
     print(str('\n') + 'Метод трапеций')
     print('J(h) = ' + str(comp_int4(A, m, h)))
     print('Абсолютная погрешность ' + str(abs(J - comp_int4(A, m, h))))
+    print('Теоритическая погрешность ' + str(comp_M(A, 1, m, h) * (B - A) * h / 12))
 
     print(str('\n') + 'Метод Симпсона')
     print('J(h) = ' + str(comp_int5(A, m, h)))
     print('Абсолютная погрешность ' + str(abs(J - comp_int5(A, m, h))))
+    print('Теоритическая погрешность ' + str(comp_M(A, 3, m, h) * (B - A) * h / 2880))
 
 if __name__ == '__main__':
     main()
