@@ -1,0 +1,14 @@
+import sympy
+
+x = sympy.Symbol('x') # Объявление переменной
+
+f = sympy.sin(x) + sympy.exp(x) # Задание функции f
+
+# Производная по x
+print(f.diff(x))
+
+# Подстановка вместо x 3
+print(f.subs(x, 3))
+
+# Приведение к десятичному виду
+print(f.subs(x, 3).evalf())
