@@ -60,9 +60,11 @@ def comp_M(A, d, m, h):
     for i in range(d + 1):
         f = f.diff(x)
     values = []
+    max = f.subs(x, A).evalf()
     for i in range(m):
-        values.append(f.subs(x, A + i * h).evalf())
-    return max(values)
+        if(max < f.subs(x, A + i * h).evalf()):
+            max = f.subs(x, A + i * h).evalf()
+    return max
 
 def main():
     print('Лабораторная номер 4')
