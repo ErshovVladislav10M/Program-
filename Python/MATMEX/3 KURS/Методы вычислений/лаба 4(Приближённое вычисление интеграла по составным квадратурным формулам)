@@ -53,13 +53,12 @@ def comp_int5(A, m, h):
 # Вычисление коэффициента M
 def comp_M(A, d, m, h):
     x = sympy.Symbol('x')
-    # f = x * 0 + 4
+    # f = 0 * x + 4
     # f = 3 * x + 4
     # f =  6 * x ** 3 + 2 * x + 4
     f = sympy.sin(x) + sympy.exp(x)
     for i in range(d + 1):
         f = f.diff(x)
-    values = []
     max = f.subs(x, A).evalf()
     for i in range(m):
         if(max < f.subs(x, A + i * h).evalf()):
@@ -103,7 +102,7 @@ def main():
     print(str('\n') + 'Метод трапеций')
     print('J(h) = ' + str(comp_int4(A, m, h)))
     print('Абсолютная погрешность ' + str(abs(J - comp_int4(A, m, h))))
-    print('Теоритическая погрешность ' + str(comp_M(A, 1, m, h) * (B - A) * h ** 2/ 12))
+    print('Теоритическая погрешность ' + str(comp_M(A, 1, m, h) * (B - A) * h ** 2 / 12))
 
     print(str('\n') + 'Метод Симпсона')
     print('J(h) = ' + str(comp_int5(A, m, h)))
