@@ -6,14 +6,16 @@ def fun(value):
     # return 4
     # return 3 * value + 4
     # return 6 * value ** 3 + 2 * value + 4
-    return math.sin(value) + math.exp(value)
+    # return value + math.exp(value)
+    return math.cos(value) + value ** 2 / 2
 
 # Первообразная функции
 def antiderivative(value):
     # return 4 * value
     # return 1.5 * value ** 2 + 4 * value
     # return 1.5 * value ** 4 + value ** 2 + 4 * value
-    return -math.cos(value) + math.exp(value)
+    # return value ** 2 / 2 + math.exp(value)
+    return math.sin(value) + value ** 3 / 6
 
 # Метод левых прямоугольников
 def comp_int1(A, m, h):
@@ -50,19 +52,48 @@ def comp_int5(A, m, h):
         sum += h * (fun(A + k * h) + 4 * fun(A + (k + 0.5) * h) + fun(A + (k + 1) * h)) / 6
     return sum
 
+# Поиск корней
+def find_roots(A, f):
+    x = sympy.Symbol('x')
+    h = 0.001
+    Ai = []
+    Bi = []
+    for i in range(1000):
+        if (f.subs(x, A + i * h).evalf() * f.subs(x, A + (i + 1) * h).evalf() <= 0):
+            Ai.append(A + i * h)
+            Bi.append(A + (i + 1) * h)
+
+    E = 0.000001
+    roots = []
+    for i in range(len(Ai)):
+        a = Ai[i]
+        b = Bi[i]
+        while (b - a > 2 * E):
+            c = (a + b) / 2
+            if (f.subs(x, a).evalf() * f.subs(x, c).evalf() <= 0):
+                b = c
+            else:
+                a = c
+        roots.append((a + b) / 2)
+    return roots
+
 # Вычисление коэффициента M
 def comp_M(A, d, m, h):
     x = sympy.Symbol('x')
     # f = 0 * x + 4
     # f = 3 * x + 4
-    # f =  6 * x ** 3 + 2 * x + 4
-    f = sympy.sin(x) + sympy.exp(x)
+    # f = 6 * x ** 3 + 2 * x + 4
+    # f = x + sympy.exp(x)
+    f = sympy.cos(x) + x ** 2 / 2
     for i in range(d + 1):
         f = f.diff(x)
-    max = f.subs(x, A).evalf()
-    for i in range(m):
-        if (max < f.subs(x, A + i * h).evalf()):
-            max = f.subs(x, A + i * h).evalf()
+
+    roots = find_roots(A, f.diff(x))
+    roots.append(A + h * m)
+    max = abs(f.subs(x, A))
+    for i in range(len(roots)):
+        if(max < abs(f.subs(x, roots[i]))):
+            max = abs(f.subs(x, roots[i]))
     return max
 
 def main():
@@ -81,7 +112,7 @@ def main():
     print('B = ' + str(B))
     print('m = ' + str(m))
     print('h = ' + str(h))
-    print('f(x) = sin(x) + exp(x)')
+    print('f(x) = x + exp(x)')
     print('J = ' + str(J))
 
     print(str('\n') + 'Метод левых прямоугольников')
