@@ -1,0 +1,110 @@
+import math
+
+# Функция
+def fun(value, num_example):
+    if(num_example == 1): return 4
+    if(num_example == 2): return 3 * value + 4
+    if(num_example == 3): return 6 * value ** 3 + 2 * value + 4
+    if(num_example == 4): return math.exp(value)
+    if(num_example == 5): return 100 * math.cos(value) + math.exp(value)
+
+# Первообразная функции
+def antiderivative(value, num_example):
+    if(num_example == 1): return 4 * value
+    if(num_example == 2): return 1.5 * value ** 2 + 4 * value
+    if(num_example == 3): return 1.5 * value ** 4 + value ** 2 + 4 * value
+    if(num_example == 4): return math.exp(value)
+    if(num_example == 5): return 100 * math.sin(value) + math.exp(value)
+
+# Метод левых прямоугольников
+def comp_int1(A, m, h, num_example):
+    sum = 0
+    for k in range(m):
+        sum += h * fun(A + k * h, num_example)
+    return sum
+
+# Метод правых прямоугольников
+def comp_int2(A, m, h, num_example):
+    sum = 0
+    for k in range(m):
+        sum += h * fun(A + (k + 1) * h, num_example)
+    return sum
+
+# Метод средних прямоугольников
+def comp_int3(A, m, h, num_example):
+    sum = 0
+    for k in range(m):
+        sum += h * fun(A + (k + 0.5) * h, num_example)
+    return sum
+
+# Метод трапеций
+def comp_int4(A, m, h, num_example):
+    sum = 0
+    for k in range(m):
+        sum += 0.5 * h * (fun(A + k * h, num_example) + fun(A + (k + 1) * h, num_example))
+    return sum
+
+# Метод Симпсона
+def comp_int5(A, m, h, num_example):
+    sum = 0
+    for k in range(m):
+        sum += h * (fun(A + k * h, num_example) + 4 * fun(A + (k + 0.5) * h, num_example) + fun(A + (k + 1) * h, num_example)) / 6
+    return sum
+
+def main():
+    print('Лабораторная номер 4')
+    print('Приближённое вычисление интеграла по составным квадратурным формулам')
+    print(str('\n') + 'Выберите номер функции num = ')
+    print('1)f(x) = 4')
+    print('2)f(x) = 3 * x + 4')
+    print('3)f(x) = 6 * x^3 + 2 * x + 4')
+    print('4)f(x) = exp(x)')
+    print('5)f(x) = 100 * cos(x) + exp(x)')
+    num_example = int(input())
+    print('Введите нижний предел A = ')
+    A = int(input())
+    print('Введите верхний предел B = ')
+    B = int(input())
+    print('Введите число разбиений m = ')
+    m = int(input())
+    h = (B - A) / m
+
+    J = antiderivative(B, num_example) - antiderivative(A, num_example)
+    print('A = ' + str(A))
+    print('B = ' + str(B))
+    print('m = ' + str(m))
+    print('h = ' + str(h))
+    print('J = ' + str(J))
+
+    print(str('\n') + 'Метод левых прямоугольников')
+    print('J(h) = ' + str(comp_int1(A, m, h, num_example)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int1(A, m, h, num_example))))
+    if(num_example == 4):
+        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h / 2))
+
+    print(str('\n') + 'Метод правых прямоугольников')
+    print('J(h) = ' + str(comp_int2(A, m, h, num_example)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int2(A, m, h, num_example))))
+    if(num_example == 4):
+        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h / 2))
+
+    print(str('\n') + 'Метод средних прямоугольников')
+    print('J(h) = ' + str(comp_int3(A, m, h, num_example)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int3(A, m, h, num_example))))
+    if(num_example == 4):
+        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2 / 24))
+
+    print(str('\n') + 'Метод трапеций')
+    print('J(h) = ' + str(comp_int4(A, m, h, num_example)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int4(A, m, h, num_example))))
+    if(num_example == 4):
+        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2/ 12))
+
+    print(str('\n') + 'Метод Симпсона')
+    print('J(h) = ' + str(comp_int5(A, m, h, num_example)))
+    print('Абсолютная погрешность ' + str(abs(J - comp_int5(A, m, h, num_example))))
+    if(num_example == 4):
+        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 4 / 180))
+
+if __name__ == '__main__':
+    main()
