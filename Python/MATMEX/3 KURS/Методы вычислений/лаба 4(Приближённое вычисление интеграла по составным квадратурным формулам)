@@ -99,7 +99,7 @@ def main():
     print('J(h) = ' + str(comp_int4(A, m, h, num_example)))
     print('Абсолютная погрешность ' + str(abs(J - comp_int4(A, m, h, num_example))))
     if(num_example == 4):
-        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2/ 12))
+        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2 / 12))
 
     print(str('\n') + 'Метод Симпсона')
     print('J(h) = ' + str(comp_int5(A, m, h, num_example)))
