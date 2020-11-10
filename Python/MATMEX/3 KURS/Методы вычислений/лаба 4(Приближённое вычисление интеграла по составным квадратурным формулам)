@@ -16,18 +16,11 @@ def antiderivative(value, num_example):
     if(num_example == 4): return math.exp(value)
     if(num_example == 5): return 100 * math.sin(value) + math.exp(value)
 
-# Метод левых прямоугольников
-def comp_int1(A, m, h, num_example):
+# Вычисление y
+def comp_y(A, m, h, num_example):
     sum = 0
-    for k in range(m):
+    for k in range(1, m):
         sum += h * fun(A + k * h, num_example)
-    return sum
-
-# Метод правых прямоугольников
-def comp_int2(A, m, h, num_example):
-    sum = 0
-    for k in range(m):
-        sum += h * fun(A + (k + 1) * h, num_example)
     return sum
 
 # Метод средних прямоугольников
@@ -35,20 +28,6 @@ def comp_int3(A, m, h, num_example):
     sum = 0
     for k in range(m):
         sum += h * fun(A + (k + 0.5) * h, num_example)
-    return sum
-
-# Метод трапеций
-def comp_int4(A, m, h, num_example):
-    sum = 0
-    for k in range(m):
-        sum += 0.5 * h * (fun(A + k * h, num_example) + fun(A + (k + 1) * h, num_example))
-    return sum
-
-# Метод Симпсона
-def comp_int5(A, m, h, num_example):
-    sum = 0
-    for k in range(m):
-        sum += h * (fun(A + k * h, num_example) + 4 * fun(A + (k + 0.5) * h, num_example) + fun(A + (k + 1) * h, num_example)) / 6
     return sum
 
 def main():
@@ -77,35 +56,40 @@ def main():
     print('h = ' + str(h))
     print('J = ' + str(J))
 
-    print(str('\n') + 'Метод левых прямоугольников')
-    print('J(h) = ' + str(comp_int1(A, m, h, num_example)))
-    print('Абсолютная погрешность ' + str(abs(J - comp_int1(A, m, h, num_example))))
+    y = comp_y(A, m, h, num_example)
+    y1 = y + h * fun(A, num_example)
+    y2 = y + h * fun(B, num_example)
+    y3 = comp_int3(A, m, h, num_example)
+
+    print(str('\n') + 'Формула левых прямоугольников')
+    print('J(h) = ' + str(y1))
+    print('Абсолютная погрешность ' + str(abs(J - y1)))
     if(num_example == 4):
-        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h / 2))
+        print('Теоретическая погрешность ' + str(math.exp(B) * (B - A) * h / 2))
 
     print(str('\n') + 'Метод правых прямоугольников')
-    print('J(h) = ' + str(comp_int2(A, m, h, num_example)))
-    print('Абсолютная погрешность ' + str(abs(J - comp_int2(A, m, h, num_example))))
+    print('J(h) = ' + str(y2))
+    print('Абсолютная погрешность ' + str(abs(J - y2)))
     if(num_example == 4):
-        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h / 2))
+        print('Теоретическая погрешность ' + str(math.exp(B) * (B - A) * h / 2))
 
-    print(str('\n') + 'Метод средних прямоугольников')
-    print('J(h) = ' + str(comp_int3(A, m, h, num_example)))
-    print('Абсолютная погрешность ' + str(abs(J - comp_int3(A, m, h, num_example))))
+    print(str('\n') + 'Формула средних прямоугольников')
+    print('J(h) = ' + str(y3))
+    print('Абсолютная погрешность ' + str(abs(J - y3)))
     if(num_example == 4):
-        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2 / 24))
+        print('Теоретическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2 / 24))
 
-    print(str('\n') + 'Метод трапеций')
-    print('J(h) = ' + str(comp_int4(A, m, h, num_example)))
-    print('Абсолютная погрешность ' + str(abs(J - comp_int4(A, m, h, num_example))))
+    print(str('\n') + 'Формула трапеций')
+    print('J(h) = ' + str((y1 + y2) / 2))
+    print('Абсолютная погрешность ' + str(abs(J - (y1 + y2) / 2)))
     if(num_example == 4):
-        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2 / 12))
+        print('Теоретическая погрешность ' + str(math.exp(B) * (B - A) * h ** 2 / 12))
 
-    print(str('\n') + 'Метод Симпсона')
-    print('J(h) = ' + str(comp_int5(A, m, h, num_example)))
-    print('Абсолютная погрешность ' + str(abs(J - comp_int5(A, m, h, num_example))))
+    print(str('\n') + 'Формула Симпсона')
+    print('J(h) = ' + str((y1 + 4 * y3 + y2) / 6))
+    print('Абсолютная погрешность ' + str(abs(J - (y1 + 4 * y3 + y2) / 6)))
     if(num_example == 4):
-        print('Теоритическая погрешность ' + str(math.exp(B) * (B - A) * h ** 4 / 180))
+        print('Теоретическая погрешность ' + str(math.exp(B) * (B - A) * h ** 4 / 2880))
 
 if __name__ == '__main__':
     main()
