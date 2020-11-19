@@ -1,0 +1,62 @@
+import math
+
+# Функция ро
+def ro(value, num_part):
+    if(num_part == 5):
+        return 1 / math.sqrt(1 - value ** 2)
+    else:
+        return 1 / math.sqrt(value)
+
+# Функция f
+def f(value, num_part):
+    if(num_part == 5):
+        return math.exp(2 * value)
+    else:
+        return math.sin(value)
+
+# Функция f * ro
+def fun(value, num_part):
+    return f(value, num_part) * ro(value, num_part)
+
+# Формула Гаусса
+def comp_int1(m):
+    sum = 0
+    h = 1 / m
+    for k in range(m):
+        sum += fun(h * (k + 0.5) + h / math.sqrt(3) / 2, 3)
+        sum += fun(h * (k + 0.5) - h / math.sqrt(3) / 2, 3)
+        sum *= h / 2
+    return sum
+
+# Формула Меллера
+def comp_int3(N):
+    sum = 0
+    for k in range(1, N + 1):
+        sum += f(math.cos(math.pi * (2 * k - 1) / (2 * N)), 5)
+    return math.pi * sum / N
+
+def main():
+    print('Лабораторная номер 5')
+    print('Приближённое вычисление интегралов при помощи КФ НАСТ')
+    print('Вариант 3')
+
+    print('Введите число разбиений m = ')
+    m = int(input())
+    h = 1 / m
+
+    print(str('\n') + 'Пункт 3')
+    print('[0, 1]')
+    print('m = ' + str(m))
+    print('f(x) = sin(x)')
+    print('p(x) = 1 / sqrt(x)')
+    print(comp_int1(m))
+
+    print(str('\n') + 'Пункт 5')
+    print('[-1, 1]')
+    print('N = 5')
+    print('f(x) = exp(2x)')
+    print('p(x) = 1 / sqrt(1 - x^2)')
+    print(comp_int3(5))
+
+if __name__ == '__main__':
+    main()
