@@ -25,8 +25,7 @@ def comp_int1(m):
     for k in range(m):
         sum += fun(h * (k + 0.5) + h / math.sqrt(3) / 2, 3)
         sum += fun(h * (k + 0.5) - h / math.sqrt(3) / 2, 3)
-        sum *= h / 2
-    return sum
+    return sum * h / 2
 
 # Формула Меллера
 def comp_int3(N):
