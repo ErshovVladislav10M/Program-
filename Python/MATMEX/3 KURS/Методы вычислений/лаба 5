@@ -27,6 +27,27 @@ def comp_int1(m):
         sum += fun(h * (k + 0.5) - h / math.sqrt(3) / 2, 3)
     return sum * h / 2
 
+# КФ типа Гаусса
+def comp_int2():
+    mu_i = []
+    for i in range(4):
+        mu_i.append(1 ** (0.5 + i) / (0.5 + i))
+    for i in range(4):
+        print('mu_' + str(i) + ' = ' + str(mu_i[i]))
+    a1 = (mu_i[0] * mu_i[3] - mu_i[1] * mu_i[2]) / (mu_i[1] ** 2 - mu_i[2] * mu_i[0])
+    a2 = (mu_i[2] * mu_i[2] - mu_i[1] * mu_i[3]) / (mu_i[1] ** 2 - mu_i[2] * mu_i[0])
+    print('x^2 + ' + str(a1) + '*x + ' + str(a2))
+    x1 = (-a1 + math.sqrt(a1 ** 2 - 4 * a2)) / 2
+    x2 = (-a1 - math.sqrt(a1 ** 2 - 4 * a2)) / 2
+    print('x1 = ' + str(x1))
+    print('x2 = ' + str(x2))
+    A1 = (mu_i[1] - x2 * mu_i[0]) / (x1 - x2)
+    A2 = (mu_i[1] - x1 * mu_i[0]) / (x2 - x1)
+    print('A1 = ' + str(A1))
+    print('A2 = ' + str(A2))
+    print('A1 + A2 - mu_0 = ' + str(A1 + A2 - mu_i[0]))
+    return A1 * f(x1, 4) + A2 * f(x2, 4)
+
 # Формула Меллера
 def comp_int3(N):
     sum = 0
@@ -48,14 +69,20 @@ def main():
     print('m = ' + str(m))
     print('f(x) = sin(x)')
     print('p(x) = 1 / sqrt(x)')
-    print(comp_int1(m))
+    print('Значение интеграла ' + str(comp_int1(m)))
+
+    print(str('\n') + 'Пункт 4')
+    print('[0, 1]')
+    print('f(x) = sin(x)')
+    print('p(x) = 1 / sqrt(x)')
+    print('Значение интеграла ' + str(comp_int2()))
 
     print(str('\n') + 'Пункт 5')
     print('[-1, 1]')
     print('N = 5')
     print('f(x) = exp(2x)')
     print('p(x) = 1 / sqrt(1 - x^2)')
-    print(comp_int3(5))
+    print('Значение интеграла ' + str(comp_int3(5)))
 
 if __name__ == '__main__':
     main()
