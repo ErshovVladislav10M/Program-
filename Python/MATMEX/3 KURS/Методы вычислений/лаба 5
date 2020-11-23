@@ -19,19 +19,19 @@ def fun(value, num_part):
     return f(value, num_part) * ro(value, num_part)
 
 # Формула Гаусса
-def comp_int1(m):
+def comp_int1(m, a, b):
     sum = 0
-    h = 1 / m
+    h = (b - a) / m
     for k in range(m):
-        sum += fun(h * (k + 0.5) + h / math.sqrt(3) / 2, 3)
-        sum += fun(h * (k + 0.5) - h / math.sqrt(3) / 2, 3)
+        sum += fun(a + h * (k + 0.5) + h / math.sqrt(3) / 2, 3)
+        sum += fun(a + h * (k + 0.5) - h / math.sqrt(3) / 2, 3)
     return sum * h / 2
 
 # КФ типа Гаусса
-def comp_int2():
+def comp_int2(a, b):
     mu_i = []
     for i in range(4):
-        mu_i.append(1 ** (0.5 + i) / (0.5 + i))
+        mu_i.append(b ** (0.5 + i) / (0.5 + i) - a ** (0.5 + i) / (0.5 + i))
     for i in range(4):
         print('mu_' + str(i) + ' = ' + str(mu_i[i]))
     a1 = (mu_i[0] * mu_i[3] - mu_i[1] * mu_i[2]) / (mu_i[1] ** 2 - mu_i[2] * mu_i[0])
@@ -62,20 +62,23 @@ def main():
 
     print('Введите число разбиений m = ')
     m = int(input())
-    h = 1 / m
+    print('Введите a = ')
+    a = float(input())
+    print('Введите b = ')
+    b = float(input())
 
     print(str('\n') + 'Пункт 3')
-    print('[0, 1]')
+    print('[' + str(a) + ', ' + str(b) + ']')
     print('m = ' + str(m))
     print('f(x) = sin(x)')
     print('p(x) = 1 / sqrt(x)')
-    print('Значение интеграла ' + str(comp_int1(m)))
+    print('Значение интеграла ' + str(comp_int1(m, a, b)))
 
     print(str('\n') + 'Пункт 4')
-    print('[0, 1]')
+    print('[' + str(a) + ', ' + str(b) + ']')
     print('f(x) = sin(x)')
     print('p(x) = 1 / sqrt(x)')
-    print('Значение интеграла ' + str(comp_int2()))
+    print('Значение интеграла ' + str(comp_int2(a, b)))
 
     print(str('\n') + 'Пункт 5')
     print('[-1, 1]')
