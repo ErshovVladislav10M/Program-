@@ -58,14 +58,18 @@ def comp_int3(N):
 def main():
     print('Лабораторная номер 5')
     print('Приближённое вычисление интегралов при помощи КФ НАСТ')
-    print('Вариант 3')
+    print('Вариант 3' + str('\n'))
 
+    print('Введите парамтеры для пунктов 3 и 4')
     print('Введите число разбиений m = ')
     m = int(input())
     print('Введите a = ')
     a = float(input())
     print('Введите b = ')
     b = float(input())
+    print('Введите парамтеры для пункта 5')
+    print('Введите N = ')
+    N = int(input())
 
     print(str('\n') + 'Пункт 3')
     print('[' + str(a) + ', ' + str(b) + ']')
@@ -85,7 +89,7 @@ def main():
     print('N = 5')
     print('f(x) = exp(2x)')
     print('p(x) = 1 / sqrt(1 - x^2)')
-    print('Значение интеграла ' + str(comp_int3(5)))
+    print('Значение интеграла ' + str(comp_int3(N)))
 
 if __name__ == '__main__':
     main()
