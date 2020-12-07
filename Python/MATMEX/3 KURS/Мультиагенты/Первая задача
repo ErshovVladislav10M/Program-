@@ -1,0 +1,130 @@
+import time
+import asyncio
+from spade.agent import Agent
+from spade.behaviour import CyclicBehaviour
+from spade.behaviour import OneShotBehaviour
+from spade.message import Message
+# from spade.template import Template
+from random import randint
+import ast
+
+list_of_agents = []
+num_of_agents = 6
+
+
+class MyBehav(CyclicBehaviour):
+    my_name = ""
+    my_work_result = 0
+    my_neighboors = []
+    all_my_info = {}
+
+    def __init__(self, my_name, my_neighboors):
+        self.my_neighboors = my_neighboors
+        self.my_name = my_name
+        self.all_my_info = {self.my_name: -1}
+        super().__init__()
+
+    async def on_start(self):
+        self.my_work_result = randint(-1000, 1000)
+        self.all_my_info.update({self.my_name: self.my_work_result})
+        await asyncio.sleep(5)
+
+    # print("Starting behaviour . . .")
+
+    async def run(self):
+
+        # self.send_all_info()
+        for neighboor in self.my_neighboors:
+            msg_s = Message(to=neighboor)
+            msg_s.body = str(self.all_my_info)
+            await self.send(msg_s)
+
+        if (self.my_name == "0@laptop-svfkbmqq"):
+            print("Result{}".format(self.all_my_info))
+            if (len(self.all_my_info) == num_of_agents):
+                print(sum(self.all_my_info.values()) / num_of_agents)
+                print("Finished!")
+                exit(0)
+
+        msg = await self.receive(timeout=5)
+        # print ("MSG{}".format(msg))
+        if (msg):
+            # print ("Get mes {}, from {}".format(msg.body, msg.sender))
+            self.all_my_info.update(ast.literal_eval(msg.body))
+        # print("Agent {} get number {}".format(self.my_name, self.my_work_result))
+        await asyncio.sleep(3)
+
+    async def send_all_info(self):
+        # print (self.my_name + " " + "send a message")
+        for neighboor in self.my_neighboors:
+            msg = Message(to=neighboor)
+            msg.body = str(self.my_work_result)
+            await self.send(msg)
+
+            print("Message sent!")
+
+
+class InformBehav(OneShotBehaviour):
+    async def run(self):
+        # print("InformBehav running")
+        msg = Message(to="receiver@your_xmpp_server")  # Instantiate the message
+        msg.set_metadata("performative", "inform")  # Set the "inform" FIPA performative
+        msg.body = "Hello World"  # Set the message content
+
+        await self.send(msg)
+        # print("Message sent!")
+
+        # stop agent from behaviour
+        await self.agent.stop()
+
+
+class DummyAgent(Agent):
+    my_agent_name = ""
+    neighboors = []
+
+    async def setup(self):
+        # print("Agent starting . . .")
+        b = MyBehav(self.my_agent_name, self.neighboors)
+        self.add_behaviour(b)
+
+    def __init__(self, name, password, neighboors):
+        # print ("Init agent begin")
+        super(DummyAgent, self).__init__(name, password)
+        self.my_agent_name = name
+        self.neighboors = neighboors
+
+
+if __name__ == "__main__":
+    dummy0 = DummyAgent("0@laptop-svfkbmqq", "0", ["1@laptop-svfkbmqq"])
+    dummy1 = DummyAgent("1@laptop-svfkbmqq", "1", ["0@laptop-svfkbmqq", "3@laptop-svfkbmqq", "5@laptop-svfkbmqq"])
+    dummy2 = DummyAgent("2@laptop-svfkbmqq", "2", ["3@laptop-svfkbmqq"])
+    dummy3 = DummyAgent("3@laptop-svfkbmqq", "3", ["1@laptop-svfkbmqq", "2@laptop-svfkbmqq", "4@laptop-svfkbmqq"])
+    dummy4 = DummyAgent("4@laptop-svfkbmqq", "4", ["3@laptop-svfkbmqq", "5@laptop-svfkbmqq"])
+    dummy5 = DummyAgent("5@laptop-svfkbmqq", "5", ["1@laptop-svfkbmqq", "4@laptop-svfkbmqq"])
+
+    dummy0.start()
+    time.sleep(1)
+    dummy1.start()
+    time.sleep(1)
+    dummy2.start()
+    time.sleep(1)
+    dummy3.start()
+    time.sleep(1)
+    dummy4.start()
+    time.sleep(1)
+    dummy5.start()
+
+    # print("Wait until user interrupts with ctrl+C")
+
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            break
+
+    dummy0.stop()
+    dummy1.stop()
+    dummy2.stop()
+    dummy3.stop()
+    dummy4.stop()
+    dummy5.stop()
