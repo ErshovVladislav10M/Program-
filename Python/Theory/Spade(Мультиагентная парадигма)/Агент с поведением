@@ -1,0 +1,46 @@
+import time
+import asyncio
+from spade.agent import Agent
+from spade.behaviour import CyclicBehaviour
+
+class DummyAgent(Agent):
+
+    # Поведение агента
+    class MyBehav(CyclicBehaviour):
+    
+        # Вызывается dummy.start()
+        async def on_start(self):
+            print("Starting behaviour . . .")
+            self.counter = 0
+
+        # Вызывается на каждой итерации
+        async def run(self):
+            print("Counter: {}".format(self.counter))
+            self.counter += 1
+            if self.counter > 3:
+                # Убийство поведения(уничтожение поведения на следующей итерации цикла)
+                self.kill(exit_code=10)
+                return
+            # Задержка перед следующим исполнением 
+            await asyncio.sleep(1)
+
+        async def on_end(self):
+            print("Behaviour finished with exit code {}.".format(self.exit_code))
+
+    async def setup(self):
+        print("Agent starting . . .")
+        self.my_behav = self.MyBehav()
+        self.add_behaviour(self.my_behav)
+
+if __name__ == "__main__":
+    dummy = DummyAgent("your_jid@your_xmpp_server", "your_password")
+    future = dummy.start()
+    future.result()  # Wait until the start method is finished
+
+    # wait until user interrupts with ctrl+C
+    while not dummy.my_behav.is_killed():
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            break
+    dummy.stop()
