@@ -1,0 +1,85 @@
+import math
+
+
+# Функция y(x) и ее производные
+def y(value, num):
+    if num == 0: return 2 / (math.exp(2 * value) + 1)
+    if num == 1: return -2 * y(value, 0) + y(value, 0) ** 2
+    if num == 2: return 2 * y(value, 1) * (y(value, 0) - 1)
+    if num == 3: return 2 * ((y(value, 0) - 1) * y(value, 2) + y(value, 1) ** 2)
+    if num == 4: return 2 * (y(value, 0) - 1) * y(value, 3) + 6 * y(value, 1) * y(value, 2)
+    if num == 5: return 2 * (y(value, 0) - 1) * y(value, 4) + 6 * y(value, 2) ** 2 + 8 * y(value, 3) * y(value, 1)
+
+
+if __name__ == '__main__':
+    print('Лабораторная номер 6')
+    print('Численное решение задачи Коши')
+    print('Вариант 3' + str('\n'))
+
+    print('Введите парамтеры')
+    print('Введите число разбиений N = ')
+    N = int(input())
+    print('Введите длину разбиения h = ')
+    h = float(input())
+
+    print('\n' + 'Исходные параметры задачи')
+    print("y'(x) = -2y(x) + y^2(x), y(0) = 1")
+    print('h = ' + str(h))
+    print('N = ' + str(N))
+
+    print('\n' + 'Точное решение задачи')
+    print('x_k' + '\t\t' + 'y(x_k)')
+    for k in range(-2, N + 1):
+        print(str(round(k * h, 1)) + '\t\t' + str(y(k * h, 0)))
+
+    print('\n' + 'Метод разложения в ряд Тейлора')
+    print('x_k' + '\t\t' + 'y_k' + '\t\t' + 'Абсолютная погрешность')
+    for k in range(-2, 3):
+        y_k = 0
+        for i in range(0, 6):
+            y_k += y(0, i) / math.factorial(i) * (k * h) ** i
+        print(str(round(k * h, 1)) + '\t\t' + str(y_k) + '\t\t' + str(abs(y_k - y(k * h, 0))))
+
+    print('\n' + 'Метод Адамса 4-го порядка')
+    print('x_k' + '\t\t' + 'y_k' + '\t\t' + 'Абсолютная погрешность')
+    y_k = 0.7086873875484091
+    for k in range(3, N + 1):
+        print(str(round(k * h, 1)) + '\t\t' + str(y_k) + '\t\t' + str(abs(y_k - y(k * h, 0))))
+        mu_0 = h * y((k + 1) * h, 1)
+        mu_1 = -h * (y((k + 1) * h, 1) - y(k * h, 1)) / 2
+        mu_2 = -h * (y((k + 1) * h, 1) - 2 * y(k * h, 1) + y((k - 1) * h, 1)) / 12
+        mu_3 = -h * (y((k + 1) * h, 1) - 3 * y(k * h, 1) + 3 * y((k - 1) * h, 1) - y((k - 2) * h, 1)) / 24
+        mu_4 = -h * (y((k + 1) * h, 1) - 4 * y(k * h, 1) + 6 * y((k - 1) * h, 1) - 4 * y((k - 2) * h, 1) + y((k - 3) * h, 1)) * 19 / 720
+        y_k += mu_0 + mu_1 + mu_2 + mu_3 + mu_4
+
+    print('\n' + 'Метод Рунге-Кутта')
+    print('x_k' + '\t\t' + 'y_k' + '\t\t' + 'Абсолютная погрешность')
+    y_k = 1
+    for k in range(N + 1):
+        print(str(round(k * h, 1)) + '\t\t' + str(y_k) + '\t\t' + str(abs(y_k - y(k * h, 0))))
+        k1 = h * y(k * h, 1)
+        k2 = h * y((k + 0.5) * h, 1)
+        k3 = h * y((k + 0.5) * h, 1)
+        k4 = h * y((k + 1) * h, 1)
+        y_k += (k1 + 2 * k2 + 2 * k3 + k4) / 6
+
+    print('\n' + 'Метод Эйлера')
+    print('x_k' + '\t\t' + 'y_k' + '\t\t' + 'Абсолютная погрешность')
+    y_k = 1
+    for k in range(N + 1):
+        print(str(round(k * h, 1)) + '\t\t' + str(y_k) + '\t\t' + str(abs(y_k - y(k * h, 0))))
+        y_k += h * y(k * h, 1)
+
+    print('\n' + 'Метод Эйлера усовершенствованный')
+    print('x_k' + '\t\t' + 'y_k' + '\t\t' + 'Абсолютная погрешность')
+    y_k = 1
+    for k in range(N + 1):
+        print(str(round(k * h, 1)) + '\t\t' + str(y_k) + '\t\t' + str(abs(y_k - y(k * h, 0))))
+        y_k += h * y((k + 0.5) * h, 1)
+
+    print('\n' + 'Метод Эйлера-Коши')
+    print('x_k' + '\t\t' + 'y_k' + '\t\t' + 'Абсолютная погрешность')
+    y_k = 1
+    for k in range(N + 1):
+        print(str(round(k * h, 1)) + '\t\t' + str(y_k) + '\t\t' + str(abs(y_k - y(k * h, 0))))
+        y_k += h * (y(k * h, 1) + y((k + 1) * h, 1)) / 2
