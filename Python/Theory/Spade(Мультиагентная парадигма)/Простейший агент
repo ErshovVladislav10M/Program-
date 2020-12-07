@@ -1,0 +1,13 @@
+from spade import agent
+
+# Класс для наших агнетов
+class DummyAgent(agent.Agent):
+    async def setup(self):
+        print("Hello World! I'm agent {}".format(str(self.jid)))
+
+# Создание и запуск агента(нужен сервер, например, openfire)
+dummy = DummyAgent("your_jid@your_xmpp_server", "your_password")
+dummy.start()
+
+# Остановка агента
+dummy.stop()
