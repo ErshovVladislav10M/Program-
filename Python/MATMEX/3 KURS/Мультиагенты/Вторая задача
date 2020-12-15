@@ -1,0 +1,167 @@
+import time
+import asyncio
+from spade.agent import Agent
+from spade.behaviour import CyclicBehaviour
+from spade.behaviour import OneShotBehaviour
+from spade.message import Message
+from spade.template import Template
+from random import randint
+import matplotlib.pyplot as plt
+
+import ast
+
+list_of_agents = []
+num_of_agents = 6
+alpha = 1/num_of_agents
+
+end_of_algo = 500
+graphic_info = {}
+schetch_of_graphs = 0
+
+
+class MyBehav(CyclicBehaviour):
+		my_name = ""
+		my_work_result = 0
+		my_neighboors = []
+		all_my_info = {}
+		schetchik = 0
+		changelog = []
+
+		def __init__(self, my_name, my_neighboors):
+			self.my_neighboors = my_neighboors
+			self.my_name = my_name
+			self.all_my_info = {self.my_name:-1}
+			self.schetchik = 0
+			self.changelog = []
+			super().__init__()
+
+		async def on_start(self):
+			self.my_work_result = randint (1,100)
+			#self.changelog.append(self.my_work_result)
+			self.all_my_info.update({self.my_name:self.my_work_result})
+			await asyncio.sleep(5)
+			#print("Starting behaviour . . .")
+
+		async def run(self):
+
+				#self.send_all_info()
+			for neighboor in self.my_neighboors:
+				msg_s = Message(to=neighboor)
+				self.my_work_result = self.my_work_result + randint (-1,1)
+				if (randint (-5,5) == 4):									  #!!!!!!!!!
+					self.my_work_result = self.my_work_result + randint(-5,5) #!!!!!!!!!
+				msg_s.body = str(self.my_work_result)   
+				if (randint (-5,5) == 4):               #!!!!!!!!
+					await self.send(msg_s)				#!!!!!!!!
+				if (randint (-5,5) == 4): 
+					await asyncio.sleep(0.1)
+
+			print (self.my_name + ": " + str(self.my_work_result))
+
+			msg = await self.receive(timeout=0.01)
+			#print ("MSG{}".format(msg))
+			if (msg):
+				#print ("Get mes {}, from {}".format(msg.body, msg.sender))
+				#self.all_my_info.update(ast.literal_eval(msg.body))
+				#print ("Тело ",msg.body)
+				#print ("Тип ", type(msg.body))
+				u = self.count_avg(float(msg.body))
+				self.my_work_result = self.my_work_result + u
+			#print("Agent {} get number {}".format(self.my_name, self.my_work_result))
+			self.schetchik = self.schetchik + 1
+			self.changelog.append(self.my_work_result)
+			if (self.schetchik == end_of_algo):
+				graphic_info.update ({self.my_name:([i for i in range(self.schetchik)], self.changelog)})
+				make_a_graph()
+				schetch_of_graphs = schetch_of_graphs + 1
+
+			if (self.schetchik == end_of_algo + num_of_agents *4) and (self.my_name == "0@laptop-svfkbmqq") and (schetch_of_graphs == 6):
+				plt.show()
+			await asyncio.sleep(0.01)
+
+		async def send_all_info (self):
+			#print (self.my_name + " " + "send a message")
+			for neighboor in self.my_neighboors:
+				msg = Message(to=neighboor)
+				msg.body = str(self.my_work_result)   
+				await self.send(msg)
+
+				print("Message sent!")
+
+		def count_avg(self, message):
+			u = alpha * (message - self.my_work_result)
+			return u
+
+class InformBehav(OneShotBehaviour):
+        async def run(self):
+            #print("InformBehav running")
+            msg = Message(to="receiver@your_xmpp_server")     # Instantiate the message
+            msg.set_metadata("performative", "inform")  # Set the "inform" FIPA performative
+            msg.body = "Hello World"                    # Set the message content
+
+            await self.send(msg)
+            #print("Message sent!")
+
+            # stop agent from behaviour
+            await self.agent.stop()
+
+class DummyAgent(Agent):
+	my_agent_name = ""
+	neighboors = []
+
+	async def setup(self):
+		#print("Agent starting . . .")
+		b = MyBehav(self.my_agent_name, self.neighboors)
+		self.add_behaviour(b)
+    
+	def __init__(self, name, password, neighboors):
+		#print ("Init agent begin")
+		super(DummyAgent, self).__init__(name, password)
+		self.my_agent_name = name
+		self.neighboors = neighboors
+    
+def make_a_graph():
+	plots = []
+	for agent in graphic_info.values():
+		if (agent[0] != agent[1]):
+			z = list(zip(agent[0], agent[1]))
+			X = [i[0] for i in z]
+			Y = [i[1] for i in z]
+			plt.plot(X, Y, 'b-')
+	#plt.show()
+
+
+if __name__ == "__main__":
+	dummy0 = DummyAgent("0@laptop-svfkbmqq", "0", ["1@laptop-svfkbmqq"])
+	dummy1 = DummyAgent("1@laptop-svfkbmqq", "1", ["0@laptop-svfkbmqq","3@laptop-svfkbmqq","5@laptop-svfkbmqq"])
+	dummy2 = DummyAgent("2@laptop-svfkbmqq", "2", ["3@laptop-svfkbmqq"])
+	dummy3 = DummyAgent("3@laptop-svfkbmqq", "3", ["1@laptop-svfkbmqq","2@laptop-svfkbmqq","4@laptop-svfkbmqq"])
+	dummy4 = DummyAgent("4@laptop-svfkbmqq", "4", ["3@laptop-svfkbmqq","5@laptop-svfkbmqq"])
+	dummy5 = DummyAgent("5@laptop-svfkbmqq", "5", ["1@laptop-svfkbmqq","4@laptop-svfkbmqq"])
+	dummy0.start()
+	dummy1.start()
+	dummy2.start()
+	dummy3.start()
+	dummy4.start()
+	dummy5.start()
+	"""
+    dummy = DummyAgent("0@laptop-svfkbmqq", "0", ["1@laptop-svfkbmqq","2@laptop-svfkbmqq","3@laptop-svfkbmqq","4@laptop-svfkbmqq","5@laptop-svfkbmqq","6@laptop-svfkbmqq"])
+    dummy.start()
+
+    for num_agent in range(1, num_of_agents):
+    	dummy = DummyAgent("{}@laptop-svfkbmqq".format(num_agent), "{}".format(num_agent), ["0@laptop-svfkbmqq"])
+    	dummy.start()
+	"""
+    #print("Wait until user interrupts with ctrl+C")
+
+	while True:
+		try:
+			time.sleep(1)
+		except KeyboardInterrupt:
+			break
+	dummy0.stop()
+	dummy1.stop()
+	dummy2.stop()
+	dummy3.stop()
+	dummy4.stop()
+	dummy5.stop()
