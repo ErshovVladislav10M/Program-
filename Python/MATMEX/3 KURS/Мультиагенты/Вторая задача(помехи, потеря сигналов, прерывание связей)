@@ -1,0 +1,115 @@
+import time
+import asyncio
+from spade.agent import Agent
+from spade.behaviour import CyclicBehaviour
+from spade.message import Message
+from random import randint, random, uniform
+
+
+ALPHA_I = 0.25
+COUNTER = 0
+LIST_OF_SENDER = [0, 0, 0, 0, 0, 0]
+LIST_OF_NUM = [0, 0, 0, 0, 0, 0]
+LIST_OF_WORK = [0, 0, 0, 0, 0, 0]
+
+
+class MyBehav(CyclicBehaviour):
+    my_name = ""
+    my_neighboors = []
+
+    def __init__(self, my_name, my_neighboors):
+        self.my_neighboors = my_neighboors
+        self.my_name = my_name
+        super().__init__()
+
+    async def on_start(self):
+        global LIST_OF_NUM
+        LIST_OF_NUM[int(self.my_name[0])] = randint(-1000, 1000)
+        print(str(self.my_name) + " " + str(LIST_OF_NUM[int(self.my_name[0])]))
+        await asyncio.sleep(10)
+
+    async def run(self):
+
+        global LIST_OF_SENDER, LIST_OF_NUM, COUNTER, LIST_OF_WORK
+        if (LIST_OF_SENDER[int(self.my_name[0])] < 1):
+            for neighboor in self.my_neighboors:
+                if(random() < 0.95):
+                    msg_s = Message(to=neighboor)
+                    msg_s.body = str(LIST_OF_NUM[int(self.my_name[0])] * uniform(0.95, 1.05))
+                    await self.send(msg_s)
+            LIST_OF_SENDER[int(self.my_name[0])] += 1
+
+        if (self.my_name == "0@laptop-svfkbmqq"):
+            print("Result " + str(LIST_OF_NUM[int(self.my_name[0])]))
+
+            if (COUNTER == 20):
+                print(LIST_OF_NUM[int(self.my_name[0])])
+                print("Finished!")
+                exit(0)
+
+        msg = await self.receive(timeout=5)
+        if (msg):
+            if (self.my_name != msg.sender):
+                LIST_OF_WORK[int(self.my_name[0])] += float(msg.body) - LIST_OF_NUM[int(self.my_name[0])]
+
+        print(LIST_OF_SENDER)
+        print(LIST_OF_NUM)
+        print(LIST_OF_WORK)
+        print(COUNTER)
+        if(sum(LIST_OF_SENDER) == 6):
+            LIST_OF_SENDER = [0, 0, 0, 0, 0, 0]
+            for i in range(6):
+                LIST_OF_WORK[i] *= ALPHA_I
+                LIST_OF_NUM[i] += LIST_OF_WORK[i]
+            LIST_OF_WORK = [0, 0, 0, 0, 0, 0]
+            COUNTER += 1
+
+        await asyncio.sleep(10)
+
+
+class DummyAgent(Agent):
+    my_agent_name = ""
+    neighboors = []
+
+    async def setup(self):
+        b = MyBehav(self.my_agent_name, self.neighboors)
+        self.add_behaviour(b)
+
+    def __init__(self, name, password, neighboors):
+        super(DummyAgent, self).__init__(name, password)
+        self.my_agent_name = name
+        self.neighboors = neighboors
+
+
+if __name__ == "__main__":
+    dummy0 = DummyAgent("0@laptop-svfkbmqq", "0", ["1@laptop-svfkbmqq", "2@laptop-svfkbmqq"])
+    dummy1 = DummyAgent("1@laptop-svfkbmqq", "1", ["0@laptop-svfkbmqq", "3@laptop-svfkbmqq", "5@laptop-svfkbmqq"])
+    dummy2 = DummyAgent("2@laptop-svfkbmqq", "2", ["0@laptop-svfkbmqq", "3@laptop-svfkbmqq"])
+    dummy3 = DummyAgent("3@laptop-svfkbmqq", "3", ["1@laptop-svfkbmqq", "2@laptop-svfkbmqq", "4@laptop-svfkbmqq"])
+    dummy4 = DummyAgent("4@laptop-svfkbmqq", "4", ["3@laptop-svfkbmqq", "5@laptop-svfkbmqq"])
+    dummy5 = DummyAgent("5@laptop-svfkbmqq", "5", ["1@laptop-svfkbmqq", "4@laptop-svfkbmqq"])
+
+    dummy0.start()
+    time.sleep(1)
+    dummy1.start()
+    time.sleep(1)
+    dummy2.start()
+    time.sleep(1)
+    dummy3.start()
+    time.sleep(1)
+    dummy4.start()
+    time.sleep(1)
+    dummy5.start()
+
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            break
+
+    dummy0.stop()
+    dummy1.stop()
+    dummy2.stop()
+    dummy3.stop()
+    dummy4.stop()
+    dummy5.stop()
