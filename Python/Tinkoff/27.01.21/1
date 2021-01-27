@@ -1,0 +1,63 @@
+n, k = input().split()
+n = int(n)
+k = int(k)
+SUM_START = 0
+SUM_END = 0
+
+A_i = input().split()
+for i in range(len(A_i)):
+    A_i[i] = int(A_i[i])
+    SUM_START += A_i[i]
+
+AA = [[], [], [], [], [], [], [], [], [], []]
+
+
+def f_in(a):
+    tmp = str(a)
+    i = 0
+    while(len(tmp) - i > 0):
+        if(tmp[i] != '9'): break
+        i += 1
+    if(len(tmp) - i >= 0):
+        AA[len(tmp) - i].append(a)
+
+
+for i in A_i:
+    f_in(i)
+
+print(AA)
+
+def f_change(a):
+    tmp = str(a)
+    i = 0
+    while(len(tmp) - i > 0):
+        if(tmp[i] != '9'): break
+        i += 1
+    
+    tmp_new = ''
+    for j in range(i):
+        tmp_new += tmp[j]
+    tmp_new += '9'
+    for j in range(len(tmp) - i - 1):
+        tmp_new += tmp[j + 1 + i]
+
+    return int(tmp_new)
+
+
+t = 0
+i = 0
+while i < 8:
+    if(len(AA[8 - i]) == 0): 
+        i += 1
+        continue
+    if(k <= t): break
+    new_a = f_change(min(AA[8 - i]))
+    AA[8 - i].remove(min(AA[8 - i]))
+    f_in(new_a)
+    t += 1
+    print(AA)
+
+
+for i in range(10):
+    SUM_END += sum(AA[i])
+print(SUM_END - SUM_START)
