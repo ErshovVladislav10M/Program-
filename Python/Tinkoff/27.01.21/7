@@ -1,0 +1,19 @@
+N = int(input())
+A, B, C = input().split()
+A = int(A)
+B = int(B)
+C = int(C)
+
+count = 0
+i, j, k = 0, 0, 0
+while i * A + j * B + k * C + 1 <= N:
+    while i * A + j * B + k * C + 1 <= N:
+        while i * A + j * B + k * C + 1 <= N:
+            count += 1
+            k += 1
+        k = 0
+        j += 1
+    j = 0
+    i += 1
+
+print(count)
