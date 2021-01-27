@@ -1,0 +1,76 @@
+N = int(input())
+#A, B, C = input().split()
+#A = int(A)
+#B = int(B)
+#C = int(C)
+
+def S(X, Y):
+    s = 0
+    for i in range(N - 1):
+        s += X[i] * Y[i + 1]
+    s += X[N - 1] * Y[0]
+    for i in range(N - 1):
+        s -= X[i + 1] * Y[i]
+    s -= Y[N - 1] * X[0]
+    return abs(s) / 2
+
+def delit(X, Y, x):
+    X1, Y1 = [], []
+    X2, Y2 = [], []
+    i = 0
+    while X[i] < x: 
+        X1.append(X[i])
+        Y1.append(Y[i])
+        i += 1
+    j = N - 1
+    while X[j] < x: 
+        X1.append(X[j])
+        Y1.append(Y[j])
+        j -= 1
+    k = i
+    while k <= j:
+        X2.append(X[k])
+        Y2.append(Y[k])
+        k += 1
+
+    if Y[i - 1] > Y[i]: 
+        y1 = - x / (X[i] - X[i - 1]) * abs(Y[i] - Y[i - 1]) + Y[i - 1]
+    else:
+        y1 = x / (X[i] - X[i - 1]) * abs(Y[i] - Y[i - 1]) + Y[i - 1]
+    if Y[(j + 1) % N] > Y[j]: 
+        y2 = - x / (X[j] - X[(j + 1) % N]) * abs(Y[j] - Y[(j + 1) % N]) + Y[(j + 1) % N]
+    else: 
+        y2 = x / (X[j] - X[(j + 1) % N]) * abs(Y[j] - Y[(j + 1) % N]) + Y[(j + 1) % N]
+    
+    X2.insert(0, x)
+    Y2.insert(0, y1)
+    X2.append(x)
+    Y2.append(y2)
+
+    X1.insert(i, x)
+    Y1.insert(i, y1)
+    X1.insert(i + 1, x)
+    Y1.insert(i + 1, y2)
+
+    return X1, Y1, X2, Y2
+
+def ans(X, Y):
+    a = min(X)
+    b = max(X)
+    x = (a + b) / 2
+    X1, Y1, X2, Y2 = delit(X, Y, x)
+    while(abs(S(X1, Y1) - S(X2, Y2)) >= 0.00001):
+        if(S(X1, Y1) > S(X2, Y2)):
+            b = x
+            x = (a + b) / 2
+        else: 
+            a = x
+            x = (a + b) / 2
+        X1, Y1, X2, Y2 = delit(X, Y, x)
+    print(S(X1, Y1))
+    print(S(X2, Y2))
+    return x
+
+X = [0, 0, 2]
+Y = [0, 2, 2]
+print(ans(X, Y))
