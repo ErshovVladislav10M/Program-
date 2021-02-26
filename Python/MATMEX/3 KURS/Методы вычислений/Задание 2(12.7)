@@ -7,8 +7,8 @@ import numpy
 # Начальные данные
 def init_data():
     A = numpy.array([[8.673134, 1.041039, -2.677712], 
-         [1.041039, 6.586211, 0.623016],
-         [-2.677712, 0.623016, 5.225935]])
+                     [1.041039, 6.586211, 0.623016],
+                     [-2.677712, 0.623016, 5.225935]])
     b = numpy.array([-1.289879, 4.020225, 5.269671])
     e = 0.00001
     return A, b, e
@@ -49,10 +49,8 @@ def comp_H_D(A):
 
 # Вычисление g_D вектора
 def comp_g_D(A, b):
-    D = [[] for i in range(len(A))]
+    D = [[0 for j in range(len(A))] for i in range(len(A))]
     for i in range(len(A)):
-        for j in range(len(A)):
-            D[i].append(0)
         D[i][i] = A[i][i]
     D1 = numpy.linalg.matrix_power(D, -1)
     g_D = D1.dot(b)
@@ -80,8 +78,8 @@ def norm_vect(b):
     return max
 
 
-# Априорная оценка
-def prior_estimate(A, b, e):
+# k для априорной оценки
+def comp_k_prior(A, b, e):
     k = 0
     H = comp_H_D(A)
     g = comp_g_D(A, b)
@@ -90,18 +88,14 @@ def prior_estimate(A, b, e):
     return k
 
 
+# Априорная оценка
+def prior_estimate(H, g, k):
+    return norm_matr(H) ** k / (1 - norm_matr(H)) * norm_vect(g)
+
+
 # Апостериорная оценка
-def posterior_estimate(A, b, e):
-    H = comp_H_D(A)
-    g = comp_g_D(A, b)
-    x_k_1 = [0 for i in range(len(A))]
-    x_k = H.dot(x_k_1) + g
-    k = 1
-    while(norm_matr(H) / (1 - norm_matr(H)) * norm_vect(x_k - x_k_1) > e):
-        x_k_1 = x_k
-        x_k = H.dot(x_k) + g
-        k += 1
-    return k
+def posterior_estimate(H, x_k, x_k_1):
+    return norm_matr(H) / (1 - norm_matr(H)) * norm_vect(x_k - x_k_1)
 
 
 # Решение методом итераций
@@ -172,9 +166,9 @@ def solut_5(A, b, e):
 
 
 A, b, e = init_data()
+print('Начальные данные')
 print('Матрица А')
-for i in range(3):
-    print(A[i])
+print(A)
 print('Вектор b')
 print(b)
 
@@ -185,46 +179,40 @@ print(x)
 print('\n2)Вычисление нормы H_D')
 print(norm_matr(comp_H_D(A)))
 
-print('\n3)Априорная оценка')
-print('k = ' + str(prior_estimate(A, b, e)))
-print('Апостериорная оценка')
-print('k = ' + str(posterior_estimate(A, b, e)))
+print('\n3)k для априорной оценки')
+print('k = ' + str(comp_k_prior(A, b, e)))
 
 print('\n4)Решение простыми итерациями')
 x_k, x_k_1, k = solut_2(A, b, e)
 print('k = ' + str(k))
 print('x_k = ' + str(x_k))
-print('Погрешность')
-print(norm_vect(x - x_k))
+print('Погрешность ' + str(norm_vect(x - x_k)))
+print('Априорная оценка ' + str(prior_estimate(comp_H_D(A), comp_g_D(A, b), k)))
+print('Апостериорная оценка ' + str(posterior_estimate(comp_H_D(A), comp_g_D(A, b), k)))
 print('Уточнение методом Люстерника')
 x1 = approx(comp_H_D(A), x_k, x_k_1)
 print('x* = ' + str(x1))
-print('Погрешность методом Люстерника')
-print(norm_vect(x - x1))
+print('Погрешность ' + str(norm_vect(x - x1)))
 
 print('\n5)Решение методом Зейделя')
 x_k, x_k_1, k = solut_3(A, b, e)
 print('k = ' + str(k))
 print('x_k = ' + str(x_k))
-print('Погрешность методом Зейделя')
-print(norm_vect(x - x_k))
+print('Погрешность ' + str(norm_vect(x - x_k)))
 
 print('\n6)Спектральный радиус матрицы перехода')
 print(spec_rad(comp_H_D(A)))
 print('Уточнение методом Люстерника')
 x1 = approx(comp_H_D(A), x_k, x_k_1)
 print('x* = ' + str(x1))
-print('Погрешность методом Люстерника')
-print(norm_vect(x - x1))
+print('Погрешность ' + str(norm_vect(x - x1)))
 
 print('\n7)Решение методом верхней релаксации')
 x_k = solut_5(A, b, e)
 print('x_k = ' + str(x_k))
-print('Погрешность методом верхней релаксации')
-print(norm_vect(x - x_k))
+print('Погрешность ' + str(norm_vect(x - x_k)))
 
 # print('\n8)Решение методом c чебышевским набором параметров')
 # x_k = solut_4(A, b, e)
 # print('x_k = ' + str(x_k))
-# print('Погрешность методом c чебышевским набором параметров')
-# print(norm_vect(x - x_k))
+# print('Погрешность ' + str(norm_vect(x - x_k)))
