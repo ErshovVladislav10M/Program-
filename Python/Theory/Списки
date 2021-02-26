@@ -36,3 +36,4 @@ cubes = [i**3 for i in range(5)]
 print(cubes) #[1,8,27,64]
 evens=[i**2 for i in range(10) if i**2 % 2 == 0]
 print(evens) #[0, 4, 16, 36, 64]
+E = [[0 for j in range(3)] for i in range(3)] # создание списка 3 на 3 из нулей
