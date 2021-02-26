@@ -1,0 +1,230 @@
+# Задание 12.7 вариант 5
+
+
+import numpy
+
+
+# Начальные данные
+def init_data():
+    A = numpy.array([[8.673134, 1.041039, -2.677712], 
+         [1.041039, 6.586211, 0.623016],
+         [-2.677712, 0.623016, 5.225935]])
+    b = numpy.array([-1.289879, 4.020225, 5.269671])
+    e = 0.00001
+    return A, b, e
+
+
+# Метод Гаусса - решение Ax = b
+def solut_1(A, b):
+    a = A[1][0] / A[0][0]
+    for i in range(3):
+        A[1][i] -= A[0][i] * a
+    b[1] -= b[0] * a
+    a = A[2][0] / A[0][0]
+    for i in range(3):
+        A[2][i] -= A[0][i] * a
+    b[2] -= b[0] * a
+    a = A[2][1] / A[1][1]
+    for i in range(3):
+        A[2][i] -= A[1][i] * a
+    b[2] -= b[1] * a
+
+    x3 = b[2] / A[2][2]
+    x2 = (b[1] - x3 * A[1][2]) / A[1][1]
+    x1 = (b[0] - x2 * A[0][1] - x3 * A[0][2]) / A[0][0]
+    return numpy.array([x1, x2, x3])
+
+
+# Вычисление H_D матрицы
+def comp_H_D(A):
+    E = [[0 for j in range(len(A))] for i in range(len(A))]
+    D = [[0 for j in range(len(A))] for i in range(len(A))]
+    for i in range(len(A)):
+        D[i][i] = A[i][i]
+        E[i][i] = 1
+    D1 = numpy.linalg.matrix_power(D, -1)
+    H_D = E - D1.dot(A)
+    return H_D
+
+
+# Вычисление g_D вектора
+def comp_g_D(A, b):
+    D = [[] for i in range(len(A))]
+    for i in range(len(A)):
+        for j in range(len(A)):
+            D[i].append(0)
+        D[i][i] = A[i][i]
+    D1 = numpy.linalg.matrix_power(D, -1)
+    g_D = D1.dot(b)
+    return g_D
+
+
+# Вычисление матричной нормы при p = бесконечность
+def norm_matr(A):
+    max = 0
+    for i in range(len(A)):
+        sum = 0
+        for j in range(len(A)):
+            sum += abs(A[j][i])
+        if(sum > max):
+            max = sum
+    return max
+
+
+# Вычисление векторной нормы при p = бесконечность
+def norm_vect(b):
+    max = 0
+    for i in range(len(b)):
+        if(max < abs(b[i])):
+            max = abs(b[i])
+    return max
+
+
+# Априорная оценка
+def prior_estimate(A, b, e):
+    k = 0
+    H = comp_H_D(A)
+    g = comp_g_D(A, b)
+    while(norm_matr(H) ** k / (1 - norm_matr(H)) * norm_vect(g) > e):
+        k += 1
+    return k
+
+
+# Апостериорная оценка
+def posterior_estimate(A, b, e):
+    H = comp_H_D(A)
+    g = comp_g_D(A, b)
+    x_k_1 = [0 for i in range(len(A))]
+    x_k = H.dot(x_k_1) + g
+    k = 1
+    while(norm_matr(H) / (1 - norm_matr(H)) * norm_vect(x_k - x_k_1) > e):
+        x_k_1 = x_k
+        x_k = H.dot(x_k) + g
+        k += 1
+    return k
+
+
+# Решение методом итераций
+def solut_2(A, b, e):
+    H = comp_H_D(A)
+    g = comp_g_D(A, b)
+    x = numpy.linalg.solve(A, b)
+    x_k = [0 for i in range(len(A))]
+    k = 0
+    while(norm_vect(x - x_k) > e):
+        x_k_1 = x_k
+        x_k = H.dot(x_k) + g
+        k += 1
+    return x_k, x_k_1, k
+
+
+# Спектральный радиус матрицы
+def spec_rad(A):
+    eigenvalue, own_vector = numpy.linalg.eigh(A)
+    max = 0
+    for i in eigenvalue:
+        if(max < abs(i)):
+            max = abs(i)
+    return max
+
+
+# Уточнение решения методом Люстерника
+def approx(H, x_k, x_k_1):
+    return x_k_1 + 1 / (1 - spec_rad(H)) * (x_k - x_k_1)
+
+
+# Метод Зейделя
+def solut_3(A, b, e):
+    E = [[0 for j in range(len(A))] for i in range(len(A))]
+    for i in range(len(A)):
+        E[i][i] = 1
+    H = comp_H_D(A)
+    g = comp_g_D(A, b)
+    H_L = [[0 for j in range(len(A))] for i in range(len(A))]
+    H_R = [[0 for j in range(len(A))] for i in range(len(A))]
+    for i in range(len(H)):
+        for j in range(len(H)):
+            if(i < j): H_L[i][j] = H[i][j]
+            if(i >= j): H_R[i][j] = H[i][j]
+    H1 = numpy.array(E) - H_L
+    H1 = numpy.linalg.matrix_power(H1, -1)
+    x_k = [0 for i in range(len(A))]
+    x = numpy.linalg.solve(A, b)
+    k = 0
+    while(norm_vect(x - x_k) > e):
+        x_k_1 = x_k
+        x_k = H1.dot(H_R).dot(x_k) + H1.dot(g)
+        k += 1
+    return x_k, x_k_1, k
+
+
+# Метод верхней релаксации
+def solut_5(A, b, e):
+    x_k = [0 for i in range(len(A))]
+    x = numpy.linalg.solve(A, b)
+    while(norm_vect(x - x_k) > e):
+        for i in range(len(x_k)):
+            tmp = 0
+            for j in range(len(x_k)):
+                tmp += A[j][i] * x_k[j]
+            x_k[i] += (b[i] - tmp) / A[i][i]
+    return x_k
+
+
+A, b, e = init_data()
+print('Матрица А')
+for i in range(3):
+    print(A[i])
+print('Вектор b')
+print(b)
+
+print('\n1)Решение Ax = b методом Гаусса')
+x = numpy.linalg.solve(A, b)
+print(x)
+
+print('\n2)Вычисление нормы H_D')
+print(norm_matr(comp_H_D(A)))
+
+print('\n3)Априорная оценка')
+print('k = ' + str(prior_estimate(A, b, e)))
+print('Апостериорная оценка')
+print('k = ' + str(posterior_estimate(A, b, e)))
+
+print('\n4)Решение простыми итерациями')
+x_k, x_k_1, k = solut_2(A, b, e)
+print('k = ' + str(k))
+print('x_k = ' + str(x_k))
+print('Погрешность')
+print(norm_vect(x - x_k))
+print('Уточнение методом Люстерника')
+x1 = approx(comp_H_D(A), x_k, x_k_1)
+print('x* = ' + str(x1))
+print('Погрешность методом Люстерника')
+print(norm_vect(x - x1))
+
+print('\n5)Решение методом Зейделя')
+x_k, x_k_1, k = solut_3(A, b, e)
+print('k = ' + str(k))
+print('x_k = ' + str(x_k))
+print('Погрешность методом Зейделя')
+print(norm_vect(x - x_k))
+
+print('\n6)Спектральный радиус матрицы перехода')
+print(spec_rad(comp_H_D(A)))
+print('Уточнение методом Люстерника')
+x1 = approx(comp_H_D(A), x_k, x_k_1)
+print('x* = ' + str(x1))
+print('Погрешность методом Люстерника')
+print(norm_vect(x - x1))
+
+print('\n7)Решение методом верхней релаксации')
+x_k = solut_5(A, b, e)
+print('x_k = ' + str(x_k))
+print('Погрешность методом верхней релаксации')
+print(norm_vect(x - x_k))
+
+# print('\n8)Решение методом c чебышевским набором параметров')
+# x_k = solut_4(A, b, e)
+# print('x_k = ' + str(x_k))
+# print('Погрешность методом c чебышевским набором параметров')
+# print(norm_vect(x - x_k))
