@@ -78,7 +78,7 @@ def norm_vect(b):
     return max
 
 
-# k для априорной оценки
+# Вычисление k для априорной оценки
 def comp_k_prior(A, b, e):
     k = 0
     H = comp_H_D(A)
@@ -156,13 +156,15 @@ def solut_3(A, b, e):
 def solut_5(A, b, e):
     x_k = [0 for i in range(len(A))]
     x = numpy.linalg.solve(A, b)
+    k = 0
     while(norm_vect(x - x_k) > e):
+        k += 1
         for i in range(len(x_k)):
             tmp = 0
             for j in range(len(x_k)):
                 tmp += A[j][i] * x_k[j]
             x_k[i] += (b[i] - tmp) / A[i][i]
-    return x_k
+    return x_k, k
 
 
 A, b, e = init_data()
@@ -179,7 +181,7 @@ print(x)
 print('\n2)Вычисление нормы H_D')
 print(norm_matr(comp_H_D(A)))
 
-print('\n3)k для априорной оценки')
+print('\n3)k для априорной оценки при получении погрешности е = ' + str(e))
 print('k = ' + str(comp_k_prior(A, b, e)))
 
 print('\n4)Решение простыми итерациями')
@@ -208,7 +210,8 @@ print('x* = ' + str(x1))
 print('Погрешность ' + str(norm_vect(x - x1)))
 
 print('\n7)Решение методом верхней релаксации')
-x_k = solut_5(A, b, e)
+x_k, k = solut_5(A, b, e)
+print('k = ' + str(k))
 print('x_k = ' + str(x_k))
 print('Погрешность ' + str(norm_vect(x - x_k)))
 
