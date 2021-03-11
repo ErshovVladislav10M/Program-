@@ -1,0 +1,25 @@
+# Вычисление собственных чисел и векторов
+def eigh(A):
+    Lambda = symbols('Lambda')    
+    I = eye(len(A))
+    b = numpy.array([0.0 for i in range(len(A))])
+    # print(det(Lambda * I - A))
+    equation = Eq(det(Lambda * I - A), 0)
+    eigenvalue = solve(equation)
+    for i in range(len(eigenvalue)):
+        eigenvalue[i] = float(round(eigenvalue[i], 16))
+    eigenvectors = numpy.array([[0.0 for j in range(len(A))] for k in range(len(A))])
+
+    for i in range(len(eigenvalue)):
+        A_i = numpy.array([[0.0 for j in range(len(A))] for k in range(len(A))])
+        for j in range(len(A)):
+            for k in range(len(A)):
+                if(j == k): A_i[j][k] = A[j][k] - eigenvalue[i]
+                else: A_i[j][k] = A[j][k]
+        b[0] = -A_i[0][0]
+        A_i[0][0] = 0
+        x = numpy.linalg.solve(A_i, b)
+        for j in range(len(A)):
+            eigenvectors[j][i] = x[j]
+
+    return numpy.array(eigenvalue), numpy.array(eigenvectors)
