@@ -1,3 +1,6 @@
+from sympy import *
+
+
 # Вычисление собственных чисел и векторов
 def eigh(A):
     Lambda = symbols('Lambda')    
