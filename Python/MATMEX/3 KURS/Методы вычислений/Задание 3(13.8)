@@ -1,0 +1,93 @@
+# Ершов 343 вычи
+# вариант 5
+
+
+import numpy
+
+
+# Сортировка по модулю собственных значений
+def sort_eig(value, vector):
+    for i in range(len(value)):
+        for j in range(i + 1, len(value)):
+            if(abs(value[i]) < abs(value[j])):
+               value[i], value[j] = value[j], value[i]
+               vector[i], vector[j] = vector[j], vector[i]
+
+
+# Степенной метод
+def solut_1(A, e):
+    eigenvalue, eigenvector = numpy.linalg.eig(A)
+    sort_eig(eigenvalue, eigenvector)
+    Y = numpy.array([i for i in eigenvector[0]])
+    eigenvalue_1 = 1.0
+    k = 0
+    while(abs(eigenvalue_1 - eigenvalue[0]) > e):
+        Y_1 = A.dot(Y)
+        for i in range(len(Y)):
+            if(abs(eigenvalue_1 - eigenvalue[0]) > abs(Y_1[i] / Y[i] - eigenvalue[0])):
+                eigenvalue_tmp = Y_1[i] / Y[i]
+        k += 1
+        print('k = ' + str(k) + '\tl_k = ' + str(round(eigenvalue_tmp, 12)) + '\tl_k - l_k-1 = ' + str(eigenvalue_tmp - eigenvalue_1))
+        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y)
+        print('l_k - l* = ' + str(eigenvalue_tmp - eigenvalue[0]) + '\t||A * x_k - l_k * x_k|| = ' + str(norm_tmp))
+        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y) / numpy.linalg.norm(Y)
+        print('Апостериорная оценка ' + str(norm_tmp) + '\n')
+        Y = Y_1
+        eigenvalue_1 = eigenvalue_tmp
+    # return eigenvalue_1
+
+
+# Метод скалярных произведений
+def solut_2(A, e):
+    eigenvalue, eigenvector = numpy.linalg.eig(A)
+    sort_eig(eigenvalue, eigenvector)
+    Y = numpy.array([i for i in eigenvector[0]])
+    eigenvalue_1 = 1.0
+    k = 0
+    while(abs(eigenvalue_1 - eigenvalue[0]) > e ** 2):
+        Y_1 = A.dot(Y)
+        eigenvalue_tmp = Y_1.dot(Y) / Y.dot(Y)
+        k += 1
+        print('k = ' + str(k) + '\tl_k = ' + str(round(eigenvalue_tmp, 12)) + '\tl_k - l_k-1 = ' + str(eigenvalue_tmp - eigenvalue_1))
+        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y)
+        print('l_k - l* = ' + str(eigenvalue_tmp - eigenvalue[0]) + '\t||A * x_k - l_k * x_k|| = ' + str(norm_tmp))
+        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y) / numpy.linalg.norm(Y)
+        print('Апостериорная оценка ' + str(norm_tmp) + '\n')
+        Y = Y_1
+        eigenvalue_1 = eigenvalue_tmp
+    # return eigenvalue_1
+
+
+print('Задача нахождения максимального по модулю собсвтенного числа матрицы')
+print('Ершов Владислав Евгеньевич группа 343')
+print('Вариант 5')
+
+A = numpy.array([[8.673134, 1.041039, -2.677712], 
+                 [1.041039, 6.586211, 0.623016],
+                 [-2.677712, 0.623016, 5.225935]])
+e = 0.0001
+print('\nИсходная матрица A')
+print(A)
+
+eigenvalue, eigenvector = numpy.linalg.eig(A)
+eigenvalue_max = -1
+eigenvalue_max_2 = -1
+for i in eigenvalue:
+    if abs(eigenvalue_max) < abs(i):
+        eigenvalue_max_2 = eigenvalue_max
+        eigenvalue_max = i
+    else:
+        if abs(eigenvalue_max_2) < abs(i):
+            eigenvalue_max_2 = i
+print('\nНаибольшое по модулю собственное число = ' + str(eigenvalue_max))
+print('Отношение наибольших по модулю собственных чисел = ' + str(eigenvalue_max_2 / eigenvalue_max))
+
+print('\nСобственные числа и ветора')
+for i in range(len(A)):
+    print(str(i + 1) + ')' + str(eigenvalue[i]) + ' ' + str(eigenvector[i]))
+
+print('\nСтепенной метод')
+solut_1(A, e)
+
+print('\nМетод скалярного произведения')
+solut_2(A, e)
