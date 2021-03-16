@@ -23,15 +23,16 @@ def solut_1(A, e):
     eigenvalue_1 = 1.0
     k = 0
     while(abs(eigenvalue_1 - eigenvalue[0]) > e):
+        print(numpy.linalg.norm(Y / 10 ** k))
         Y_1 = A.dot(Y)
         for i in range(len(Y)):
             if(abs(eigenvalue_1 - eigenvalue[0]) > abs(Y_1[i] / Y[i] - eigenvalue[0])):
                 eigenvalue_tmp = Y_1[i] / Y[i]
         k += 1
         print('k = ' + str(k) + '\tl_k = ' + str(round(eigenvalue_tmp, 12)) + '\tl_k - l_k-1 = ' + str(eigenvalue_tmp - eigenvalue_1))
-        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y)
+        norm_tmp = numpy.linalg.norm(A.dot(Y / 10 ** k) - eigenvalue_tmp * (Y / 10 ** k))
         print('l_k - l* = ' + str(eigenvalue_tmp - eigenvalue[0]) + '\t||A * x_k - l_k * x_k|| = ' + str(norm_tmp))
-        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y) / numpy.linalg.norm(Y)
+        norm_tmp = numpy.linalg.norm(A.dot(Y / 10 ** k) - eigenvalue_tmp * (Y / 10 ** k)) / numpy.linalg.norm(Y / 10 ** k)
         print('Апостериорная оценка ' + str(norm_tmp) + '\n')
         Y = Y_1
         eigenvalue_1 = eigenvalue_tmp
@@ -50,9 +51,9 @@ def solut_2(A, e):
         eigenvalue_tmp = Y_1.dot(Y) / Y.dot(Y)
         k += 1
         print('k = ' + str(k) + '\tl_k = ' + str(round(eigenvalue_tmp, 12)) + '\tl_k - l_k-1 = ' + str(eigenvalue_tmp - eigenvalue_1))
-        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y)
+        norm_tmp = numpy.linalg.norm(A.dot(Y / 10 ** k) - eigenvalue_tmp * (Y / 10 ** k))
         print('l_k - l* = ' + str(eigenvalue_tmp - eigenvalue[0]) + '\t||A * x_k - l_k * x_k|| = ' + str(norm_tmp))
-        norm_tmp = numpy.linalg.norm(A.dot(Y) - eigenvalue_tmp * Y) / numpy.linalg.norm(Y)
+        norm_tmp = numpy.linalg.norm(A.dot(Y / 10 ** k) - eigenvalue_tmp * (Y / 10 ** k)) / numpy.linalg.norm(Y / 10 ** k)
         print('Апостериорная оценка ' + str(norm_tmp) + '\n')
         Y = Y_1
         eigenvalue_1 = eigenvalue_tmp
