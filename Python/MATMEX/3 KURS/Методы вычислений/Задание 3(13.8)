@@ -23,7 +23,6 @@ def solut_1(A, e):
     eigenvalue_1 = 1.0
     k = 0
     while(abs(eigenvalue_1 - eigenvalue[0]) > e):
-        print(numpy.linalg.norm(Y / 10 ** k))
         Y_1 = A.dot(Y)
         for i in range(len(Y)):
             if(abs(eigenvalue_1 - eigenvalue[0]) > abs(Y_1[i] / Y[i] - eigenvalue[0])):
