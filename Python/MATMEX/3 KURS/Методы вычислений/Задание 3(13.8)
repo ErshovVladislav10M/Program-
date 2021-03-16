@@ -11,7 +11,8 @@ def sort_eig(value, vector):
         for j in range(i + 1, len(value)):
             if(abs(value[i]) < abs(value[j])):
                value[i], value[j] = value[j], value[i]
-               vector[i], vector[j] = vector[j], vector[i]
+               for k in range(len(value)):
+                   vector[i][k], vector[j][k] = vector[j][k], vector[i][k]
 
 
 # Степенной метод
@@ -70,17 +71,9 @@ print('\nИсходная матрица A')
 print(A)
 
 eigenvalue, eigenvector = numpy.linalg.eig(A)
-eigenvalue_max = -1
-eigenvalue_max_2 = -1
-for i in eigenvalue:
-    if abs(eigenvalue_max) < abs(i):
-        eigenvalue_max_2 = eigenvalue_max
-        eigenvalue_max = i
-    else:
-        if abs(eigenvalue_max_2) < abs(i):
-            eigenvalue_max_2 = i
-print('\nНаибольшое по модулю собственное число = ' + str(eigenvalue_max))
-print('Отношение наибольших по модулю собственных чисел = ' + str(eigenvalue_max_2 / eigenvalue_max))
+sort_eig(eigenvalue, eigenvector)
+print('\nНаибольшое по модулю собственное число = ' + str(eigenvalue[0]))
+print('Отношение наибольших по модулю собственных чисел = ' + str(eigenvalue[1] / eigenvalue[0]))
 
 print('\nСобственные числа и ветора')
 for i in range(len(A)):
