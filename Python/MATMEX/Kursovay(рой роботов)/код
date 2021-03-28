@@ -54,6 +54,7 @@ for i in range(4):
     ls.append(robot.getLightSensor(ls_names[i]))
     ls[i].enable(timestep)
 
+
 # initialize compass   
 com = robot.getCompass('com')
 com.enable(timestep)
@@ -64,14 +65,6 @@ leftSpeed = 0
 rightSpeed = 0 
 
 
-while robot.step(timestep) != -1:
-    leftSpeed = -10
-    rightSpeed = 2
-    wheels[0].setVelocity(leftSpeed)
-    wheels[1].setVelocity(rightSpeed)
-
-
-################################################
 # Переменные для задания обхода препятствия
 avoidObstacleCounter = 0
 j = 0
@@ -82,7 +75,7 @@ p = 0
 # - perform simulation steps until Webots is stopping the controller
 while robot.step(timestep) != -1:
 
-    # Расчитываем азимут.
+    # Расчитываем азимут
     north = com.getValues()
     rad = math.atan2(north[0], north[2])
     bearing = (rad - 1.5708) / math.pi * 180.0;
@@ -90,26 +83,26 @@ while robot.step(timestep) != -1:
         bearing = bearing + 360 
     cos_com = north[0]
     sin_com = north[2]    
-    #print(cos_com, sin_com)
-    #Ищем максимум из датчиков
+    # print(cos_com, sin_com)
+    
+    # Ищем максимум из датчиков
     light = []
     for i in range(4):
         light.append(ls[i].getValue())
-    max = light[0]
-    for i in range(4):
-        if light[i] > max:
-            max = light[i]
-            
+    max_ls = max(light)
+    # print(max_ls)
+    
+    
     # Расчет азимута движения на источник по четырем сенсорам света.
     # Выбираем датчик с максимальным уровнем излучения. Сравниваем с соседними.
     # Выбираем второй по мощности излучения датчик.
     # Расчитываем доворо по часовой стролке до источника излучения.
     # Расчитываем желаемый азимут.
     dbearing = bearing
-    if max != 0:
+    if max_ls != 0:
         a = 0
         b = 0               
-        if max == light[0]:
+        if max_ls == light[0]:
             a = light[0] - light[3] 
             b = light[0] - light[1]
             if a < b and light[3] != 0: 
@@ -118,7 +111,7 @@ while robot.step(timestep) != -1:
                 dbearing = bearing + 45 + (light[1]*90)/(light[0]+light[1])
             else: 
                 dbearing = bearing + 45 
-        elif max == light[1]:
+        elif max_ls == light[1]:
             a = light[1] - light[0]
             b = light[1] - light[2]
             if a <= b and light[0] != 0:
@@ -127,7 +120,7 @@ while robot.step(timestep) != -1:
                 dbearing = bearing + 135 + (light[2]*90)/(light[2]+light[1])
             else: 
                 dbearing = bearing + 135
-        elif max == light[2]:
+        elif max_ls == light[2]:
             a = light[2] - light[1] 
             b = light[2] - light[3] 
             if a <= b and light[1] != 0: 
@@ -136,7 +129,7 @@ while robot.step(timestep) != -1:
                 dbearing = bearing + 225 + (light[3]*90)/(light[2]+light[3])
             else: 
                 dbearing = bearing + 225
-        elif max == light[3]:
+        elif max_ls == light[3]:
             a = light[3] - light[2] 
             b = light[3] - light[0]
             if a <= b and light[2] != 0: 
@@ -146,7 +139,7 @@ while robot.step(timestep) != -1:
             else: 
                 dbearing = bearing + 315                                
         if dbearing > 360:
-          dbearing = dbearing - 360
+            dbearing = dbearing - 360
  
     # Вводим уверенность в курсем по датчикам света q_az b
     # и q_dis - уверенность по датчику направления. a_q - коэфициент
@@ -154,6 +147,7 @@ while robot.step(timestep) != -1:
     q = 0.3
     a_q = 0.5
     d = ds.getValue();
+    print(d)
     if light[0]+light[3] == 0:
         q = 0
     else:
@@ -161,7 +155,7 @@ while robot.step(timestep) != -1:
     
     # Передаем сообщение соседям
     message = struct.pack("dd",bearing,q)
-    emm.send(message)
+    emit.send(message)
     
     # Принимаем сообщение
     bearingn = [[0]*k,[0]*k]
@@ -227,12 +221,12 @@ while robot.step(timestep) != -1:
         elif cos_db_G < 0 and sin_db_G < 0:
             dbearingG = 180 + math.degrees(math.acos(cos_db_G))
         
-    if d < 1000 and d > 400:
+    if d < 1000 and d > 700:
         if light[0]+light[3] > light[1]+light[2]: 
             if light[0]+light[1] > light[3]+light[2]:
-                j = 1 #право
+                j = 1 # право
             elif light[0]+light[1] < light[3]+light[2]:
-                j = 2 #лево
+                j = 2 # лево
             else:
                 j = randint(1,2) 
         else:
@@ -242,7 +236,7 @@ while robot.step(timestep) != -1:
             dbearingG = dbearingG+10
         elif j == 1:
             dbearingG = dbearingG-10
-    print (j)   
+    # print(j)   
     if dbearingG > 360:
         dbearingG = dbearingG-360
           
@@ -267,20 +261,20 @@ while robot.step(timestep) != -1:
         rightSpeed = 0
     
     # Обход препятствий
-    print(p, d)
-    if d <= 400 and avoidObstacleCounter == 0:
+    # print(p, d)
+    if d <= 700 and avoidObstacleCounter == 0:
         avoidObstacleCounter = 100
         if light[0]+light[3] > light[1]+light[2]: 
             if light[0]+light[1] > light[3]+light[2]:
-                p = 0 #право
+                p = 0 # право
             elif light[0]+light[1] < light[3]+light[2]:
-                p = 1 #лево
+                p = 1 # лево
             else:
                 p = randint(0,1)  
    
     
     if avoidObstacleCounter != 0:
-        if d > 400:
+        if d > 700:
            avoidObstacleCounter = 0
         else:
             avoidObstacleCounter -= 1
@@ -295,8 +289,6 @@ while robot.step(timestep) != -1:
     # Отправляем значение на моторы
     wheels[0].setVelocity(leftSpeed)
     wheels[1].setVelocity(rightSpeed)
-    wheels[2].setVelocity(leftSpeed)
-    wheels[3].setVelocity(rightSpeed)
     
     
     pass
