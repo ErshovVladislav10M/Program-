@@ -20,9 +20,8 @@ timestep = int(robot.getBasicTimeStep())
 
 # initialize motors
 wheels = []
-wheels_names = ['wheel1', 'wheel2']
 for i in range(2):
-    wheels.append(robot.getMotor(wheels_names[i]))
+    wheels.append(robot.getMotor('wheel' + str(i + 1)))
     wheels[i].setPosition(float('inf'))
     wheels[i].setVelocity(0.0)
 
@@ -38,7 +37,7 @@ k = 2
 rec = []  
 rec_names = ['rec1', 'rec2']
 for i in range(k):
-    rec.append(robot.getReceiver(rec_names[i]))
+    rec.append(robot.getReceiver('rec' + str(i + 1)))
     rec[i].enable(timestep)
 
 
@@ -49,9 +48,8 @@ ds.enable(timestep)
 
 # initialize light sensor
 ls = []
-ls_names = ['ls1', 'ls2', 'ls3', 'ls4']
 for i in range(4):
-    ls.append(robot.getLightSensor(ls_names[i]))
+    ls.append(robot.getLightSensor('ls' + str(i + 1)))
     ls[i].enable(timestep)
 
 
@@ -80,7 +78,7 @@ while robot.step(timestep) != -1:
     rad = math.atan2(north[0], north[2])
     bearing = (rad - 1.5708) / math.pi * 180.0;
     if bearing < 0.0:
-        bearing += + 360 
+        bearing += 360 
     cos_com = north[0]
     sin_com = north[2]    
     # print(cos_com, sin_com)
