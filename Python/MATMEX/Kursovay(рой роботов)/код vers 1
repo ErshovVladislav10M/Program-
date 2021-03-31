@@ -90,7 +90,7 @@ while robot.step(timestep) != -1:
     for i in range(4):
         light.append(ls[i].getValue())
     max_ls = max(light)
-    # print(max_ls)
+    # print(light)
     
     
     # Расчет азимута движения на источник по четырем сенсорам света.
@@ -147,7 +147,7 @@ while robot.step(timestep) != -1:
     q = 0.3
     a_q = 0.5
     d = ds.getValue();
-    print(d)
+    # print(d)
     if light[0]+light[3] == 0:
         q = 0
     else:
