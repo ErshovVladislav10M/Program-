@@ -80,7 +80,7 @@ while robot.step(timestep) != -1:
     rad = math.atan2(north[0], north[2])
     bearing = (rad - 1.5708) / math.pi * 180.0;
     if bearing < 0.0:
-        bearing = bearing + 360 
+        bearing += + 360 
     cos_com = north[0]
     sin_com = north[2]    
     # print(cos_com, sin_com)
@@ -106,40 +106,40 @@ while robot.step(timestep) != -1:
             a = light[0] - light[3] 
             b = light[0] - light[1]
             if a < b and light[3] != 0: 
-                dbearing = bearing - 45 + (light[0]*90)/(light[0]+light[3])
+                dbearing = bearing - 45 + (light[0] * 90) / (light[0] + light[3])
             elif b < a and light[1] != 0:
-                dbearing = bearing + 45 + (light[1]*90)/(light[0]+light[1])
+                dbearing = bearing + 45 + (light[1] * 90) / (light[0] + light[1])
             else: 
                 dbearing = bearing + 45 
         elif max_ls == light[1]:
             a = light[1] - light[0]
             b = light[1] - light[2]
             if a <= b and light[0] != 0:
-                dbearing = bearing + 45 + (light[1]*90)/(light[0]+light[1])
+                dbearing = bearing + 45 + (light[1] * 90) / (light[0] + light[1])
             elif b < a and light[2] != 0:
-                dbearing = bearing + 135 + (light[2]*90)/(light[2]+light[1])
+                dbearing = bearing + 135 + (light[2] * 90) / (light[2] + light[1])
             else: 
                 dbearing = bearing + 135
         elif max_ls == light[2]:
             a = light[2] - light[1] 
             b = light[2] - light[3] 
             if a <= b and light[1] != 0: 
-                dbearing = bearing + 135 + (light[2]*90)/(light[2]+light[1])
+                dbearing = bearing + 135 + (light[2] * 90) / (light[2] + light[1])
             elif b < a and light[3] != 0:
-                dbearing = bearing + 225 + (light[3]*90)/(light[2]+light[3])
+                dbearing = bearing + 225 + (light[3] * 90) / (light[2] + light[3])
             else: 
                 dbearing = bearing + 225
         elif max_ls == light[3]:
             a = light[3] - light[2] 
             b = light[3] - light[0]
             if a <= b and light[2] != 0: 
-                dbearing = bearing + 225 + (light[3]*90)/(light[2]+light[3])
+                dbearing = bearing + 225 + (light[3] * 90) / (light[2] + light[3])
             elif b < a and light[0] != 0:
-                dbearing = bearing + 315 + (light[0]*90)/(light[0]+light[3])
+                dbearing = bearing + 315 + (light[0] * 90) / (light[0] + light[3])
             else: 
                 dbearing = bearing + 315                                
         if dbearing > 360:
-            dbearing = dbearing - 360
+            dbearing -= 360
  
     # Вводим уверенность в курсем по датчикам света q_az b
     # и q_dis - уверенность по датчику направления. a_q - коэфициент
@@ -148,33 +148,33 @@ while robot.step(timestep) != -1:
     a_q = 0.5
     d = ds.getValue();
     # print(d)
-    if light[0]+light[3] == 0:
+    if light[0] + light[3] == 0:
         q = 0
     else:
-        q = (1-a_q)*(1 - abs((light[0]-light[3])/(light[0]+light[3]))) + a_q*(d/1000)    
+        q = (1 - a_q) * (1 - abs((light[0] - light[3]) / (light[0] + light[3]))) + a_q * (d / 1000)    
     
     # Передаем сообщение соседям
-    message = struct.pack("dd",bearing,q)
+    message = struct.pack("dd", bearing, q)
     emit.send(message)
     
     # Принимаем сообщение
-    bearingn = [[0]*k,[0]*k]
-    for i in range (k):
+    bearingn = [[0] * k, [0] * k]
+    for i in range(k):
         if rec[i].getQueueLength() > 0:
             message = rec[i].getData()
-            dataList = struct.unpack("dd",message)
-            bearingn [i][0] = dataList[0]
-            bearingn [i][1] = dataList[1]
+            dataList = struct.unpack("dd", message)
+            bearingn[i][0] = dataList[0]
+            bearingn[i][1] = dataList[1]
             rec[i].nextPacket()
-    # print("Robot",*bearingn)
+    # print("Robot", *bearingn)
     
     # Считаем среднюю уверенность соседей q_sr
     q_sum = 0
     k_i = k
     q_sr = q
-    for i in range (k):
-        if bearingn [i][1] != 0:
-            q_sum += bearingn [i][1]
+    for i in range(k):
+        if bearingn[i][1] != 0:
+            q_sum += bearingn[i][1]
         else:
             k_i -= 1
     if k_i > 0:
@@ -190,28 +190,28 @@ while robot.step(timestep) != -1:
     sin_sum_w = 0
     cos_sum_w = 0
     k_i_w = 0
-    for i in range (k):
+    for i in range(k):
         cos_sum = 0
         sin_sum = 0
-        if bearingn [i][1] > 0:
-            cos_sum_w += math.cos(math.radians(bearingn[i][0]))*bearingn[i][1]
-            sin_sum_w += math.sin(math.radians(bearingn[i][0]))*bearingn[i][1]
+        if bearingn[i][1] > 0:
+            cos_sum_w += math.cos(math.radians(bearingn[i][0])) * bearingn[i][1]
+            sin_sum_w += math.sin(math.radians(bearingn[i][0])) * bearingn[i][1]
             k_i_w += 1 
     if k_i_w != 0:
-        cos_sum_sr_w = cos_sum_w/k_i_w
-        sin_sum_sr_w = sin_sum_w/k_i_w
+        cos_sum_sr_w = cos_sum_w / k_i_w
+        sin_sum_sr_w = sin_sum_w / k_i_w
     
     # Расчитываем курс в группе dbearingG исходя из данных группы
     # alpha - коэфициент, p - уверенность к курсу при пересчете от группы
     alpha = 0.3
     dbearingG = 0
-    if k_i_w ==0:
+    if k_i_w == 0:
         dbearingG = dbearing
     else:     
         cos_dbearing = math.cos(math.radians(dbearing))
         sin_dbearing = math.sin(math.radians(dbearing))  
-        cos_db_G = ((1-alpha)*cos_dbearing*q + alpha*cos_sum_sr_w)/((1-alpha)*q + alpha*q_sr)
-        sin_db_G = ((1-alpha)*sin_dbearing*q + alpha*sin_sum_sr_w)/((1-alpha)*q + alpha*q_sr)
+        cos_db_G = ((1 - alpha) * cos_dbearing * q + alpha * cos_sum_sr_w) / ((1 - alpha) * q + alpha * q_sr)
+        sin_db_G = ((1 - alpha) * sin_dbearing * q + alpha * sin_sum_sr_w) / ((1 - alpha) * q + alpha * q_sr)
         if cos_db_G > 0 and sin_db_G > 0:
             dbearingG = math.degrees(math.acos(cos_db_G))
         elif cos_db_G > 0 and sin_db_G < 0:
@@ -222,26 +222,26 @@ while robot.step(timestep) != -1:
             dbearingG = 180 + math.degrees(math.acos(cos_db_G))
         
     if d < 1000 and d > 700:
-        if light[0]+light[3] > light[1]+light[2]: 
-            if light[0]+light[1] > light[3]+light[2]:
+        if light[0] + light[3] > light[1] + light[2]: 
+            if light[0] + light[1] > light[3] + light[2]:
                 j = 1 # право
-            elif light[0]+light[1] < light[3]+light[2]:
+            elif light[0] + light[1] < light[3] + light[2]:
                 j = 2 # лево
             else:
-                j = randint(1,2) 
+                j = randint(1, 2) 
         else:
             j = 0
        
         if j == 2:
-            dbearingG = dbearingG+10
+            dbearingG += 10
         elif j == 1:
-            dbearingG = dbearingG-10
+            dbearingG -= 10
     # print(j)   
     if dbearingG > 360:
-        dbearingG = dbearingG-360
+        dbearingG -= 360
           
     # Задаем движение
-    if bearing == dbearingG and light[0]+light[1]+light[2]+light[3] > 0:
+    if bearing == dbearingG and light[0] + light[1] + light[2] + light[3] > 0:
         leftSpeed = 3.14 
         rightSpeed = 3.14
     elif dbearingG > bearing and dbearingG < bearing + 180:
@@ -264,18 +264,18 @@ while robot.step(timestep) != -1:
     # print(p, d)
     if d <= 700 and avoidObstacleCounter == 0:
         avoidObstacleCounter = 100
-        if light[0]+light[3] > light[1]+light[2]: 
-            if light[0]+light[1] > light[3]+light[2]:
+        if light[0] + light[3] > light[1] + light[2]: 
+            if light[0] + light[1] > light[3] + light[2]:
                 p = 0 # право
-            elif light[0]+light[1] < light[3]+light[2]:
+            elif light[0] + light[1] < light[3] + light[2]:
                 p = 1 # лево
             else:
-                p = randint(0,1)  
+                p = randint(0, 1)  
    
     
     if avoidObstacleCounter != 0:
         if d > 700:
-           avoidObstacleCounter = 0
+            avoidObstacleCounter = 0
         else:
             avoidObstacleCounter -= 1
                 
