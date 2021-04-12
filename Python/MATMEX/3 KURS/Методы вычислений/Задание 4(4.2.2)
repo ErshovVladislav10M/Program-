@@ -1,0 +1,130 @@
+# Ершов 343 вычи
+# вариант 5
+
+
+import numpy
+import math
+
+
+# Функция f
+def f(x):
+    return x - 0.6
+
+
+# Функция H
+def H(x, y):
+    return 1.0 / (3 + x * y ** 2)
+
+# Вычисление t_j
+def comp_t_j(j):
+    return (-1.0) ** j / math.sqrt(3)
+
+
+# Вычисление x_k (k = 0, ...)
+def comp_x_k(k, h):
+    return h / 2 * (comp_t_j((k + 1) % 2) + 1 + k // 2)
+
+
+# Вычисление A_k
+def comp_A_k(h):
+    return h / 2
+
+
+# Вычисление матрицы D
+def comp_D(n, h):
+    D = []
+    for i in range(n):
+        D_i = []
+        for j in range(n):
+            if i == j: D_i.append(1 - comp_A_k(h) * H(comp_x_k(i, h), comp_x_k(j, h)))
+            else: D_i.append(-comp_A_k(h) * H(comp_x_k(i, h), comp_x_k(j, h)))
+        D.append(D_i)
+    return numpy.array(D)
+
+
+# Вычисление вектора g
+def comp_g(n, h):
+    g = []
+    for i in range(n):
+        g.append(f(comp_x_k(i, h)))
+    return numpy.array(g)
+
+
+# Вычисление вектора z
+def comp_z(n, h):
+    return numpy.linalg.solve(comp_D(n, h), comp_g(n, h))
+
+
+# Вычисление u^n(x)
+def comp_u_n(x, n, h):
+    ans = 0
+    z = comp_z(n, h)
+    for i in range(n):
+        ans += comp_A_k(h) * H(x, comp_x_k(i, h)) * z[i]
+    ans += f(x)
+    return ans
+
+
+# Вывод промежуточных значений
+def solut(n, e):
+    value = [e]
+    while max(value) >= e:
+        h = 1.0 / n
+        value = []
+        for i in range(3):
+            value.append(abs(comp_u_n(i / 2, 2 * n, h) - comp_u_n(i / 2, n, h)))
+        
+        print('\nКоличество узлов квадратурной формулы: ' + str(n))
+        
+        print('Узлы квадратурной формулы')
+        x_k = []
+        for i in range(n):
+            x_k.append(comp_x_k(i, h))
+        print(x_k)
+        
+        print('Коэффициенты квадратурной формулы')
+        A_k = []
+        for i in range(n):
+            A_k.append(comp_A_k(h))
+        print(A_k)
+        
+        if n < 4:
+            print('Матрица D')
+            print(comp_D(n, h))
+
+        print('Решение системы в узлах')
+        u_n_x = []
+        for i in range(n):
+            u_n_x.append(comp_u_n(x_k[i], n, h))
+        print(u_n_x)
+
+        print('Решение системы в 3 точках')
+        u_n_x = []
+        for i in range(3):
+            u_n_x.append(comp_u_n(i / 2, n, h))
+        print(u_n_x)
+
+        print('Модуль разности двух последних приближений ' + str(max(value)))
+        n *= 2
+
+
+def main():
+
+    print('Задача численного решения интегрального уравнения Фредгольма 2 рода')
+    print('Ершов Владислав Евгеньевич группа 343')
+    print('Вариант 5')
+
+    print('\nУсловие:')
+    print('u(x) - 0.6 * int(u(y) / (3 + x * y ** 2) dy, 0, 1) = x - 0.6')
+
+    print('Введите параметр n - начальное количество разбиений')
+    n = int(input())
+    print('Введите погрешность e')
+    e = float(input())
+
+    print('\nРешение с использованием составной формулы Гаусса с двумя узлами')
+    solut(n, e)
+    
+
+if __name__ == '__main__':
+    main()
