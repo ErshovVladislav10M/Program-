@@ -20,7 +20,7 @@ def compute_f1(x, i, m, h):
         return (3 * init_f(x) - 4 * init_f(x - h) + init_f(x - 2 * h)) / (2 * h)
     return (init_f(x + h) - init_f(x - h)) / (2 * h)
 
-# Вычисление первой производной
+# Вычисление второй производной
 def compute_f2(x, m, h):
     return (init_f(x + h) - 2 * init_f(x) + init_f(x - h)) / h ** 2
 
