@@ -11,4 +11,15 @@ print(A) # выводит как матрицу
 numpy.linalg.matrix_power(D, 2) # возведение матрицы в степень(целая число)
 numpy.linalg.solve(A, b) # решение линейной системы
 A.dot(b) # умножение ветора или матрицы на матрицу
-eigenvalue, own_vector = numpy.linalg.eigh(A) # вычмсление собственных чисел и векторов матрицы
+eigenvalue, own_vector = numpy.linalg.eigh(A) # вычисление собственных чисел и векторов матрицы
+
+# Вычисление интеграла от функции f
+def f(x):
+    return x ** 2 + 1
+    
+X = []
+Y = []
+for i in range(10000):
+    X.append(-1.0 + 0.0002 * i)
+    Y.append(f(X[i]))
+print(numpy.trapz(Y, X))
