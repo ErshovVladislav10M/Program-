@@ -1,0 +1,191 @@
+# Ершов 343 вычи
+# вариант 5
+
+
+import numpy
+import math
+import sympy
+
+
+# Полиномы Якоби (нумерация с 0, k - верхний индекс)
+def P_k_i(k, i, x):
+    if i == 0: return 1
+    if i == 1: return (k + 1) * x
+    return (i + k) / (i + 2 * k) * ((2 + (2 * k - 1) / i) * x * P_k_i(k, i - 1, x) - (1 + (k - 1) / i) * P_k_i(k, i - 2, x))
+
+
+# Функции w_i (нумерация с 0)
+def w_i(i, x):
+    if i == 0: return x ** 2 + 2 * x - 11
+    if i == 1: return x ** 3 + 2 * x ** 2 + x - 20
+    # ans = 0
+    # for j in range(i + 1):
+    #     denominator = 4 * math.factorial(j) * math.factorial(i + 2 - j) * math.factorial(2 + j) * math.factorial(i - j)
+    #     ans += (x - 1) ** (i - j) * (x + 1) ** j / denominator
+    # ans *= math.factorial(i) ** 2 * (1 - x ** 2) ** 2
+    return (1 - x ** 2) ** 2 * P_k_i(2, i - 2, x)
+
+
+# Первая производная w_i (нумерация с 0)
+def w_i_1(i, x, h=0.001):
+    return (w_i(i, x + h) - w_i(i, x - h)) / (2 * h)
+
+
+# Вторая производная w_i (нумерация с 0)
+def w_i_2(i, x, h=0.001):
+    return (w_i(i, x + h) - 2 * w_i(i, x) + w_i(i, x - h)) / h ** 2
+
+
+# Функция f
+def f(x):
+    return 1 - x / 2
+
+
+# Оператор L
+def L(i, x):
+    return -1 / (x + 3) * w_i_2(i, x) - x * w_i_1(i, x) + math.log(2 + x) * w_i(i, x)
+
+
+# Вычисление c_j для Галеркина
+def comp_c_j_1(n):
+
+    A = numpy.array([[0 for i in range(n)] for j in range(n)])
+    b = numpy.array([0 for i in range(n)])
+
+    for i in range(n):
+        for j in range(n):
+            X = []
+            Y = []
+            for k in range(10001):
+                X.append(-1 + 0.0002 * k)
+                Y.append(L(j, X[k]) * w_i(i, X[k]))
+            A[i][j] = numpy.trapz(Y, X)
+
+    for i in range(n):
+        X = []
+        Y = []
+        for k in range(10001):
+            X.append(-1 + 0.0002 * k)
+            Y.append(f(X[k]) * w_i(i, X[k]))
+        b[i] = numpy.trapz(Y, X)
+
+    return numpy.linalg.solve(A, b), A
+
+
+# Вычисление матричной нормы при p = бесконечность
+def norm(A):
+    max = 0
+    for i in range(len(A)):
+        sum = 0
+        for j in range(len(A)):
+            sum += abs(A[j][i])
+        if(sum > max):
+            max = sum
+    return max
+
+
+# Вычисление числа обусловленности
+def cond(A):
+    if(abs(numpy.linalg.det(A)) < 0.0000001):
+        return 0
+    return norm(A) * norm(numpy.linalg.matrix_power(A, -1))
+
+
+# Вывод значений для Галеркина 
+def solut_1(n):
+    c_j, A = comp_c_j_2(n)
+    y_x = []
+    for j in range(-1, 2):
+        ans = 0
+        for i in range(n):
+            ans += c_j[i] * w_i(i, j * 0.5)
+        y_x.append(ans)
+
+    c_j, A = comp_c_j_1(n)
+    y_n_x = []
+    for j in range(-1, 2):
+        ans = 0
+        for i in range(n):
+            ans += c_j[i] * w_i(i, j * 0.5)
+        y_n_x.append(ans)
+
+    print(str(n) + ') cond(A) = ' + str(round(cond(A), 5)) + '\t|' + 
+          str(round(y_n_x[0], 5)) + '\t|' + str(round(y_n_x[1], 5)) + 
+          '\t|' + str(round(y_n_x[2], 5)) + '\t\t|' + str(round(y_x[0] - y_n_x[0], 5)) + 
+          '\t|' + str(round(y_x[1] - y_n_x[1], 5)) + '\t|' + str(round(y_x[2] - y_n_x[2], 5)))
+
+
+# Вычисление t_n (нумерация с 1)
+def t_n(i, n):
+    return math.cos(math.pi * (2 * i - 1) / (2 * n)) 
+
+
+# Вычисление c_j для Галеркина
+def comp_c_j_2(n):
+
+    A = numpy.array([[0 for i in range(n)] for j in range(n)])
+    b = numpy.array([0 for i in range(n)])
+
+    for i in range(n):
+        for j in range(n):
+            A[i][j] = L(j, t_n(i + 1, n))
+
+    for i in range(n):
+        b[i] = f(t_n(i + 1, n))
+
+    return numpy.linalg.solve(A, b), A
+
+
+# Вывод значений для коллокации 
+def solut_2(n):
+    c_j, A = comp_c_j_1(n)
+    y_x = []
+    for j in range(-1, 2):
+        ans = 0
+        for i in range(n):
+            ans += c_j[i] * w_i(i, j * 0.5)
+        y_x.append(ans)
+
+    c_j, A = comp_c_j_2(n)
+    y_n_x = []
+    for j in range(-1, 2):
+        ans = 0
+        for i in range(n):
+            ans += c_j[i] * w_i(i, j * 0.5)
+        y_n_x.append(ans)
+
+    print(str(n) + ') cond(A) = ' + str(round(cond(A), 5)) + '\t|' + 
+          str(round(y_n_x[0], 5)) + '\t|' + str(round(y_n_x[1], 5)) + 
+          '\t|' + str(round(y_n_x[2], 5)) + '\t\t|' + str(round(y_x[0] - y_n_x[0], 5)) + 
+          '\t|' + str(round(y_x[1] - y_n_x[1], 5)) + '\t|' + str(round(y_x[2] - y_n_x[2], 5)))
+
+
+def main():
+
+    print('Проекционные методы решения краевой задачи для')
+    print('обыкновенного дифференциального уравнения второго порядка')
+    print('Ершов Владислав Евгеньевич группа 343')
+    print('Вариант 5')
+
+    print('\nУсловие:')
+    print('-1/(x + 3) * u" - x * u' + str("'") + ' + ln(2 + x) * u = 1 - x/2')
+    print("u'(-1) = u'(1) + u(1)/2 = 0")
+
+    print('\nВведите параметр n - число координатных функций')
+    n = int(input())
+
+    print('\nМетод Галеркина')
+    print('n)\tcond(A)\t\t|\t\ty_n(x)\t\t\t\t|\t\ty*(x) - y_n(x)')
+    print('\t\t\t|x = -0.5\t|x = 0\t\t|x = 0.5\t|x = -0.5\t|x = 0\t\t|x = 0.5')
+    for i in range(n):
+        solut_1(i + 1)
+
+    print('\nМетод коллокации')
+    print('n)\tcond(A)\t\t|\t\ty_n(x)\t\t\t\t|\t\ty*(x) - y_n(x)')
+    print('\t\t\t|x = -0.5\t|x = 0\t\t|x = 0.5\t|x = -0.5\t|x = 0\t\t|x = 0.5')
+    for i in range(n):
+        solut_2(i + 1)
+    
+
+if __name__ == '__main__':
+    main()
