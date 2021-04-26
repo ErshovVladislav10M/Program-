@@ -1,0 +1,22 @@
+# Ершов 343 вычи
+# вариант 5
+
+
+import numpy
+import math
+
+
+def main():
+
+    print('Метод сеток для решения уравнения параболического типа')
+    print('Ершов Владислав Евгеньевич группа 343')
+    print('Вариант 5')
+
+    print('\nУсловие:')
+    print('du/dt = d^2u/(dx)^2 + (x^2 + 1)du/dx + f(x, t)')
+    print('u(x, 0) = y(x), 0 <= x <= 1')
+    print('du/dx|x=0 = a(t), du/dx|x=1 = b(t), 0 <= t <= 0.1')
+    
+
+if __name__ == '__main__':
+    main()
