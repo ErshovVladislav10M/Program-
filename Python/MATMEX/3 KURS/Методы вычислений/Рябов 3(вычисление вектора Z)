@@ -1,0 +1,95 @@
+# Ершов 343 вычи
+# вариант 39
+
+
+import numpy
+import math
+import matplotlib.pyplot as plt
+
+
+# Функция K(x, s)
+def K(x, s):
+    return math.cos(4 - x - s)
+
+
+# Коэффициент A_k
+def A_k(n):
+    return 1 / (n - 1)
+
+
+# Коэффициент s_j (нумерация с 1)
+def s_j(j, n):
+    return (j - 1) / (n - 1)
+
+
+# Функция u(x)
+def u(x):
+    return 2 * math.sin(0.5) * math.cos(3.5 - x)
+
+
+# Вычисление U( = u(s_j))
+def comp_U(n):
+    return numpy.array([u(s_j(i, n)) for i in range(1, n + 1)])
+
+
+# Вычисление C
+def comp_C(n):
+    return numpy.matrix([[A_k(n) * K(s_j(j, n), s_j(k, n)) for k in range(1, n + 1)] for j in range(1, n + 1)])
+
+
+# Вычисление Z( = z(s_k))
+def comp_Z(n, alpha):
+    U = comp_U(n)
+    C = comp_C(n)
+    C_H = C.getH()
+    A = C_H.dot(C) + alpha * numpy.eye(n)
+    b = numpy.array(C_H).dot(U)
+    return numpy.linalg.solve(A, b)
+
+
+# Погрешность вычисления Z
+def calc_error(Z):
+    max = 0
+    for i in Z:
+        if abs(1 - i) > max:
+            max = abs(1 - i)
+    return max
+
+
+def main():
+
+    print('Решение урванения Az = u(x), x из [0, 1]')
+    print('Ершов Владислав Евгеньевич группа 343')
+    print('Вариант 39')
+
+    print('\nУсловие:')
+    print('K(x, s) = cos(4 - x - s), z(s) = 1')
+
+    # print('Введите параметр n - количесвто разбиений отрезка')
+    # n = int(input())
+    # print('Введите параметр alpha')
+    # alpha = float(input())
+    
+    min = 1
+    for i in range(1, 11):
+        for j in range(1, 11):
+            Z = comp_Z(10 * i, 10 ** (-j))
+            if calc_error(Z) < min:
+                min = calc_error(Z)
+                n = 10 * i
+                alpha = 10 ** (-j)
+    print(min)
+    print(n)
+    print(alpha)
+
+    # X = [i / n for i in range(1, n + 1)]
+    # Z = comp_Z(n, alpha)
+    # plt.plot(X, Z, 'go-')
+    # plt.xlabel("x", fontsize = 14)
+    # plt.ylabel("Z", fontsize = 14)
+    # plt.title('Массив Z', fontsize = 15)
+    # plt.show()
+    
+
+if __name__ == '__main__':
+    main()
