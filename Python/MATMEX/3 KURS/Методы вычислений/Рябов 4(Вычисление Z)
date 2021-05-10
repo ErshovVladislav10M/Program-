@@ -1,0 +1,123 @@
+# Ершов 343 вычи
+# вариант 39
+
+
+import numpy
+import math
+
+
+# Полиномы Якоби (нумерация с 0, k - верхний индекс)
+def P_k_i(k, i, x):
+    if i == 0: return 1
+    if i == 1: return (k + 1) * x
+    return (i + k) / (i + 2 * k) * ((2 + (2 * k - 1) / i) * x * P_k_i(k, i - 1, x) - (1 + (k - 1) / i) * P_k_i(k, i - 2, x))
+
+
+# Функции w_i(x) (нумерация с 0)
+def w_i(i, x):
+    if i == 0: return x ** 2 + 2 * x - 11
+    if i == 1: return x ** 3 + 2 * x ** 2 + x - 20
+    return (1 - x ** 2) ** 2 * P_k_i(2, i - 2, x)
+
+
+# Функция u(x)
+def u(x):
+    return 2 * math.sin(0.5) * math.cos(3.5 - x)
+
+
+# Функция K(x, s)
+def K(x, s):
+    return math.cos(4 - x - s)
+
+
+# Оператор A(w_i(x)) (нумерация с 0)
+def A(i, x):
+    X = []
+    Y = []
+    for k in range(101):
+        X.append(0.01 * k)
+        Y.append(K(x, X[k]) * w_i(i, X[k]))
+
+    return numpy.trapz(Y, X)
+
+
+# Вычисление С (= c_j)
+def comp_С(n):
+    C = numpy.array([[0.0 for i in range(n)] for j in range(n)])
+
+    for i in range(n):
+        for j in range(n):
+            X = []
+            Y = []
+            for k in range(101):
+                X.append(0.01 * k)
+                Y.append(A(j, X[k]) * w_i(i, X[k]))
+            C[i][j] = numpy.trapz(Y, X)
+
+    return numpy.array(C)
+
+
+# Вычисление U ( = u(s_j))
+def comp_U(n):
+    U = []
+
+    for i in range(n):
+        X = []
+        Y = []
+        for k in range(101):
+            X.append(0.01 * k)
+            Y.append(u(X[k]) * w_i(i, X[k]))
+        U.append(numpy.trapz(Y, X))
+
+    return numpy.array(U)
+
+
+# Вычисление Z ( = z(s_j))
+def comp_Z(n, alpha):
+    U = comp_U(n)
+    C = comp_С(n)
+    C_H = C.transpose()
+    A = C_H.dot(C) + alpha * numpy.eye(n)
+    b = C_H.dot(U)
+    return numpy.linalg.solve(A, b)
+
+
+# Погрешность вычисления Z
+def calc_error(Z):
+    return max([abs(i - 1) for i in Z])
+
+
+def main():
+
+    print('Метод моментов решения интегрального уравнения первого рода')
+    print('Ершов Владислав Евгеньевич группа 343')
+    print('Вариант 39')
+
+    print('\nУсловие:')
+    print('Az(x) = int(z(s) * cos(4 - x - s)ds, 0, 1) = 2 * sin(1/2) * cos(7/2 - x)')
+
+    # print('\nВведите параметр n - число координатных функций')
+    # n = int(input())
+
+    result = numpy.array([[0.0 for j in range(9)] for i in range(9)])
+    
+    for i in range(1, 6):
+        result_i = []
+        min = 100
+        for j in range(1, 7):
+            Z = comp_Z(i, 10 ** (-j))
+            result[i - 1][j - 1] = calc_error(Z)
+            if calc_error(Z) < min:
+                min = calc_error(Z)
+        #for j in range(1, 10):
+        #    result[i - 1][j - 1] -= min
+    
+    print('n/alpha\t\t10^-1\t\t\t10^-2\t\t\t10^-3\t\t\t10^-4\t\t\t10^-5\t\t\t10^-6')
+    for i in range(5):
+        print(str(i + 1) + '\t' + str(result[i][0] - 1) + '\t' + str(result[i][1] - 1) + '\t' + 
+              str(result[i][2] - 1) + '\t' + str(result[i][3] - 1) + '\t' + str(result[i][4] - 1) + 
+              '\t' + str(result[i][5] - 1))
+    
+
+if __name__ == '__main__':
+    main()
