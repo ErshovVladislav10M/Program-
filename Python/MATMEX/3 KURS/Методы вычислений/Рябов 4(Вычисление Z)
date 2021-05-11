@@ -4,6 +4,7 @@
 
 import numpy
 import math
+import matplotlib.pyplot as plt
 
 
 # Полиномы Якоби (нумерация с 0, k - верхний индекс)
@@ -23,6 +24,11 @@ def w_i(i, x):
 # Функция u(x)
 def u(x):
     return 2 * math.sin(0.5) * math.cos(3.5 - x)
+
+
+# Функция u(x) для z(x) = x^2 + 1
+def u_2(x):
+    return 2 * math.cos(3.0 - x) - math.sin(4.0 - x)
 
 
 # Функция K(x, s)
@@ -82,6 +88,31 @@ def comp_Z(n, alpha):
     return numpy.linalg.solve(A, b)
 
 
+# Вычисление U ( = u(s_j)) для z(x) = x^2 + 1
+def comp_U_2(n):
+    U = []
+
+    for i in range(n):
+        X = []
+        Y = []
+        for k in range(101):
+            X.append(0.01 * k)
+            Y.append(u_2(X[k]) * w_i(i, X[k]))
+        U.append(numpy.trapz(Y, X))
+
+    return numpy.array(U)
+
+
+# Вычисление Z ( = z(s_j)) для z(x) = x^2 + 1 
+def comp_Z_2(n, alpha):
+    U = comp_U_2(n)
+    C = comp_С(n)
+    C_H = C.transpose()
+    A = C_H.dot(C) + alpha * numpy.eye(n)
+    b = C_H.dot(U)
+    return numpy.linalg.solve(A, b)
+
+
 # Погрешность вычисления Z
 def calc_error(Z):
     return max([abs(i - 1) for i in Z])
@@ -96,11 +127,7 @@ def main():
     print('\nУсловие:')
     print('Az(x) = int(z(s) * cos(4 - x - s)ds, 0, 1) = 2 * sin(1/2) * cos(7/2 - x)')
 
-    # print('\nВведите параметр n - число координатных функций')
-    # n = int(input())
-
     result = numpy.array([[0.0 for j in range(9)] for i in range(9)])
-    
     for i in range(1, 6):
         result_i = []
         min = 100
@@ -111,13 +138,35 @@ def main():
                 min = calc_error(Z)
         #for j in range(1, 10):
         #    result[i - 1][j - 1] -= min
-    
+
+    print('Для z(s) = 1')
     print('n/alpha\t\t10^-1\t\t\t10^-2\t\t\t10^-3\t\t\t10^-4\t\t\t10^-5\t\t\t10^-6')
     for i in range(5):
         print(str(i + 1) + '\t' + str(result[i][0] - 1) + '\t' + str(result[i][1] - 1) + '\t' + 
               str(result[i][2] - 1) + '\t' + str(result[i][3] - 1) + '\t' + str(result[i][4] - 1) + 
               '\t' + str(result[i][5] - 1))
-    
+
+    result = numpy.array([[0.0 for j in range(9)] for i in range(9)])
+    for i in range(1, 6):
+        result_i = []
+        min = 100
+        for j in range(1, 7):
+            Z = comp_Z_2(i, 10 ** (-j))
+            result[i - 1][j - 1] = calc_error(Z)
+            if calc_error(Z) < min:
+                min = calc_error(Z)
+        #for j in range(1, 10):
+        #    result[i - 1][j - 1] -= min
+    print('Для z(s) = s^2 + 1')
+    print('n/alpha\t\t10^-1\t\t\t10^-2\t\t\t10^-3\t\t\t10^-4\t\t\t10^-5\t\t\t10^-6')
+    for i in range(5):
+        print(str(i + 1) + '\t' + str(result[i][0] - 1) + '\t' + str(result[i][1] - 1) + '\t' + 
+              str(result[i][2] - 1) + '\t' + str(result[i][3] - 1) + '\t' + str(result[i][4] - 1) + 
+              '\t' + str(result[i][5] - 1))
+
+    X = [0.01 * i for i in range(101)]
+    plt.plot(X, Z)   
+
 
 if __name__ == '__main__':
     main()
