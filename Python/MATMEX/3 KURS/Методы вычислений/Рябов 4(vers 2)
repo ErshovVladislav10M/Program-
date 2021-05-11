@@ -1,0 +1,130 @@
+# Ершов 343 вычи
+# вариант 39
+
+
+import numpy
+import math
+import matplotlib.pyplot as plt
+
+
+# Полиномы Якоби (нумерация с 0, k - верхний индекс)
+def P_k_i(k, i, x):
+    if i == 0: return 1
+    if i == 1: return (k + 1) * x
+    return (i + k) / (i + 2 * k) * ((2 + (2 * k - 1) / i) * x * P_k_i(k, i - 1, x) - (1 + (k - 1) / i) * P_k_i(k, i - 2, x))
+
+
+# Полиномы Лежандра (нумерация с 0, k - верхний индекс)
+def L_n(n, x):
+    if n == 0: return 1
+    if n == 1: return x
+    return (2 * n + 1) / (n + 1) * x * L_n(n - 1, x) - n / (n + 1) * L_n(n - 2, x)
+
+
+# Функции w_i(x) (нумерация с 0)
+def w_i(i, x):
+    return L_n(i, x)
+
+
+# Функция u(x)
+def u(x):
+    return 2 * math.sin(0.5) * math.cos(3.5 - x)
+
+
+# Функция u(x) для z(x) = x^2 + 1
+def u_2(x):
+    return 2 * math.cos(3.0 - x) - math.sin(4.0 - x)
+
+
+# Функция K(x, s)
+def K(x, s):
+    return math.cos(4 - x - s)
+
+
+# Оператор A(w_i(x)) (нумерация с 0)
+def A(i, x):
+    X = []
+    Y = []
+    for k in range(101):
+        X.append(0.01 * k)
+        Y.append(K(x, X[k]) * w_i(i, X[k]))
+
+    return numpy.trapz(Y, X)
+
+
+# Вычисление B
+def comp_B(n):
+    B = numpy.array([[0.0 for i in range(n)] for j in range(n)])
+
+    for i in range(n):
+        for j in range(n):
+            X = []
+            Y = []
+            for k in range(101):
+                X.append(0.01 * k)
+                Y.append(A(j, X[k]) * w_i(i, X[k]))
+            B[i][j] = numpy.trapz(Y, X)
+
+    return numpy.array(B)
+
+
+# Вычисление U ( = u(s_j)) для z(x) = x^2 + 1
+def comp_U_2(n):
+    U = []
+
+    for i in range(n):
+        X = []
+        Y = []
+        for k in range(101):
+            X.append(0.01 * k)
+            Y.append(u_2(X[k]) * w_i(i, X[k]))
+        U.append(numpy.trapz(Y, X))
+
+    return numpy.array(U)
+
+
+# Вычисление C ( = c_j) для z(x) = x^2 + 1 
+def comp_C_2(n, alpha):
+    U = comp_U_2(n)
+    B = comp_B(n)
+    B_H = B.transpose()
+    A = B_H.dot(B) + alpha * numpy.eye(n)
+    b = B_H.dot(U)
+    return numpy.linalg.solve(A, b)
+
+
+# Вывод значений для Галеркина 
+def solut(n, alpha):
+    c_j = comp_C_2(n, alpha)
+    y_n_x = []
+    for j in range(6):
+        ans = 0
+        for i in range(n):
+            ans += c_j[i] * w_i(i, j * 0.2)
+        y_n_x.append(ans)
+    return y_n_x
+
+
+def main():
+
+    print('Метод моментов решения интегрального уравнения первого рода')
+    print('Ершов Владислав Евгеньевич группа 343')
+    print('Вариант 39')
+
+    print('\nУсловие:')
+    print('Az(x) = int(z(s) * cos(4 - x - s)ds, 0, 1) = 2 * sin(1/2) * cos(7/2 - x)')
+
+    color = ['red', 'green', 'orange', 'black', 'purple', 'pink']
+    for i in range(3, 9):
+        Z_n = solut(3, 0.1 ** i)
+        X = [0.2 * i for i in range(6)]
+        Y = [(0.2 * i) ** 2 + 1 for i in range(6)]
+        plt.plot(X, Z_n, color = color[i - 3], marker = 'o', linestyle = '-', markerfacecolor = color[i - 3], label = ' Вычисленный Z, при alpha = ' + str(0.1 ** i))
+        
+    plt.plot(X, Y, color = 'blue', marker = 'o', linestyle = '-', markerfacecolor = 'blue', label = 'x^2 + 1') 
+    plt.legend(loc = 'best')
+    plt.show()
+
+
+if __name__ == '__main__':
+    main()
