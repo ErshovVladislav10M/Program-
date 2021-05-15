@@ -4,6 +4,7 @@
 
 import numpy
 import cmath
+import math
 import matplotlib.pyplot as plt
 
 
@@ -59,17 +60,42 @@ def W_n_m(m, n, r, t):
     return sum / m
 
 
-# Вычисление в точках
-def solut(n, e, t):
+# Вычисление в точках (Метод Виддера W_n_m(f, t))
+def solut_1(n, e, t):
     r = comp_r(n)
     m = comp_m(n, e)
     return W_n_m(m, n, r, t)
 
 
-# Функция W_n(f, t)
-def W_n(n, t):
-    p = n / t
-    return 1
+# Вычисление всех d_j
+def comp_d_j(k):
+    d_j = [2 * j for j in range(1, k + 1)]
+    return d_j
+
+
+# Вычисление всех c_k_j
+def comp_c_k_j(n, k):
+    d_j = comp_d_j(k)
+    c_k_j = []
+    for j in range(1, k + 1):
+        ans = 1
+        for i in range(1, n + 1):
+            if i != j:
+                ans *= d_j[j - 1] / (d_j[j - 1] - d_j[i - 1])
+        c_k_j.append(ans)
+    return c_k_j
+
+
+# Вычисление в точках (ускоренный Виддер W_n(k, f, t))
+def solut_2(n, k, e, t):
+    d_j = comp_d_j(k)
+    c_k_j = comp_c_k_j(n, k)
+    ans = 0
+    for j in range(1, k + 1):
+        r = comp_r(n * d_j[j - 1])
+        m = comp_m(n * d_j[j - 1], e)
+        ans += c_k_j[j - 1] * W_n_m(m, n * d_j[j - 1], r, t)
+    return ans
 
 
 def main():
@@ -83,17 +109,23 @@ def main():
 
     print('Введите параметр n = ')
     # n = int(input())
-    n = 200
+    n = 1
     print('Введите погрешность e = ')
     # e = float(input())
     e = 1e-12
 
     print('\nМетод Виддера')
-    print('t\tW_n_m')
-    for i in [0.2 * k for k in range(1, 6)]:
-        print(str(round(i, 3)) + '\t' + str(solut(n, e, i)))
+    print('n\tW_n_m(0.5)')
+    for i in range(11):
+        print(str(i + n) + '\t' + str(solut_1(i + n, e, 0.5).real))
 
     print('\nМетод Виддера с ускоренеим сходимости')
+    print('Введите параметр k = ')
+    # k = int(input())
+    k = 1
+    print('k\tW_n(k), n = ' + str(n))
+    for i in range(11):
+        print(str(i + k) + '\t' + str(solut_2(n, i + k, e, 0.5).real))
 
     print('\nОригинал в виде ряда')
 
