@@ -8,6 +8,66 @@ from controller import Compass
 from random import randint
 import math
 import struct   
+import numpy
+
+
+# Преобразование данных дистанционного сенсора в расстояние
+def transform_d(volt):
+    volt_val = [0.45, 0.47, 0.5, 0.55, 0.61, 0.69, 0.74, 
+                0.8, 0.87, 1.04, 1.27, 1.54, 1.99, 2.48, 2.7]
+    dist_val = [150, 140, 130, 120, 110, 100, 90, 
+                80, 70, 60, 50, 40, 30, 20, 15]
+    return numpy.interp(volt, volt_val, dist_val)
+    
+    
+# Преобразование данных ls в соответствии с реальным датчиком
+def transform_light(light):
+    if light > 1000: light = 1000
+    angle = 180 * (math.pi / 2 - math.asin(light / 1000)) / math.pi
+    light_val = [0, 23, 45, 66, 85, 115, 117, 115, 
+                 85, 66, 45, 23, 0]
+    angle_val = [-90, -80, -67.5, -60, -45, -22.5, 0,
+                 22.5, 45, 60, 67.5, 80, 90]
+    return numpy.interp(angle, angle_val, light_val) * 1000 / 117
+    
+    
+# Нахождение угла по датчикам ls
+def comp_angle(light):
+    if max(light) == sum(light):
+        return light.index(max(light)) * 90 + 45
+        
+    light_val = [0, 23, 45, 66, 85, 115, 117, 115, 
+                 85, 66, 45, 23, 0]
+    angle_val = [-90, -80, -67.5, -60, -45, -22.5, 0,
+                 22.5, 45, 60, 67.5, 80, 90]
+                 
+    if(light[0] + light[1] == 0):
+        real_l1 = light[2]
+        real_l2 = light[3]
+        angle_sector = 225
+    if(light[1] + light[2] == 0):
+        real_l1 = light[3]
+        real_l2 = light[0]
+        angle_sector = 315
+    if(light[2] + light[3] == 0):
+        real_l1 = light[0]
+        real_l2 = light[1]
+        angle_sector = 45
+    if(light[3] + light[0] == 0):
+        real_l1 = light[1]
+        real_l2 = light[2]
+        angle_sector = 135
+
+    min_comp = 100.0
+    j = 0
+    for i in range(-90, 1):
+        l1 = numpy.interp(abs(i), angle_val, light_val)
+        l2 = numpy.interp(i + 90, angle_val, light_val)
+        if min_comp > abs(l1 / real_l1 - l2 / real_l2):
+            min_comp = abs(l1 / real_l1 - l2 / real_l2)
+            j = i
+
+    return (abs(j) + angle_sector) % 365
 
 
 # create the Robot instance.
@@ -35,16 +95,17 @@ k = 2
 
 # initialize receiver 
 rec = []  
-rec_names = ['rec1', 'rec2']
 for i in range(k):
     rec.append(robot.getReceiver('rec' + str(i + 1)))
     rec[i].enable(timestep)
 
 
 # initialize distance sensor   
-ds = robot.getDistanceSensor('ds')
-ds.enable(timestep)
-
+ds = []
+for i in range(2):
+    ds.append(robot.getDistanceSensor('ds' + str(i + 1)))
+    ds[i].enable(timestep)
+    
 
 # initialize light sensor
 ls = []
@@ -86,9 +147,10 @@ while robot.step(timestep) != -1:
     # Ищем максимум из датчиков
     light = []
     for i in range(4):
-        light.append(ls[i].getValue())
+        light.append(transform_light(ls[i].getValue()))
     max_ls = max(light)
-    # print(light)
+    #print(light)
+    print(comp_angle(light))
     
     
     # Расчет азимута движения на источник по четырем сенсорам света.
@@ -144,8 +206,8 @@ while robot.step(timestep) != -1:
     # d - показаия датчика дистанции.
     q = 0.3
     a_q = 0.5
-    d = ds.getValue();
-    # print(d)
+    d = transform_d(max(ds[0].getValue(), ds[1].getValue()))
+    
     if light[0] + light[3] == 0:
         q = 0
     else:
@@ -219,7 +281,7 @@ while robot.step(timestep) != -1:
         elif cos_db_G < 0 and sin_db_G < 0:
             dbearingG = 180 + math.degrees(math.acos(cos_db_G))
         
-    if d < 1000 and d > 700:
+    if d < 50 and d > 20:
         if light[0] + light[3] > light[1] + light[2]: 
             if light[0] + light[1] > light[3] + light[2]:
                 j = 1 # право
@@ -260,7 +322,7 @@ while robot.step(timestep) != -1:
     
     # Обход препятствий
     # print(p, d)
-    if d <= 700 and avoidObstacleCounter == 0:
+    if d <= 20 and avoidObstacleCounter == 0:
         avoidObstacleCounter = 100
         if light[0] + light[3] > light[1] + light[2]: 
             if light[0] + light[1] > light[3] + light[2]:
@@ -272,7 +334,7 @@ while robot.step(timestep) != -1:
    
     
     if avoidObstacleCounter != 0:
-        if d > 700:
+        if d > 20:
             avoidObstacleCounter = 0
         else:
             avoidObstacleCounter -= 1
