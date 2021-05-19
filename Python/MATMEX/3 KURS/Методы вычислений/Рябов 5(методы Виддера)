@@ -98,6 +98,13 @@ def solut_2(n, k, e, t):
     return ans
 
 
+# Разложение F(p) в ряд (n - количество элементов в ряде
+def row_F(n, p):
+    ans = 0
+    for i in range(n):
+        ans += (-1) ** i * (2 / p) ** i
+    return ans * (p ** (1 / 2) - p ** (1 / 3)) / p
+
 def main():
 
     print('Обращение интегрального преобразования Лапласа')
@@ -107,27 +114,38 @@ def main():
     print('\nУсловие:')
     print('F(p) = (p^(1/2) - p^(1/3)) / (p + 2)')
 
-    print('Введите параметр n = ')
+    # print('Введите параметр n = ')
     # n = int(input())
-    n = 1
-    print('Введите погрешность e = ')
+    n = 801
+    # print('Введите погрешность e = ')
     # e = float(input())
     e = 1e-12
 
     print('\nМетод Виддера')
-    print('n\tW_n_m(0.5)')
+    print('Погрешность e = ' + str(e))
+    print('n\tW_n_m(21.5)')
     for i in range(11):
-        print(str(i + n) + '\t' + str(solut_1(i + n, e, 0.5).real))
+        print(str(i + n) + '\t' + str(59 * solut_1(i + n, e, 21.5).real))
 
     print('\nМетод Виддера с ускоренеим сходимости')
-    print('Введите параметр k = ')
+    # print('Введите параметр k = ')
     # k = int(input())
-    k = 1
-    print('k\tW_n(k), n = ' + str(n))
+    k = 61
+    # print('Введите параметр n = ')
+    # n = int(input())
+    n = 1
+    print('k\tW_n_k(21.5), n = ' + str(n))
     for i in range(11):
-        print(str(i + k) + '\t' + str(solut_2(n, i + k, e, 0.5).real))
+        print(str(i + k) + '\t' + str(solut_2(n, i + k, e, 21.5).real))
 
     print('\nОригинал в виде ряда')
+    print('n - количество элементов в ряде')
+    # print('Введите параметр n = ')
+    # n = int(input())
+    n = 1
+    print('n\trow_F(21.5)')
+    for i in range(11):
+        print(str(i + n) + '\t' + str(row_F(i + n, 21.5)))
 
 
 if __name__ == '__main__':
