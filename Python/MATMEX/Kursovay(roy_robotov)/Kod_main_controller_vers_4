@@ -103,10 +103,8 @@ rec_main.enable(timestep)
 
 
 # initialize distance sensor   
-ds = []
-for i in range(2):
-    ds.append(robot.getDistanceSensor('ds' + str(i + 1)))
-    ds[i].enable(timestep)
+ds = robot.getDistanceSensor('ds')
+ds.enable(timestep)
     
 
 # initialize light sensor
@@ -128,6 +126,7 @@ rightSpeed = 0
 
 # Переменные для задания обхода препятствия
 avoidObstacleCounter = 0
+detourObstacleCounter = 0
 j = 0
 p = 0
 
@@ -208,7 +207,7 @@ while robot.step(timestep) != -1:
     # d - показаия датчика дистанции.
     q = 0.3
     a_q = 0.5
-    d = transform_d(max(ds[0].getValue(), ds[1].getValue()))
+    d = transform_d(ds.getValue())
     
     if light[0] + light[3] == 0:
         q = 0
@@ -216,6 +215,7 @@ while robot.step(timestep) != -1:
         q = (1 - a_q) * (1 - abs((light[0] - light[3]) / (light[0] + light[3]))) + a_q * (d / 1000)    
     
     # Передаем сообщение на микрочип для связи
+    #print(bearing)
     message = struct.pack("dd", bearing, q)
     emit_main.send(message)
     
@@ -265,7 +265,7 @@ while robot.step(timestep) != -1:
     
     # Расчитываем курс в группе dbearingG исходя из данных группы
     # alpha - коэфициент, p - уверенность к курсу при пересчете от группы
-    alpha = 0.3
+    alpha = 0.9
     dbearingG = 0
     if k_i_w == 0:
         dbearingG = dbearing
@@ -283,7 +283,7 @@ while robot.step(timestep) != -1:
         elif cos_db_G < 0 and sin_db_G < 0:
             dbearingG = 180 + math.degrees(math.acos(cos_db_G))
         
-    if d < 50 and d > 20:
+    if d < 50 and d > 30:
         if light[0] + light[3] > light[1] + light[2]: 
             if light[0] + light[1] > light[3] + light[2]:
                 j = 1 # право
@@ -324,8 +324,9 @@ while robot.step(timestep) != -1:
     
     # Обход препятствий
     # print(p, d)
-    if d <= 20 and avoidObstacleCounter == 0:
-        avoidObstacleCounter = 100
+    if d <= 30 and avoidObstacleCounter == 0 and detourObstacleCounter == 0:
+        avoidObstacleCounter = 30
+        detourObstacleCounter = 150
         if light[0] + light[3] > light[1] + light[2]: 
             if light[0] + light[1] > light[3] + light[2]:
                 p = 0 # право
@@ -334,19 +335,26 @@ while robot.step(timestep) != -1:
             else:
                 p = randint(0, 1)  
    
-    
-    if avoidObstacleCounter != 0:
-        if d > 20:
-            avoidObstacleCounter = 0
-        else:
+    if avoidObstacleCounter != 0 or detourObstacleCounter != 0:
+        if avoidObstacleCounter != 0:
             avoidObstacleCounter -= 1
+                    
+            if p == 1:
+                leftSpeed = -2
+                rightSpeed = 2  
+            elif p == 0:
+                leftSpeed = 2
+                rightSpeed = -2 
                 
-        if p == 1:
-            leftSpeed = -2
-            rightSpeed = 2  
-        elif p == 0:
+        elif detourObstacleCounter != 0:
+            detourObstacleCounter -= 1
+                    
             leftSpeed = 2
-            rightSpeed = -2 
+            rightSpeed = 2  
+            
+    #print('*')
+    #print(avoidObstacleCounter)
+    #print(detourObstacleCounter)
             
     # Отправляем значение на моторы
     wheels[0].setVelocity(leftSpeed)
