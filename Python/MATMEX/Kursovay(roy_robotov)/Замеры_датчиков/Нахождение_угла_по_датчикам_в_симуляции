@@ -1,0 +1,78 @@
+import matplotlib.pyplot as plt
+import math
+import numpy
+
+
+Y = [[], [], [], []]
+
+file = open(r'C:\Users\ershov.e\Desktop\test_2.txt', 'r')
+i = 0
+for line in file:
+    Y[i].append(float(line))
+    i += 1
+    i %= 4
+
+# Нахождение угла по датчикам ls
+def comp_angle(light, e=0.0001):
+    if max(light) == sum(light):
+        return light.index(max(light)) * 90 + 45
+
+    light_val = [0, 23, 45, 66, 85, 115, 117, 115, 
+                 85, 66, 45, 23, 0]
+    angle_val = [-90, -80, -67.5, -60, -45, -22.5, 0,
+                 22.5, 45, 60, 67.5, 80, 90]
+
+    if(light[0] + light[1] == 0):
+        real_l1 = light[2]
+        real_l2 = light[3]
+        angle_sector = 225
+    if(light[1] + light[2] == 0):
+        real_l1 = light[3]
+        real_l2 = light[0]
+        angle_sector = 315
+    if(light[2] + light[3] == 0):
+        real_l1 = light[0]
+        real_l2 = light[1]
+        angle_sector = 45
+    if(light[3] + light[0] == 0):
+        real_l1 = light[1]
+        real_l2 = light[2]
+        angle_sector = 135
+
+    a = -90.0
+    b = 0.0
+    l1 = numpy.interp((b + a) / 2, angle_val, light_val)
+    l2 = numpy.interp((b + a) / 2 + 90, angle_val, light_val)
+    while abs(l1 / l2 - real_l1 / real_l2) > e:
+        if l1 / l2 > real_l1 / real_l2:
+            b = (b + a) / 2
+        else:
+            a = (b + a) / 2
+        l1 = numpy.interp((b + a) / 2, angle_val, light_val)
+        l2 = numpy.interp((b + a) / 2 + 90, angle_val, light_val)
+
+    return (abs((b + a) / 2) + angle_sector) % 365
+
+X = [180 - 180 * i / len(Y[0]) for i in range(len(Y[0]))]
+A = [90 - 180 * i / len(Y[0]) for i in range(len(Y[0]))]
+B = []
+
+for i in range(len(Y[0])):
+    light = []
+    for j in range(4):
+        light.append(Y[j][i])
+    #print(light)
+    if(comp_angle(light) > 180):
+        B.append(comp_angle(light) - 365)
+    else:
+        B.append(comp_angle(light))
+
+plt.plot(X, A, color = 'r', marker = '', linestyle = '-', markerfacecolor = 'r', label = 'Реальный угол')
+plt.plot(X, B, color = 'b', marker = '', linestyle = '-', markerfacecolor = 'b', label = 'Высчитанный угол')
+plt.xlabel('Время', fontsize = 14)
+plt.ylabel('Угол направления на свет', fontsize = 14)
+plt.title('Сравнение реального и вычисленного угла', fontsize = 15)
+plt.legend(loc = 'best')
+plt.show()
+
+print(max([abs(A[i] - B[i]) for i in range(len(A))]))
