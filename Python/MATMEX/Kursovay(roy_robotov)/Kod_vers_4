@@ -32,15 +32,15 @@ def transform_light(light):
     
     
 # Нахождение угла по датчикам ls
-def comp_angle(light):
+def comp_angle(light, e=0.0001):
     if max(light) == sum(light):
         return light.index(max(light)) * 90 + 45
-        
+
     light_val = [0, 23, 45, 66, 85, 115, 117, 115, 
                  85, 66, 45, 23, 0]
     angle_val = [-90, -80, -67.5, -60, -45, -22.5, 0,
                  22.5, 45, 60, 67.5, 80, 90]
-                 
+
     if(light[0] + light[1] == 0):
         real_l1 = light[2]
         real_l2 = light[3]
@@ -58,16 +58,19 @@ def comp_angle(light):
         real_l2 = light[2]
         angle_sector = 135
 
-    min_comp = 100.0
-    j = 0
-    for i in range(-90, 1):
-        l1 = numpy.interp(abs(i), angle_val, light_val)
-        l2 = numpy.interp(i + 90, angle_val, light_val)
-        if min_comp > abs(l1 / real_l1 - l2 / real_l2):
-            min_comp = abs(l1 / real_l1 - l2 / real_l2)
-            j = i
+    a = -90.0
+    b = 0.0
+    l1 = numpy.interp((b + a) / 2, angle_val, light_val)
+    l2 = numpy.interp((b + a) / 2 + 90, angle_val, light_val)
+    while abs(l1 / l2 - real_l1 / real_l2) > e:
+        if l1 / l2 > real_l1 / real_l2:
+            b = (b + a) / 2
+        else:
+            a = (b + a) / 2
+        l1 = numpy.interp((b + a) / 2, angle_val, light_val)
+        l2 = numpy.interp((b + a) / 2 + 90, angle_val, light_val)
 
-    return (abs(j) + angle_sector) % 365
+    return (abs((b + a) / 2) + angle_sector) % 365
 
 
 # create the Robot instance.
@@ -87,17 +90,16 @@ for i in range(2):
 
 
 # initialize emmiters    
-emit = robot.getEmitter('emit')
+emit_main = robot.getEmitter('emit_main')
 
 
 # Вводим количество членов группы не включая самого робота (т.е. n-1)
 k = 2
 
+
 # initialize receiver 
-rec = []  
-for i in range(k):
-    rec.append(robot.getReceiver('rec' + str(i + 1)))
-    rec[i].enable(timestep)
+rec_main = robot.getReceiver('rec_main')
+rec_main.enable(timestep)
 
 
 # initialize distance sensor   
@@ -150,7 +152,7 @@ while robot.step(timestep) != -1:
         light.append(transform_light(ls[i].getValue()))
     max_ls = max(light)
     #print(light)
-    print(comp_angle(light))
+    #print(comp_angle(light)[0])
     
     
     # Расчет азимута движения на источник по четырем сенсорам света.
@@ -213,20 +215,20 @@ while robot.step(timestep) != -1:
     else:
         q = (1 - a_q) * (1 - abs((light[0] - light[3]) / (light[0] + light[3]))) + a_q * (d / 1000)    
     
-    # Передаем сообщение соседям
+    # Передаем сообщение на микрочип для связи
     message = struct.pack("dd", bearing, q)
-    emit.send(message)
+    emit_main.send(message)
     
-    # Принимаем сообщение
+    # Принимаем сообщение от микрочипа связи
     bearingn = [[0] * k, [0] * k]
     for i in range(k):
-        if rec[i].getQueueLength() > 0:
-            message = rec[i].getData()
+        if rec_main.getQueueLength() > 0:
+            message = rec_main.getData()
             dataList = struct.unpack("dd", message)
             bearingn[i][0] = dataList[0]
             bearingn[i][1] = dataList[1]
-            rec[i].nextPacket()
-    # print("Robot", *bearingn)
+            rec_main.nextPacket()
+    #print("Robot", *bearingn)
     
     # Считаем среднюю уверенность соседей q_sr
     q_sum = 0
@@ -241,7 +243,7 @@ while robot.step(timestep) != -1:
         q_sr = q_sum/k_i
     else:
         q_sr = 1
-    # print ("q_sr", q_sr)
+    #print ("q_sr", q_sr)
     
     # Считаем средневзвешенный курс соседей dbearingn_sr_w
     dbearingn_sr_w = 0
@@ -349,6 +351,3 @@ while robot.step(timestep) != -1:
     # Отправляем значение на моторы
     wheels[0].setVelocity(leftSpeed)
     wheels[1].setVelocity(rightSpeed)
-    
-    
-    pass
