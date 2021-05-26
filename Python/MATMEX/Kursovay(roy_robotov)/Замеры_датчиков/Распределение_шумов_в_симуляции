@@ -1,0 +1,22 @@
+import matplotlib.pyplot as plt
+import math
+import numpy
+import random
+
+
+file = open(r'C:\Users\ershov.e\Desktop\test_3.txt', 'r')
+value = [float(line) for line in file]
+max_value = max(value)
+min_value = min(value)
+X1 = [-10 + i / 2.5 for i in range(51)]
+Y1 = [0 for i in range(51)]
+for i in range(len(value)):
+    for j in range(51):
+        if (j * (max_value - min_value) / 51 < value[i] - min_value
+        and (j + 1) * (max_value - min_value) / 51 >= value[i] - min_value):
+            Y1[j] += 1
+plt.plot(X1, Y1, color = 'green', marker = '', linestyle = '-', markerfacecolor = 'green', label = '')
+plt.title('Распределение размеров погрешностей', fontsize = 15)
+plt.xlabel('Размер погрешности в %', fontsize = 14)
+plt.ylabel('Количество значений', fontsize = 14)
+plt.show()
