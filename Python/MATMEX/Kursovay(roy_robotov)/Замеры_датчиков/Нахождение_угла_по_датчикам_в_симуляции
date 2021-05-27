@@ -34,7 +34,7 @@ def comp_angle(light):
         real_l2 = light[2]
         angle_sector = 135
 
-    return math.atan(real_l2 / real_l1) * 180 / math.pi + angle_sector
+    return (math.atan(real_l2 / real_l1) * 180 / math.pi + angle_sector) % 360
 
 
 X = [180 - 180 * i / len(Y[0]) for i in range(len(Y[0]))]
