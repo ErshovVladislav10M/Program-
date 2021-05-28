@@ -1,4 +1,9 @@
-# Задание 10.4 вариант 5
+# Фомина Виктория, 344 группа, вычислительные методы
+# вариант 12
+# Задание 10.4
+
+
+import numpy
 
 
 # Метод Жордана - обратная матрица
@@ -19,22 +24,11 @@ def inv(A):
     A[0][1] = 0
     return inv_A
 
-    # det_A = A[0][0] * A[1][1] - A[0][1] * A[1][0]
-    # if(det_A == 0): exit(1)
-    # tmp = A[0][0]
-    # A[0][0] = A[1][1]
-    # A[1][1] = tmp
-    # inv_A = A
-    # inv_A[0][0] /= det_A
-    # inv_A[1][0] /= det_A
-    # inv_A[0][1] /= det_A
-    # inv_A[1][1] /= det_A
-    # return inv_A
-
 
 # Метод Гаусса - решение Ax = b
 def solut(A, b):
     if(A[0][0] != 0):
+        #return numpy.linalg.solve(A, b)
         a = A[1][0] / A[0][0]
         A[1][1] -= a * A[0][1]
         b[1] -= a * b[0]
@@ -44,7 +38,9 @@ def solut(A, b):
             x1 = (b[0] - x2 * A[0][1]) / A[0][0]
         else: exit(1)
         return [x1, x2]
+
     if(A[1][0] != 0):
+        #return numpy.linalg.solve(A, b)
         a = A[0][0] / A[1][0]
         A[0][1] -= a * A[1][1]
         b[0] -= a * b[1]
@@ -54,48 +50,39 @@ def solut(A, b):
             x1 = (b[1] - x2 * A[1][1]) / A[1][0]
         else: exit(1)
         return [x1, x2]
+
     exit(1)
 
-    # if(A[1][1] * A[0][0] - A[1][0] * A[0][1] == 0): exit(1)
-    # x2 = (A[0][0] * b[1] - A[1][0] * b[0]) / (A[1][1] * A[0][0] - A[1][0] * A[0][1])
-    # x1 = (b[0] - A[0][1] * x2) / A[0][0]
-    # return [x1, x2]
+
+def main():
+
+    print('Виктория Фомина, группа 344, вариант 12')
+    
+    print('\nУсловие')
+    A = [[-401.46, 200.18], [1201.08, -601.64]]
+    b = [200, -600]
+    b1 = [199, -601]
+    print(A)
+    print('A')
+    print(b)
+    print('b')
+    print(b1)
+    print('b1')
+
+    print('\nРешение Ax = b')
+    x = numpy.array(solut(A, b))
+    print(x)
+    
+    print('\nРешение Ax = b1')
+    x1 = numpy.array(solut(A, b1))
+    print(x1)
+    
+    print('\nCond(A)')
+    print(numpy.linalg.norm(A) * numpy.linalg.norm(inv(A)))
+    
+    print('\nОценка погрешности')
+    print(numpy.linalg.norm(x1 - x) / numpy.linalg.norm(x))
 
 
-# LU разложение - нахождение определителя
-def comp_det(A):
-    L = [[0, 0], [0, 0]]
-    U = [[1, 0], [0, 1]]
-    L[0][0] = A[0][0]
-    L[1][0] = A[1][0]
-    U[0][1] = A[0][1] / A[0][0]
-    L[1][1] = A[1][1] - L[1][0] * U[0][1]
-    return L[0][0] * L[1][1]
-
-
-# Вычисление нормы матрицы
-def comp_norm(A):
-    ans = 0
-    for i in range(len(A)):
-        for j in range(len(A[i])):
-            ans += A[i][j] ** 2
-    return ans ** 0.5
-
-
-A = [[-401.46, 200.18], [1201.08, -601.64]]
-b = [200, -600]
-b1 = [199, -601]
-
-print('Решение Ax = b')
-x = solut(A, b)
-print(x)
-print('\nРешение Ax = b1')
-x1 = solut(A, b1)
-print(x1)
-print('\nCond(A)')
-print(comp_norm(A) * comp_norm(inv(A)))
-print('\nПогрешность')
-ans = 0
-ans += (x[0] - x1[0]) ** 2 + (x[1] - x1[1]) ** 2
-ans /= x[0] ** 2 + x[1] ** 2
-print(ans)
+if __name__ == '__main__':
+    main()
