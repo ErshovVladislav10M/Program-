@@ -1,0 +1,99 @@
+import matplotlib.pyplot as plt
+import math
+import numpy
+import random
+
+# Насколько разбиваем групп с шагом 2 * error / n
+n = 11
+
+file1 = open(r'C:\Users\ershov.e\Desktop\test_ds_1.txt', 'r')
+
+Y2 = [float(line) for line in file1]
+#Y2 = [value_real[i] for i in range(3, len(value_real), 4)]
+
+max_value_r = max(Y2)
+min_value_r = min(Y2)
+
+medium_val_r = sum(Y2) / len(Y2)
+error_comp_r = max(max_value_r - medium_val_r, medium_val_r - min_value_r) / min_value_r * 100
+
+X1 = [-error_comp_r + i * error_comp_r / (n - 1) * 2 for i in range(n)]
+Y1 = [0 for i in range(n)]
+
+for i in range(len(Y2)):
+    for j in range(n):
+        if (j * (max_value_r - min_value_r) / n <= Y2[i] - min_value_r
+        and (j + 1) * (max_value_r - min_value_r) / n >= Y2[i] - min_value_r):
+            Y1[j] += 1
+
+
+max_number_r = max(Y1)
+
+plt.plot(X1, Y1, color = 'green', marker = '', linestyle = '-', markerfacecolor = 'green', label = 'На реальном роботе')
+
+
+file = open(r'C:\Users\ershov.e\Desktop\test_3.txt', 'r')
+
+value = [float(line) for line in file]
+
+max_value = max(value)
+min_value = min(value)
+
+error_comp = (max_value - min_value) / (min_value + max_value) * 100 / 5.5
+medium_val = (min_value + max_value) / 2
+
+X1 = [-error_comp + i * error_comp / (n - 1) * 2 for i in range(n)]
+Y1 = [0 for i in range(n)]
+
+for i in range(len(value)):
+    for j in range(n):
+        if (j * (max_value - min_value) / n <= value[i] - min_value
+        and (j + 1) * (max_value - min_value) / n >= value[i] - min_value):
+            Y1[j] += 1
+
+max_number = max(Y1)
+for i in range(n):
+    Y1[i] *= max_number_r / max_number
+
+# plt.plot(X1, Y1, color = 'blue', marker = '', linestyle = '-', markerfacecolor = 'blue', label = 'В симуляции с заданной погрешностью 1.21%')
+
+
+N = 10000
+#Y4 = numpy.random.normal(medium_val_r, error_comp_r / 5.5, size=N)
+Y4 = [0 for i in range(N)]
+for i in range(N):
+    p = random.uniform(0, 1)
+    if p <= 0.1328:
+        t = round(medium_val_r * (1 - error_comp_r / 100))
+        Y4[i] = round(medium_val_r * (1 - error_comp_r / 100))
+    elif p >= 0.8671:
+        Y4[i] = round(medium_val_r * (1 + error_comp_r / 100))
+    else:
+        Y4[i] = round(medium_val_r)
+
+max_value_2 = max(Y4)
+min_value_2 = min(Y4)
+
+error_comp_2 = (max_value_2 - min_value_2) / (min_value_2 + max_value_2) * 100
+
+X1 = [-error_comp_2 + i * error_comp_2 / (n - 1) * 2 for i in range(n)]
+Y1 = [0 for i in range(n)]
+
+for i in range(len(Y4)):
+    for j in range(n):
+        if (j * (max_value_2 - min_value_2) / n <= Y4[i] - min_value_2
+        and (j + 1) * (max_value_2 - min_value_2) / n >= Y4[i] - min_value_2):
+            Y1[j] += 1
+
+max_number = max(Y1)
+for i in range(n):
+    Y1[i] *= max_number_r / max_number
+
+plt.plot(X1, Y1, color = 'purple', marker = '', linestyle = '-', markerfacecolor = 'purple', label = 'Заданным распределением')
+
+
+plt.title('Распределение размеров погрешностей', fontsize = 15)
+plt.xlabel('Размер погрешности в %', fontsize = 14)
+plt.ylabel('Количество значений', fontsize = 14)
+plt.legend(loc='best')
+plt.show()
