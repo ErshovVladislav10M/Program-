@@ -9,7 +9,6 @@ n = 11
 file1 = open(r'C:\Users\ershov.e\Desktop\test_ds_1.txt', 'r')
 
 Y2 = [float(line) for line in file1]
-#Y2 = [value_real[i] for i in range(3, len(value_real), 4)]
 
 max_value_r = max(Y2)
 min_value_r = min(Y2)
@@ -32,14 +31,14 @@ max_number_r = max(Y1)
 plt.plot(X1, Y1, color = 'green', marker = '', linestyle = '-', markerfacecolor = 'green', label = 'На реальном роботе')
 
 
-file = open(r'C:\Users\ershov.e\Desktop\test_3.txt', 'r')
+file = open(r'C:\Users\ershov.e\Desktop\test_ds_2.txt', 'r')
 
 value = [float(line) for line in file]
 
 max_value = max(value)
 min_value = min(value)
 
-error_comp = (max_value - min_value) / (min_value + max_value) * 100 / 5.5
+error_comp = (max_value - min_value) / (min_value + max_value) * 100 
 medium_val = (min_value + max_value) / 2
 
 X1 = [-error_comp + i * error_comp / (n - 1) * 2 for i in range(n)]
@@ -55,7 +54,7 @@ max_number = max(Y1)
 for i in range(n):
     Y1[i] *= max_number_r / max_number
 
-# plt.plot(X1, Y1, color = 'blue', marker = '', linestyle = '-', markerfacecolor = 'blue', label = 'В симуляции с заданной погрешностью 1.21%')
+plt.plot(X1, Y1, color = 'blue', marker = '', linestyle = '-', markerfacecolor = 'blue', label = 'В симуляции с заданной погрешностью 1.21%')
 
 
 N = 10000
@@ -89,7 +88,7 @@ max_number = max(Y1)
 for i in range(n):
     Y1[i] *= max_number_r / max_number
 
-plt.plot(X1, Y1, color = 'purple', marker = '', linestyle = '-', markerfacecolor = 'purple', label = 'Заданным распределением')
+# plt.plot(X1, Y1, color = 'purple', marker = '', linestyle = '-', markerfacecolor = 'purple', label = 'Заданным распределением')
 
 
 plt.title('Распределение размеров погрешностей', fontsize = 15)
