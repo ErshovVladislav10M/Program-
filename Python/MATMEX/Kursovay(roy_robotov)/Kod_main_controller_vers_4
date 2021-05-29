@@ -9,6 +9,7 @@ from random import randint
 import math
 import struct   
 import numpy
+import random
 
 
 # Преобразование данных дистанционного сенсора в расстояние
@@ -32,14 +33,9 @@ def transform_light(light):
     
     
 # Нахождение угла по датчикам ls
-def comp_angle(light, e=0.0001):
+def comp_angle(light):
     if max(light) == sum(light):
         return light.index(max(light)) * 90 + 45
-
-    light_val = [0, 23, 45, 66, 85, 115, 117, 115, 
-                 85, 66, 45, 23, 0]
-    angle_val = [-90, -80, -67.5, -60, -45, -22.5, 0,
-                 22.5, 45, 60, 67.5, 80, 90]
 
     if(light[0] + light[1] == 0):
         real_l1 = light[2]
@@ -58,19 +54,23 @@ def comp_angle(light, e=0.0001):
         real_l2 = light[2]
         angle_sector = 135
 
-    a = -90.0
-    b = 0.0
-    l1 = numpy.interp((b + a) / 2, angle_val, light_val)
-    l2 = numpy.interp((b + a) / 2 + 90, angle_val, light_val)
-    while abs(l1 / l2 - real_l1 / real_l2) > e:
-        if l1 / l2 > real_l1 / real_l2:
-            b = (b + a) / 2
-        else:
-            a = (b + a) / 2
-        l1 = numpy.interp((b + a) / 2, angle_val, light_val)
-        l2 = numpy.interp((b + a) / 2 + 90, angle_val, light_val)
+    return (math.atan(real_l2 / real_l1) * 180 / math.pi + angle_sector) % 360
 
-    return (abs((b + a) / 2) + angle_sector) % 365
+
+# Внесение погрешности в показания ls
+def inaccuracy_ls(light):
+    return numpy.random.normal(light, 2.18)
+
+
+# Внесение погрешности в показания ls
+def inaccuracy_ds(d):
+    p = random.uniform(0, 1)
+    if p <= 0.1328:
+        return round(d * (1 - 0.0121))
+    elif p >= 0.8671:
+        return round(d * (1 + 0.0121))
+    else:
+        return round(d)
 
 
 # create the Robot instance.
@@ -148,9 +148,9 @@ while robot.step(timestep) != -1:
     # Ищем максимум из датчиков
     light = []
     for i in range(4):
-        light.append(transform_light(ls[i].getValue()))
+        light.append(inaccuracy_ls(transform_light(ls[i].getValue())))
     max_ls = max(light)
-    #print(light)
+    #print(light[0])
     #print(comp_angle(light)[0])
     
     
@@ -207,7 +207,8 @@ while robot.step(timestep) != -1:
     # d - показаия датчика дистанции.
     q = 0.3
     a_q = 0.5
-    d = transform_d(ds.getValue())
+    d = inaccuracy_ds(transform_d(ds.getValue()))
+    print(d)
     
     if light[0] + light[3] == 0:
         q = 0
@@ -357,5 +358,5 @@ while robot.step(timestep) != -1:
     #print(detourObstacleCounter)
             
     # Отправляем значение на моторы
-    wheels[0].setVelocity(leftSpeed)
-    wheels[1].setVelocity(rightSpeed)
+    wheels[0].setVelocity(0)
+    wheels[1].setVelocity(0)
