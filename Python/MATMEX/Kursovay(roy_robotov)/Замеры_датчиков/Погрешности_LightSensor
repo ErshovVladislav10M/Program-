@@ -60,11 +60,13 @@ max_number = max(Y1)
 for i in range(n):
     Y1[i] *= max_number_r / max_number
 
-plt.plot(X1, Y1, color = 'blue', marker = '', linestyle = '-', markerfacecolor = 'blue', label = 'В симуляции с заданной погрешностью 2.18%')
+#plt.plot(X1, Y1, color = 'blue', marker = '', linestyle = '-', markerfacecolor = 'blue', label = 'В симуляции с заданной погрешностью 2.18%')
 
 
-N = 100000
+N = 1000000
 Y4 = numpy.random.normal(medium_val_r, error_comp_r, size=N)
+for i in range(len(Y4)):
+    Y4[i] = round(Y4[i])
 
 max_value_2 = max(Y4)
 min_value_2 = min(Y4)
@@ -74,7 +76,7 @@ error_comp_2 = (max_value_2 - min_value_2) / (min_value_2 + max_value_2) * 100
 X1 = [-error_comp_2 + i * error_comp_2 / (n - 1) * 2 for i in range(n)]
 Y1 = [0 for i in range(n)]
 
-for i in range(len(value)):
+for i in range(len(Y4)):
     for j in range(n):
         if (j * (max_value_2 - min_value_2) / n < Y4[i] - min_value_2
         and (j + 1) * (max_value_2 - min_value_2) / n >= Y4[i] - min_value_2):
@@ -83,6 +85,20 @@ for i in range(len(value)):
 max_number = max(Y1)
 for i in range(n):
     Y1[i] *= max_number_r / max_number
+
+Y1.append(0)
+Y1.append(0)
+#Y1.append(0)
+Y1.insert(0, 0)
+Y1.insert(0, 0)
+#Y1.insert(0, 0)
+X1.append(-error_comp_2 + error_comp_2 * n / (n - 1) * 2)
+X1.append(-error_comp_2 + error_comp_2 * (n + 1) / (n - 1) * 2)
+#X1.append(-error_comp_2 + error_comp_2 * (n + 2) / (n - 1) * 2)
+X1.insert(0, -error_comp_2 - error_comp_2 / (n - 1) * 2)
+X1.insert(0, -error_comp_2 - 2 * error_comp_2 / (n - 1) * 2)
+#X1.insert(0, -error_comp_2 - 3 * error_comp_2 / (n - 1) * 2)
+
 
 plt.plot(X1, Y1, color = 'purple', marker = '', linestyle = '-', markerfacecolor = 'purple', label = 'Заданным распределением')
 
