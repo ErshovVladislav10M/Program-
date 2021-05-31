@@ -37,8 +37,8 @@ def comp_D(n, h):
     for i in range(n):
         D_i = []
         for j in range(n):
-            if i == j: D_i.append(1 - comp_A_k(h) * H(comp_x_k(i, h), comp_x_k(j, h)))
-            else: D_i.append(-comp_A_k(h) * H(comp_x_k(i, h), comp_x_k(j, h)))
+            if i == j: D_i.append(1 - 0.7 * comp_A_k(h) * H(comp_x_k(i, h), comp_x_k(j, h)))
+            else: D_i.append(-0.7 * comp_A_k(h) * H(comp_x_k(i, h), comp_x_k(j, h)))
         D.append(D_i)
     return numpy.array(D)
 
@@ -61,7 +61,7 @@ def comp_u_n(x, n, h):
     ans = 0
     z = comp_z(n, h)
     for i in range(n):
-        ans += comp_A_k(h) * H(x, comp_x_k(i, h)) * z[i]
+        ans += 0.7 * comp_A_k(h) * H(x, comp_x_k(i, h)) * z[i]
     ans += f(x)
     return ans
 
