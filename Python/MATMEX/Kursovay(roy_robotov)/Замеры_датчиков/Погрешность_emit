@@ -1,0 +1,53 @@
+import numpy
+import matplotlib.pyplot as plt
+import math
+
+
+DOWN_LIMIT_SIGNAl = 1.0
+UP_LIMIT_SIGNAL = 3.0
+
+
+def inaccuracy_message(signal, white_noise, mediana, sigma):
+    out_signal = signal + white_noise + numpy.random.normal(mediana, sigma)
+    if out_signal > UP_LIMIT_SIGNAL or out_signal < DOWN_LIMIT_SIGNAl: 
+        return 0
+    else:
+        return 1
+
+
+def main():
+
+    colors = ['blue', 'red', 'purple', 'black', 'orange']
+    for i in range(5):
+        X1 = [-10 + i * 0.8, 10 + i * 0.8]
+        Y1 = [0, 0]
+
+        signal = 2.0
+        white_noise = 0.1 + i * 0.02
+        median = 0.3 + i * 0.02
+        sigma = 0.2 + i * 0.02
+
+        N = 1000
+
+        for t in range(N):
+            k = 0
+            for j in range(16):
+                if not inaccuracy_message(signal, white_noise, median, sigma):
+                    k = 1
+            if k == 0:
+                Y1[0] += 1
+            else:
+                Y1[1] += 1
+
+        plt.bar(X1, Y1, color=colors[i], label='Распределение с white noise = ' + str(round(white_noise, 4)) +
+                                             ' median = ' + str(round(median, 4)) +' sigma = ' + str(round(sigma, 4)))
+
+    plt.title('Распределение потерь сообщений')
+    plt.ylabel('Количество сообщений', fontsize = 14)
+    plt.xticks([-8.5, 11.5], ['Принятые', 'Потерянные'])
+    plt.legend(loc='best')
+    plt.show()
+
+
+if __name__ == '__main__':
+    main()
