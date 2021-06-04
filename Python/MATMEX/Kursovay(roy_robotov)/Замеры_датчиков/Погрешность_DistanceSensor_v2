@@ -8,7 +8,10 @@ d_test = '45'
 file_r = open(r'C:\Users\ershov.e\Desktop\test_sensor\ds_real\ds_mov_' + d_test + '.txt', 'r')
 Y2 = [float(line) for line in file_r]
 
+min_val_r = round(min(Y2))
+max_val_r = round(max(Y2))
 medium_val_r = round(sum(Y2) / len(Y2))
+error_comp_r = (max(Y2) - medium_val_r) / medium_val_r * 100
 
 X1 = []
 for i in range(len(Y2)):
@@ -55,6 +58,30 @@ for i in range(len(Y2)):
 
 plt.plot(X1, Y1, color = 'red', marker = '', linestyle = '-', markerfacecolor = 'red', label = 'В симуляции')
 
+
+def inaccuracy_ds(d, error_comp=0.0923):
+    p = random.uniform(0, 1)
+    if p <= 0.01527:
+        q = random.uniform(0, error_comp)
+        return round(d * (1 - q))
+    elif p >= 0.9847:
+        q = random.uniform(0, error_comp)
+        return round(d * (1 + q))
+    else:
+        return round(d)
+
+X1 = []
+a = min_val_r
+while a <= max_val_r:
+    X1.append(a)
+    a += 1
+
+Y1 = [0 for i in range(len(X1))]
+for i in range(3150):
+    p = inaccuracy_ds(float(d_test)) - min_val_r
+    Y1[inaccuracy_ds(float(d_test)) - min_val_r] += 1
+
+plt.plot(X1, Y1, color = 'purple', marker = '', linestyle = '-', markerfacecolor = 'purple', label = 'Заданным распределением')
 
 plt.title('Распределение значений на расстоянии ' + d_test + ' см', fontsize = 15)
 plt.xlabel('Значение в см', fontsize = 14)
