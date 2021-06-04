@@ -61,10 +61,10 @@ plt.plot(X1, Y1, color = 'red', marker = '', linestyle = '-', markerfacecolor = 
 
 def inaccuracy_ds(d, error_comp=0.0923):
     p = random.uniform(0, 1)
-    if p <= 0.01527:
+    if p <= 0.03827:
         q = random.uniform(0, error_comp)
         return round(d * (1 - q))
-    elif p >= 0.9847:
+    elif p >= 0.96173:
         q = random.uniform(0, error_comp)
         return round(d * (1 + q))
     else:
@@ -77,7 +77,7 @@ while a <= max_val_r:
     a += 1
 
 Y1 = [0 for i in range(len(X1))]
-for i in range(3150):
+for i in range(len(Y2)):
     p = inaccuracy_ds(float(d_test)) - min_val_r
     Y1[inaccuracy_ds(float(d_test)) - min_val_r] += 1
 
