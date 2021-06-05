@@ -4,7 +4,7 @@ import numpy
 import random
 
 
-ls_test = '101'
+ls_test = '600'
 
 file1 = open(r'C:\Users\ershov.e\Desktop\test_sensor\ls_real\ls_' + ls_test + '.txt', 'r')
 
@@ -19,7 +19,7 @@ medium_val_r = (min_val_r + max_val_r) / 2
 X1 = []
 for i in range(len(Y2)):
     if Y2[i] not in X1:
-       X1.append(Y2[i])
+       X1.append(round(Y2[i]))
 
 X1.sort()
 Y1 = [0 for i in range(len(X1))]
@@ -34,7 +34,8 @@ print(X1[0])
 print(X1[len(X1) - 1])
 
 #plt.plot(X1, Y1, color = 'green', marker = '', linestyle = '-', markerfacecolor = 'green', label = 'На реальном роботе')
-plt.bar(X1, Y1)
+plt.bar(X1, Y1, color = 'blue', label = 'На реальном роботе')
+plt.xticks(X1, X1)
 
 
 def inaccuracy_ls(light):
@@ -67,10 +68,11 @@ for i in range(len(Y2)):
     p = int(inaccuracy_ls(float(ls_test)) - min_val_r)
     Y1[p] += 1
 
-plt.plot(X1, Y1, color = 'purple', marker = '', linestyle = '-', markerfacecolor = 'purple', label = 'Заданным распределением')
+plt.plot(X1, Y1, color = 'purple', marker = '', linestyle = '-', markerfacecolor = 'purple',
+         label = 'Заданным распределением с погрешностью 0.67%')
 
 
-plt.title('Распределение значений на расстоянии ' + ls_test + ' см', fontsize = 15)
+plt.title('Распределение значений при значении ' + ls_test, fontsize = 15)
 plt.xlabel('Значение в условных единицах', fontsize = 14)
 plt.ylabel('Количество значений', fontsize = 14)
 plt.legend(loc='best')
