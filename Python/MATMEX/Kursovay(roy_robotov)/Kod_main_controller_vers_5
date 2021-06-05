@@ -10,15 +10,6 @@ import math
 import struct   
 import numpy
 import random
-
-
-# Преобразование данных дистанционного сенсора в расстояние
-def transform_d(volt):
-    volt_val = [0.45, 0.47, 0.5, 0.55, 0.61, 0.69, 0.74, 
-                0.8, 0.87, 1.04, 1.27, 1.54, 1.99, 2.48, 2.7]
-    dist_val = [150, 140, 130, 120, 110, 100, 90, 
-                80, 70, 60, 50, 40, 30, 20, 15]
-    return numpy.interp(volt, volt_val, dist_val)
     
     
 # Преобразование данных ls в соответствии с реальным датчиком
@@ -160,7 +151,7 @@ while robot.step(timestep) != -1:
         bearing += 360 
     cos_com = north[0]
     sin_com = north[2]    
-    # print(cos_com, sin_com)
+    #print(cos_com, sin_com)
     
     # Ищем максимум из датчиков
     light = []
@@ -168,22 +159,22 @@ while robot.step(timestep) != -1:
         light.append(inaccuracy_ls(transform_light(ls[i].getValue())))
     max_ls = max(light)
     #print(light[0])
+    #print(comp_angle(light)[0])
     
     
     # Расчет азимута движения на источник по четырем сенсорам света.
     dbearing = comp_angle(light)
-    print(dbearing)
  
     # Вводим уверенность в курсем по датчикам света q_az b
     # и q_dis - уверенность по датчику направления. a_q - коэфициент
     # d - показаия датчика дистанции.
     q = 0.3
     a_q = 0.5
-    d = ds.getValue()
-    # print(round(d))
-    # print(ds.getValue())
+    d = inaccuracy_ds(ds.getValue())
+    #print(round(d))
+    #print(ds.getValue())
     
-    if light[0] + light[3] == 0:
+    if comp_angle(light) > 90 and comp_angle(light) < 180:
         q = 0
     else:
         q = (1 - a_q) * (1 - abs((light[0] - light[3]) / (light[0] + light[3]))) + a_q * (d / 1000)    
@@ -239,8 +230,9 @@ while robot.step(timestep) != -1:
     
     # Расчитываем курс в группе dbearingG исходя из данных группы
     # alpha - коэфициент, p - уверенность к курсу при пересчете от группы
-    alpha = 0.7
+    alpha = 0.5
     dbearingG = 0
+    
     if k_i_w == 0:
         dbearingG = dbearing
     else:     
@@ -259,12 +251,10 @@ while robot.step(timestep) != -1:
         
     if d < 50 and d > 30:
         if comp_angle(light) < 90 or comp_angle(light) > 270: 
-            if comp_angle(light) > 0 and comp_angle(light) < 180:
+            if comp_angle(light) < 180:
                 j = 1 # право
-            elif comp_angle(light) > 180 and comp_angle(light) < 360:
-                j = 2 # лево
             else:
-                j = randint(1, 2) 
+                j = 2 # лево
         else:
             j = 0
        
@@ -278,7 +268,7 @@ while robot.step(timestep) != -1:
         dbearingG -= 360
           
     # Задаем движение
-    if bearing == dbearingG and light[0] + light[1] + light[2] + light[3] > 0:
+    if bearing == dbearingG and sum(light) > 0:
         leftSpeed = 3.14 
         rightSpeed = 3.14
     elif dbearingG > bearing and dbearingG < bearing + 180:
@@ -298,17 +288,15 @@ while robot.step(timestep) != -1:
         rightSpeed = 0
     
     # Обход препятствий
-    # print(p, d)
+    #print(p, d)
     if d <= 30 and avoidObstacleCounter == 0 and detourObstacleCounter == 0:
         avoidObstacleCounter = 30
         detourObstacleCounter = 150
-        if light[0] + light[3] > light[1] + light[2]: 
-            if light[0] + light[1] > light[3] + light[2]:
+        if comp_angle(light) < 90 or comp_angle(light) > 270: 
+            if comp_angle(light) < 180:
                 p = 0 # право
-            elif light[0] + light[1] < light[3] + light[2]:
-                p = 1 # лево
             else:
-                p = randint(0, 1)  
+                p = 1 # лево
    
     if avoidObstacleCounter != 0 or detourObstacleCounter != 0:
         if avoidObstacleCounter != 0:
