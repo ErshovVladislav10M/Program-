@@ -22,12 +22,12 @@ emit_main = robot.getEmitter('emit_main')
 
 
 # Вводим количество членов группы не включая самого робота (т.е. n-1)
-num_of_robots = 2
+k = 2
 
 
 # initialize receiver 
 rec = []  
-for i in range(num_of_robots):
+for i in range(k):
     rec.append(robot.getReceiver('rec' + str(i + 1)))
     rec[i].enable(timestep)
     
@@ -37,11 +37,11 @@ rec_main.enable(timestep)
 
 # Курс и уверенность в курсе
 bearing = 0
-confidence_bearing = 0
+q = 0
 
 
 # Список для приема сообщений
-bearingn = [[0] * num_of_robots, [0] * num_of_robots]
+bearingn = [[0] * k, [0] * k]
 
 
 # Время переключения между роботами для приема сообщений
@@ -60,14 +60,14 @@ while robot.step(timestep) != -1:
         message = rec_main.getData()
         dataList = struct.unpack("dd", message)
         bearing = dataList[0]
-        confidence_bearing = dataList[1]
+        q = dataList[1]
         rec_main.nextPacket()
     #print(bearing)
     
     # Передаем сообщение соседям
     p = random.uniform(0, 1)
     if p > 0.04:
-        message = struct.pack("dd", bearing, confidence_bearing)
+        message = struct.pack("dd", bearing, q)
         emit.send(message)
     
     # Принимаем сообщение от соседей
@@ -81,11 +81,11 @@ while robot.step(timestep) != -1:
         rec[index_robot_rec].nextPacket()
         
         index_robot_rec += 1
-        index_robot_rec %= num_of_robots
+        index_robot_rec %= k
         time_wait_switch = 2
     #print("Robot", *bearingn)
     
     # Перадаем сообщение на основной микрочип
-    for i in range(num_of_robots):
+    for i in range(k):
         message = struct.pack("dd", bearingn[i][0], bearingn[i][1])          
         emit_main.send(message)
