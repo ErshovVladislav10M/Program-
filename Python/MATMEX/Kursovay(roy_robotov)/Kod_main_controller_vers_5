@@ -50,9 +50,9 @@ def comp_angle(light):
 
 # Внесение погрешности в показания ls
 def inaccuracy_ls(light):
-    percent_val = [0.7985, 0.8152, 0.8489, 0.8723]
-    error_comp_val = [0.198, 0.0796, 0.0175, 0.0067]
-    light_val = [101, 201, 399, 600]
+    percent_val = [0.7951, 0.7985, 0.8152, 0.8489, 0.8723, 0.9046]
+    error_comp_val = [0.4706, 0.198, 0.0796, 0.0175, 0.0067, 0.0059]
+    light_val = [51, 101, 201, 399, 600, 799]
 
     error_comp = numpy.interp(light, light_val, error_comp_val)
     percent = numpy.interp(light, light_val, percent_val)
@@ -102,7 +102,11 @@ emit_main = robot.getEmitter('emit_main')
 
 
 # Вводим количество членов группы не включая самого робота (т.е. n-1)
-k = 2
+num_of_robots = 2
+
+
+# Список для приема сообщений
+bearingn = [[0] * num_of_robots, [0] * num_of_robots]
 
 
 # initialize receiver 
@@ -157,7 +161,6 @@ while robot.step(timestep) != -1:
     light = []
     for i in range(4):
         light.append(inaccuracy_ls(transform_light(ls[i].getValue())))
-    max_ls = max(light)
     #print(light[0])
     #print(comp_angle(light)[0])
     
@@ -185,8 +188,7 @@ while robot.step(timestep) != -1:
     emit_main.send(message)
     
     # Принимаем сообщение от микрочипа связи
-    bearingn = [[0] * k, [0] * k]
-    for i in range(k):
+    for i in range(num_of_robots):
         if rec_main.getQueueLength() > 0:
             message = rec_main.getData()
             dataList = struct.unpack("dd", message)
@@ -197,9 +199,9 @@ while robot.step(timestep) != -1:
     
     # Считаем среднюю уверенность соседей q_sr
     q_sum = 0
-    k_i = k
+    k_i = num_of_robots
     q_sr = q
-    for i in range(k):
+    for i in range(num_of_robots):
         if bearingn[i][1] != 0:
             q_sum += bearingn[i][1]
         else:
@@ -217,7 +219,7 @@ while robot.step(timestep) != -1:
     sin_sum_w = 0
     cos_sum_w = 0
     k_i_w = 0
-    for i in range(k):
+    for i in range(num_of_robots):
         cos_sum = 0
         sin_sum = 0
         if bearingn[i][1] > 0:
@@ -315,7 +317,6 @@ while robot.step(timestep) != -1:
             leftSpeed = 2
             rightSpeed = 2  
             
-    #print('*')
     #print(avoidObstacleCounter)
     #print(detourObstacleCounter)
             
