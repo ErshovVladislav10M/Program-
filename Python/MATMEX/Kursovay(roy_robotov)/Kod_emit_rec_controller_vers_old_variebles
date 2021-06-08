@@ -37,7 +37,7 @@ rec_main.enable(timestep)
 
 # Курс и уверенность в курсе
 bearing = 0
-q = 0
+confidence_bearing = 0
 
 
 # Список для приема сообщений
@@ -60,14 +60,14 @@ while robot.step(timestep) != -1:
         message = rec_main.getData()
         dataList = struct.unpack("dd", message)
         bearing = dataList[0]
-        q = dataList[1]
+        confidence_bearing = dataList[1]
         rec_main.nextPacket()
     #print(bearing)
     
     # Передаем сообщение соседям
     p = random.uniform(0, 1)
     if p > 0.04:
-        message = struct.pack("dd", bearing, q)
+        message = struct.pack("dd", bearing, confidence_bearing)
         emit.send(message)
     
     # Принимаем сообщение от соседей
