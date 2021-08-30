@@ -1,0 +1,49 @@
+13.1)Функции, до : название файла, в котором будет функция, после - название функции
+function script:newfunc()
+  print("First function was created!");
+end
+Вызов функции
+script:newfunc(); -- First function was created!
+Если в работаем в этом же файле
+self:newfunc(); -- First function was created!
+
+Можно обойтись без названия файла
+function func()
+  print("Second function");
+end
+Вызов
+func();
+
+13.2)Аргументы
+function script:stick2(a,b,c);
+  print(a + b + c);  
+end
+
+self:stick2(); -- все аргументы равны nil — вылезет ошибка
+self:stick2(1); -- аргументы b и c равны nil — вылезет ошибка
+self:stick2(1,2); -- аргумент c равен nil — вылезет ошибка
+self:stick2(1,2,3,4); -- 4 — лишнее — он просто удалится, и всё будет нормально
+
+13.2.1)Перменнное число аргументов, arg - локальная таблица, n - количество аргументов
+funcion func(...)
+  local arg = {...}; --Лучше добавить эту строку, но и без нее можно
+  print(arg.n);
+end
+
+Можно так
+function func(...)  
+  print(...);
+end
+
+func(1,2,3,4,5); -- 1 2 3 4 5
+
+13.3)Оператор return
+Без аргументов - только в условии или блоке do ... end
+function func()  
+  if not a then return end  
+
+  print(a);  
+end
+
+Если нужны не все возвращаемые аргументы
+local _,b,_ = func();
