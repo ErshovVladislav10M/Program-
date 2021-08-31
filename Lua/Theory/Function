@@ -38,12 +38,25 @@ end
 func(1,2,3,4,5); -- 1 2 3 4 5
 
 13.3)Оператор return
-Без аргументов - только в условии или блоке do ... end
 function func()  
-  if not a then return end  
-
+  if not a then return end
   print(a);  
 end
+Или так
+function func()  
+  return  
+end
+--Вернется nil
 
 Если нужны не все возвращаемые аргументы
 local _,b,_ = func();
+
+!!!Важно!!!
+function fac2(n)
+  fac = 1
+  for i = 2, n do
+   fac = fac * i
+  end
+  return fac
+end
+Перменная fac будет глобальной
