@@ -39,6 +39,8 @@ dofile("data/configs/config.cfg");
 
 4.1)Преобразование в число
 tonumber() вернет тип number или nil, если переменную не преобразовать
+tonumber("ff", 16) -- 255
+tonumber("steiner", 36) -- 62727809283
 
 4.2)Версия Lua (_VERSION глобальная переменная)
 print(_VERSION); -- Lua 5.3.1
