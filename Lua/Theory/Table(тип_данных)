@@ -76,6 +76,14 @@ end
 
 tab:func(2,2); -- 4
 
+Или так - метод
+local o = {
+ x = 2,
+ getX = function(self)
+   return self.x
+ end
+}
+
 14.3)Функции для работы с таблицами
 table.concat(table [, sep [, i [, j]]]) Задан массив, в котором все элементы — строки или числа, 
     возвращает table[i]..sep..table[i+1] ··· sep..table[j]. Значение по умолчанию 
