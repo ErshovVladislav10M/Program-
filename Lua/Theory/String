@@ -55,3 +55,5 @@ string.dump() Возвращает строку, содержащую двоич
 
 12.4)Преобразование в строку
 tostring()
+tostring(nil) -- "nil"
+tostring(tostring) -- "function: 0x418a20"
