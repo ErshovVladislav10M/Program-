@@ -9,6 +9,16 @@
 print(8, 'qwerty') --8 qwerty
 Или так, если выводим строку, должны быть кавычки
 print 'qwerty' --qwerty
+Или так
+print [[
+  O come, O come, Emmanuel,
+  and ransom captive Israel
+  that mourns in lonely exile here
+  until the Son of God appear.
+]]
+
+Экранирующие последовательности
+\", \' и \\ --", ' и \
 
 3)Типы данных
 nil ничего
