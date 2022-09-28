@@ -1,0 +1,18 @@
+
+
+def print_prime_numbers(number: float):
+    numbers = [-1 for i in range(int(number) + 1)]
+    prime_numbers = []
+
+    for i in range(2, int(number) + 1):
+        if numbers[i] != 0:
+            prime_numbers.append(i)
+            for j in range(i, int(number) + 1, i):
+                numbers[j] = 0
+
+    print(prime_numbers)
+
+
+if __name__ == '__main__':
+    lim_number = float(input("Please, enter limit number: "))
+    print_prime_numbers(lim_number)
