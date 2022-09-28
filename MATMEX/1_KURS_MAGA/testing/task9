@@ -1,0 +1,11 @@
+
+
+def check_correct_bracket_seq(enter_string: str, num_open_brackets=0, num_close_brackets=0) -> bool:
+    if len(enter_string) == 0:
+        return num_open_brackets == num_close_brackets
+    elif enter_string[0] == "(":
+        return check_correct_bracket_seq(enter_string[1:], num_open_brackets + 1, num_close_brackets)
+    elif enter_string[0] == ")":
+        return check_correct_bracket_seq(enter_string[1:], num_open_brackets, num_close_brackets + 1)
+    else:
+        return check_correct_bracket_seq(enter_string[1:], num_open_brackets, num_close_brackets)
